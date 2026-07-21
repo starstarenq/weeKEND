@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이어 상태 시스템 시뮬레이터</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #4fc1ff;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        /* 컨트롤러 및 상태창 */
+        .panel {
+            background-color: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .status-box {
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .status-item {
+            font-size: 16px;
+            margin: 8px 0;
+        }
+        .status-val {
+            font-weight: bold;
+            color: #ff8c00;
+        }
+        .btn {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn:hover { background-color: #005999; }
+        .btn-danger { background-color: #d9534f; }
+        .btn-danger:hover { background-color: #c9302c; }
+        .btn-success { background-color: #5cb85c; }
+        .btn-success:hover { background-color: #4cae4c; }
+
+        /* 콘솔 로그 창 */
+        .console-panel {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #console-log {
+            flex-grow: 1;
+            background-color: #050505;
+            border: 1px solid #222;
+            padding: 15px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            color: #a9b7c6;
+            overflow-y: auto;
+            height: 350px;
+            white-space: pre-wrap;
+            border-radius: 4px;
+        }
+        .log-entry { margin-bottom: 6px; }
+        .log-normal { color: #a9b7c6; }
+        .log-fatigue { color: #ffeb3b; }
+        .log-gameover { color: #ff3333; font-weight: bold; }
+        .log-system { color: #4fc1ff; }
+    </style>
+</head>
+<body>
+
+    <h1>플레이어 상태 시스템 시뮬레이션</h1>
+    <p>아래 버튼을 눌러 체력을 변화시키며 주석의 조건문이 실제 게임 내 사례로 어떻게 나타나는지 확인해 보세요.</p>
+
+    <div class="container">
+        <div class="panel">
+            <h2>실시간 플레이어 상태</h2>
+            <div class="status-box">
+                <div class="status-item">현재 체력: <span id="hp-val" class="status-val">100 / 100 (100%)</span></div>
+                <div class="status-item">현재 상태: <span id="state-val" class="status-val" style="color: #4fc1ff;">Normal (일반)</span></div>
+                <hr style="border: 0; border-top: 1px solid #444; margin: 15px 0;">
+                <div class="status-item">이동 속도: <span id="speed-val">5.0</span></div>
+                <div class="status-item">방 어 력: <span id="def-val">10.0</span></div>
+                <div class="status-item">공 격 력: <span id="atk-val">20.0</span></div>
+            </div>
+
+            <h2>수행할 시나리오 사례 선택</h2>
+            <div>
+                <button class="btn" onclick="takeDamage(30)">사례 1: 적당한 피해 (체력 -30) <br><small>여전히 일반 상태유지</small></button>
+                <button class="btn btn-danger" onclick="takeDamage(50)">사례 2: 치명적 피해 (체력 -50) <br><small>피로 상태 진입 (디버프)</small></button>
+                <button class="btn btn-danger" onclick="takeDamage(100)">사례 3: 즉사급 피해 (체력 0) <br><small>게임오버 상태 (행동불가)</small></button>
+                <br><br>
+                <button class="btn" onclick="movePlayer()">이동 및 공격 행동 시도</button>
+                <button class="btn btn-success" onclick="restartGame()">게임 재시작 (체력 회복)</button>
+            </div>
+        </div>
+
+        <div class="console-panel">
+            <h2>실행 로그 (C# Console.WriteLine 결과)</h2>
+            <div id="console-log"></div>
+            <button class="btn" style="margin-top: 10px; align-self: flex-end;" onclick="clearConsole()">로그 지우기</button>
+        </div>
+    </div>
+
+    <script>
+        // C# Player 클래스 구조를 그대로 JavaScript로 모사
+        const State = {
+            Normal: 'Normal (일반)',
+            Fatigued: 'Fatigued (피로)',
+            GameOver: 'GameOver (게임 오버)',
+            Invalid: 'Invalid (잘못됨)'
+        };
+
+        class Player {
+            constructor() {
+                this.MaxHP = 100;
+                this._hp = 100;
+                
+                this.BaseMoveSpeed = 5.0;
+                this.BaseDefense = 10.0;
+                this.BaseAttackPower = 20.0;
+
+                this.CurrentState = State.Normal;
+            }
+
+            // C#의 HP 프로퍼티 역할
+            get HP() {
+                return this._hp;
+            }
+
+            set HP(value) {
+                // Math.Clamp(value, 0, MaxHP)
+                this._hp = Math.max(0, Math.min(value, this.MaxHP));
+                this.UpdatePlayerState();
+            }
+
+            // 조건문에 맞춰 상태 업데이트
+            UpdatePlayerState() {
+                const hpPercentage = (this._hp / this.MaxHP) * 100;
+
+                if (hpPercentage >= 25 && this._hp > 0) {
+                    this.CurrentState = State.Normal;
+                } else if (hpPercentage < 25 && this._hp > 0) {
+                    this.CurrentState = State.Fatigued;
+                } else if (this._hp === 0) {
+                    this.CurrentState = State.GameOver;
+                } else {
+                    this.CurrentState = State.Invalid;
+                }
+            }
+
+            // 상태별 적용 능력치 계산기
+            GetCurrentMoveSpeed() {
+                if (this.CurrentState === State.GameOver) return 0;
+                return this.CurrentState === State.Fatigued ? this.BaseMoveSpeed * 0.5 : this.BaseMoveSpeed;
+            }
+
+            GetCurrentDefense() {
+                if (this.CurrentState === State.GameOver) return 0;
+                return this.CurrentState === State.Fatigued ? this.BaseDefense * 0.7 : this.BaseDefense;
+            }
+
+            GetCurrentAttackPower() {
+                if (this.CurrentState === State.GameOver) return 0;
+                return this.CurrentState === State.Fatigued ? this.BaseAttackPower * 0.6 : this.BaseAttackPower;
+            }
+        }
+
+        // --- 웹 화면 렌더링 및 제어 코드 ---
+        const player = new Player();
+        const consoleLog = document.getElementById('console-log');
+
+        function appendLog(text, className = 'log-normal') {
+            const div = document.createElement('div');
+            div.className = `log-entry ${className}`;
+            div.innerText = text;
+            consoleLog.appendChild(div);
+            consoleLog.scrollTop = consoleLog.scrollHeight;
+        }
+
+        function updateUI() {
+            const hpPct = (player.HP / player.MaxHP) * 100;
+            document.getElementById('hp-val').innerText = `${player.HP} / ${player.MaxHP} (${hpPct}%)`;
+            
+            const stateEl = document.getElementById('state-val');
+            stateEl.innerText = player.CurrentState;
+            
+            if (player.CurrentState === State.Normal) stateEl.style.color = '#4fc1ff';
+            else if (player.CurrentState === State.Fatigued) stateEl.style.color = '#ffeb3b';
+            else if (player.CurrentState === State.GameOver) stateEl.style.color = '#ff3333';
+
+            document.getElementById('speed-val').innerText = player.GetCurrentMoveSpeed().toFixed(1);
+            document.getElementById('def-val').innerText = player.GetCurrentDefense().toFixed(1);
+            document.getElementById('atk-val').innerText = player.GetCurrentAttackPower().toFixed(1);
+        }
+
+        // [사례 기능] 데미지 입기
+        function takeDamage(amount) {
+            appendLog(`\n[사례 실행] 플레이어가 데미지를 ${amount} 입었습니다.`, 'log-system');
+            player.HP -= amount;
+            
+            let logStyle = 'log-normal';
+            if (player.CurrentState === State.Fatigued) logStyle = 'log-fatigue';
+            else if (player.CurrentState === State.GameOver) logStyle = 'log-gameover';
+
+            appendLog(` -> 현재 HP: ${player.HP}% | 현재 상태: ${player.CurrentState}`, logStyle);
+            updateUI();
+        }
+
+        // [사례 기능] 플레이어 일반 행동 시도
+        function movePlayer() {
+            appendLog(`\n[행동 시도] 플레이어가 이동 및 공격을 시도합니다.`, 'log-system');
+            
+            if (player.CurrentState === State.GameOver) {
+                appendLog(`[행동 불가] 게임 오버 상태입니다. 플레이어가 더 이상 행동할 수 없습니다! (게임을 재시작 하십시오.)`, 'log-gameover');
+                return;
+            }
+
+            appendLog(` -> 플레이어가 성공적으로 움직입니다.`, 'log-normal');
+            appendLog(` -> 실시간 적용 능력치: [이동속도: ${player.GetCurrentMoveSpeed()} / 방어력: ${player.GetCurrentDefense()} / 공격력: ${player.GetCurrentAttackPower()}]`, 
+                player.CurrentState === State.Fatigued ? 'log-fatigue' : 'log-normal'
+            );
+        }
+
+        // [사례 기능] 게임 재시작
+        function restartGame() {
+            appendLog(`\n[시스템] 게임 재시작 신호를 보냅니다.`, 'log-system');
+            if (player.CurrentState === State.GameOver) {
+                player.HP = 100;
+                appendLog(` -> 게임을 성공적으로 재시작하여 일반 상태로 복귀했습니다!`, 'log-normal');
+            } else {
+                appendLog(` -> [경고] 아직 게임 오버 상태가 아닙니다. 재시작할 수 없습니다.`, 'log-fatigue');
+            }
+            updateUI();
+        }
+
+        function clearConsole() {
+            consoleLog.innerHTML = '';
+        }
+
+        // 최초 UI 업데이트 및 환영 메시지
+        updateUI();
+        appendLog("시뮬레이터가 정상 구동되었습니다. 왼쪽 버튼을 눌러 각 사례(상태 변화)를 테스트해보세요.", "log-system");
+    </script>
+</body>
+</html>

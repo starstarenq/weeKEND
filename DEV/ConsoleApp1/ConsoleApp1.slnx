@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
+  <Project Path="D02(열거형)/D02(열거형).csproj" Id="ba4e6e04-8479-4449-84d1-273d4e8736e8" />
+  <Project Path="D03/D03.csproj" Id="c5e2e45a-9097-4052-b0a8-34cf7e613264" />
+</Solution>

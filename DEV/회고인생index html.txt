@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 게임</title>
+    <style>
+        body { font-family: sans-serif; background: #f0f0f0; padding: 20px; text-align: center; }
+        .screen { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }
+        .active { display: block; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin-top: 15px; }
+        .status { margin: 10px 0; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>⏳ 회고인생 게임</h1>
+
+    <!-- 1. 메뉴 화면 -->
+    <div id="menuScreen" class="screen active">
+        <h2>메인 메뉴</h2>
+        <button onclick="startGame()">게임 시작</button>
+    </div>
+
+    <!-- 2. 플레이 화면 -->
+    <div id="playScreen" class="screen">
+        <h2>전투 진행 중</h2>
+        <div class="status">플레이어 상태: <span id="pState">-</span></div>
+        <div class="status">플레이어 HP: <span id="pHp">-</span> | 스태미나: <span id="pStamina">-</span></div>
+        <hr>
+        <div class="status">몬스터 상태: <span id="mState">-</span></div>
+        <div class="status">몬스터 HP: <span id="mHp">-</span></div>
+        <button onclick="attack()">공격하기 (스태미나 소모)</button>
+    </div>
+
+    <!-- 3. 게임오버 화면 -->
+    <div id="gameoverScreen" class="screen">
+        <h2>게임 오버</h2>
+        <p id="gameOverReason">당신은 피로를 이기지 못했습니다.</p>
+        <button onclick="goToMenu()">메뉴로 돌아가기</button>
+    </div>
+
+    <!-- 데이터 파일 로드 -->
+    <script src="gameData.js"></script>
+    <script>
+        // 화면 전환 함수
+        function render() {
+            // 모든 화면 숨기기
+            document.getElementById('menuScreen').classList.remove('active');
+            document.getElementById('playScreen').classList.remove('active');
+            document.getElementById('gameoverScreen').classList.remove('active');
+
+            // 현재 상태에 맞는 화면 켜기
+            if (gameData.currentGameState === GameState.MENU) {
+                document.getElementById('menuScreen').classList.add('active');
+            } else if (gameData.currentGameState === GameState.PLAYING) {
+                document.getElementById('playScreen').classList.add('active');
+                updatePlayScreen();
+            } else if (gameData.currentGameState === GameState.GAMEOVER) {
+                document.getElementById('gameoverScreen').classList.add('active');
+            }
+        }
+
+        // 플레이 화면 실시간 데이터 갱신
+        function updatePlayScreen() {
+            document.getElementById('pState').innerText = gameData.player.state;
+            document.getElementById('pHp').innerText = gameData.player.hp;
+            document.getElementById('pStamina').innerText = gameData.player.stamina;
+            document.getElementById('mState').innerText = gameData.monster.state;
+            document.getElementById('mHp').innerText = gameData.monster.hp;
+        }
+
+        // 게임 시작
+        function startGame() {
+            gameData.currentGameState = GameState.PLAYING;
+            gameData.player.hp = 100;
+            gameData.player.stamina = 100;
+            gameData.player.state = PlayerState.IDLE;
+            gameData.monster.hp = 50;
+            gameData.monster.state = MonsterState.ALIVE;
+            render();
+        }
+
+        // 공격 액션 (로직 예시)
+        function attack() {
+            if (gameData.player.state === PlayerState.DEAD) return;
+
+            // 스태미나 감소 및 피로 상태 체크
+            gameData.player.stamina -= 40;
+            if (gameData.player.stamina <= 30) {
+                gameData.player.state = PlayerState.TIRED;
+            }
+
+            // 몬스터 타격
+            gameData.monster.hp -= 20;
+            if (gameData.monster.hp <= 0) {
+                gameData.monster.hp = 0;
+                gameData.monster.state = MonsterState.DEFEATED;
+                alert("야근 몬스터를 물리쳤습니다! 성공적인 회고입니다.");
+                goToMenu();
+                return;
+            }
+
+            // 반격 당함 (플레이어 피격)
+            gameData.player.hp -= gameData.monster.damage;
+            if (gameData.player.hp <= 0) {
+                gameData.player.hp = 0;
+                gameData.player.state = PlayerState.DEAD;
+                gameData.currentGameState = GameState.GAMEOVER;
+                document.getElementById('gameOverReason').innerText = "체력이 모두 고갈되었습니다.";
+            }
+
+            render();
+        }
+
+        // 메뉴로 돌아가기
+        function goToMenu() {
+            gameData.currentGameState = GameState.MENU;
+            render();
+        }
+
+        // 초기 실행
+        render();
+    </script>
+</body>
+</html>
