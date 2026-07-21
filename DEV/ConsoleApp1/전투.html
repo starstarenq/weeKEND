@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 실시간 전투 프로토타입</title>
+    <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: 'Malgun Gothic', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 5px;
+        }
+
+        .description {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* 게임 화면 컨테이너 */
+        #game-stage {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: linear-gradient(to bottom, #1a1a2e, #16213e);
+            border: 3px solid #444;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* 플레이어 스타일 */
+        #player {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            border-radius: 50%;
+            left: 100px;
+            top: 230px;
+            transition: left 0.1s linear, top 0.1s linear;
+            box-shadow: 0 0 15px #3498db;
+        }
+
+        /* 몬스터 스타일 */
+        .monster {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #e74c3c;
+            border-radius: 8px;
+            right: 150px;
+            top: 225px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #e74c3c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        /* 스탯 표기창 */
+        .status-panel {
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+            margin-top: 15px;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+        }
+
+        .status-box {
+            width: 45%;
+        }
+
+        .bar-container {
+            width: 100%;
+            background-color: #444;
+            height: 20px;
+            border-radius: 10px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .hp-bar {
+            height: 100%;
+            width: 100%;
+            transition: width 0.1s ease;
+        }
+
+        #player-hp-bar { background-color: #2ecc71; }
+        #monster-hp-bar { background-color: #e74c3c; }
+
+        /* 전투 로그 창 */
+        #battle-log {
+            width: 800px;
+            height: 100px;
+            background-color: #050505;
+            border: 1px solid #222;
+            margin-top: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            font-size: 13px;
+            color: #2ecc71;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>회고인생 (Realtime Action RPG)</h1>
+    <div class="description">이동: [W, A, S, D] | <b>빨간색 몬스터를 마우스로 클릭</b>하면 선제공격과 함께 실시간 전투가 시작됩니다.</div>
+
+    <!-- 게임 화면 -->
+    <div id="game-stage">
+        <div id="player"></div>
+        <div id="monster" class="monster">적</div>
+    </div>
+
+    <!-- 스탯 패널 -->
+    <div class="status-panel">
+        <div class="status-box">
+            <h3>주인공 (Player)</h3>
+            <div>공격력: <span id="player-atk">20</span></div>
+            <div class="bar-container">
+                <div id="player-hp-bar" class="hp-bar"></div>
+            </div>
+            <div style="text-align: right; font-size: 12px;" id="player-hp-text">100 / 100</div>
+        </div>
+        
+        <div class="status-box">
+            <h3>몬스터 (Monster)</h3>
+            <div>공격력: <span id="monster-atk">10</span></div>
+            <div class="bar-container">
+                <div id="monster-hp-bar" class="hp-bar"></div>
+            </div>
+            <div style="text-align: right; font-size: 12px;" id="monster-hp-text">150 / 150</div>
+        </div>
+    </div>
+
+    <!-- 로그창 -->
+    <div id="battle-log">시스템: 전장에 진입했습니다. 이동하여 적을 선제공격하세요.</div>
+
+    <script>
+        // 캐릭터 스탯 데이터 객체화
+        const player = {
+            element: document.getElementById('player'),
+            x: 100, y: 230, speed: 15,
+            maxHp: 100, hp: 100, atk: 20
+        };
+
+        const monster = {
+            element: document.getElementById('monster'),
+            maxHp: 150, hp: 150, atk: 10,
+            isDead: false
+        };
+
+        let battleInterval = null; // 실시간 전투용 타이머 변수
+        const logBox = document.getElementById('battle-log');
+
+        // 1. WASD 조작 키보드 이벤트
+        window.addEventListener('keydown', (e) => {
+            if (monster.isDead) return;
+
+            switch(e.key.toLowerCase()) {
+                case 'w': player.y = Math.max(0, player.y - player.speed); break;
+                case 's': player.y = Math.min(460, player.y + player.speed); break;
+                case 'a': player.x = Math.max(0, player.x - player.speed); break;
+                case 'd': player.x = Math.min(760, player.x + player.speed); break;
+            }
+            updatePosition();
+        });
+
+        function updatePosition() {
+            player.element.style.left = player.x + 'px';
+            player.element.style.top = player.y + 'px';
+        }
+
+        // 2. 몬스터 클릭 시 선제공격 및 실시간 전투 개시
+        monster.element.addEventListener('click', () => {
+            if (monster.isDead || battleInterval !== null) return;
+
+            // 거리 계산 (충돌 및 사거리 검사 대용)
+            const monsterX = 600; // 고정 배치값 기준
+            const monsterY = 225;
+            const distance = Math.sqrt(Math.pow(player.x - monsterX, 2) + Math.pow(player.y - monsterY, 2));
+
+            // 플레이어가 적 근처로 접근했는지 판별
+            if (distance > 150) {
+                addLog("시스템: 거리가 너무 멉니다! 적에게 더 가까이 다가가 선제공격 하세요.", "#e67e22");
+                return;
+            }
+
+            addLog("⚔️ 선제공격! 실시간 전투가 시작되었습니다.", "#e74c3c");
+            
+            // 0.5초마다 플레이어와 몬스터가 서로 주고받는 실시간 액션 처리
+            battleInterval = setInterval(() => {
+                // 플레이어가 몬스터 공격
+                monster.hp -= player.atk;
+                addLog(`주인공이 몬스터에게 ${player.atk}의 피해를 입혔습니다.`, "#2ecc71");
+
+                if (monster.hp <= 0) {
+                    monster.hp = 0;
+                    monster.isDead = true;
+                    addLog("💀 몬스터를 처치했습니다! 전투에서 승리했습니다.", "#f1c40f");
+                    monster.element.style.backgroundColor = '#444';
+                    monster.element.innerText = "사망";
+                    clearInterval(battleInterval);
+                } else {
+                    // 몬스터의 반격
+                    player.hp -= monster.atk;
+                    addLog(`몬스터가 반격하여 주인공에게 ${monster.atk}의 피해를 입혔습니다.`, "#e74c3c");
+
+                    if (player.hp <= 0) {
+                        player.hp = 0;
+                        addLog("❌ 주인공이 쓰러졌습니다. 게임 오버.", "#95a5a6");
+                        clearInterval(battleInterval);
+                    }
+                }
+
+                updateUI();
+            }, 500); // 0.5초 간격 실시간 교전
+        });
+
+        // UI 정보(체력바 게이지와 텍스트) 갱신함수
+        function updateUI() {
+            // 플레이어 UI 갱신
+            const playerHpPercent = (player.hp / player.maxHp) * 100;
+            document.getElementById('player-hp-bar').style.width = playerHpPercent + '%';
+            document.getElementById('player-hp-text').innerText = `${player.hp} / ${player.maxHp}`;
+
+            // 몬스터 UI 갱신
+            const monsterHpPercent = (monster.hp / monster.maxHp) * 100;
+            document.getElementById('monster-hp-bar').style.width = monsterHpPercent + '%';
+            document.getElementById('monster-hp-text').innerText = `${monster.hp} / ${monster.maxHp}`;
+        }
+
+        // 로그 기록 스크롤 제어 함수
+        function addLog(text, color) {
+            const logEntry = document.createElement('div');
+            logEntry.style.color = color;
+            logEntry.innerHTML = text;
+            logBox.appendChild(logEntry);
+            logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // 초기 실행 화면 세팅
+        updateUI();
+    </script>
+</body>
+</html>
