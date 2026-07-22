@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 실시간 전투 시뮬레이터</title>
+    <style>
+        body {
+            background-color: #0f1115;
+            color: #f1f5f9;
+            font-family: 'Malgun Gothic', -apple-system, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 { margin-bottom: 5px; font-size: 24px; color: #fff; }
+        .sub { color: #94a3b8; margin-bottom: 30px; font-size: 14px; }
+
+        /* 전투 무대 대치 화면 */
+        .battle-stage {
+            display: flex;
+            justify-content: space-between;
+            width: 700px;
+            background-color: #1a1c23;
+            border: 1px solid #2a2e3d;
+            border-radius: 12px;
+            padding: 30px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .char-box {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .char-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .stat-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 12px;
+        }
+
+        /* 체력바 디자인 */
+        .hp-container {
+            width: 100%;
+            background-color: #2d3748;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hp-bar {
+            height: 100%;
+            width: 100%;
+            transition: width 0.15s ease-out;
+        }
+        #player-hp-bar { background-color: #10b981; } /* 플레이어 녹색 */
+        #monster-hp-bar { background-color: #ef4444; } /* 몬스터 적색 */
+
+        .hp-text {
+            text-align: right;
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        /* 컨트롤 버튼 */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #2563eb; }
+        button:disabled { background-color: #4b5563; cursor: not-allowed; }
+        #btn-strike { background-color: #ef4444; }
+        #btn-strike:hover { background-color: #dc2626; }
+
+        /* 전투 로그 창 */
+        #log-panel {
+            width: 700px;
+            height: 160px;
+            background: #090a0f;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+        .log { margin-bottom: 5px; line-height: 1.4; }
+        .log.system { color: #f59e0b; font-weight: bold; }
+        .log.player { color: #38bdf8; }
+        .log.monster { color: #f43f5e; }
+        .log.win { color: #10b981; font-weight: bold; font-size: 14px; }
+        .log.lose { color: #94a3b8; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>실시간 전투 시스템 시뮬레이터</h1>
+    <div class="sub">플레이어 스탯은 고정되며, 매 시뮬레이션마다 다른 스탯의 무작위 몬스터가 등장합니다.</div>
+
+    <!-- 전투 스테이지 UI -->
+    <div class="battle-stage">
+        <!-- 플레이어 슬롯 -->
+        <div class="char-box">
+            <div class="char-title">주인공 (Player)</div>
+            <div class="stat-line">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="M14.5 17.5L3 6V3H6L17.5 14.5M14.5 17.5L19 13L21 15L16.5 19.5M14.5 17.5L13 21L11 19L14.5 15.5"/></svg>
+                공격력: <span>25</span> (고정)
+            </div>
+            <div class="hp-container">
+                <div id="player-hp-bar" class="hp-bar"></div>
+            </div>
+            <div id="player-hp-text" class="hp-text">150 / 150</div>
+        </div>
+
+        <!-- 몬스터 슬롯 -->
+        <div class="char-box">
+            <div class="char-title" id="monster-name">몬스터 (Monster)</div>
+            <div class="stat-line">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2.5"><path d="M14.5 17.5L3 6V3H6L17.5 14.5M14.5 17.5L19 13L21 15L16.5 19.5M14.5 17.5L13 21L11 19L14.5 15.5"/></svg>
+                공격력: <span id="monster-atk">0</span> (랜덤)
+            </div>
+            <div class="hp-container">
+                <div id="monster-hp-bar" class="hp-bar"></div>
+            </div>
+            <div id="monster-hp-text" class="hp-text">0 / 0</div>
+        </div>
+    </div>
+
+    <!-- 제어 버튼 그룸 -->
+    <div class="btn-group">
+        <button id="btn-strike">⚔️ 선제공격 시작</button>
+        <button id="btn-next" disabled>다음 전투 준비</button>
+    </div>
+
+    <!-- 전투 리얼타임 로그 -->
+    <div id="log-panel"></div>
+
+    <script type="module">
+        import { Status } from './Status.js';
+        import { Fight } from './Fight.js';
+
+        let player, monster, currentFight;
+        let simCount = 1; // 시뮬레이션 회차 (몬스터 레벨 대용)
+
+        const btnStrike = document.getElementById('btn-strike');
+        const btnNext = document.getElementById('btn-next');
+        const logPanel = document.getElementById('log-panel');
+
+        // 새로운 전투 판 세팅 (플레이어 고정, 몬스터 무작위 생성)
+        function initNewSimulation() {
+            // 플레이어는 항상 MaxHP 150, ATK 25로 고정 생성
+            player = new Status("주인공", 150, 25);
+            
+            // 몬스터는 시뮬레이션 카운트에 맞춰 랜덤 스탯 생성
+            monster = Status.createRandomMonster(simCount);
+
+            document.getElementById('monster-name').innerText = monster.name;
+            document.getElementById('monster-atk').innerText = monster.atk;
+
+            updateUI();
+            
+            logPanel.innerHTML = `<div class="log system">⚙️ 시스템: [시뮬레이션 ${simCount}회차] 새로운 적이 출현했습니다. 선제공격을 가하세요.</div>`;
+            
+            btnStrike.disabled = false;
+            btnNext.disabled = true;
+
+            // 핵심 클래스 인스턴스 조립 및 주입
+            currentFight = new Fight(player, monster, {
+                updateUI: updateUI,
+                addLog: addLog,
+                onBattleEnd: handleBattleEnd
+            });
+        }
+
+        // 스탯 및 체력바 UI 동적 갱신
+        function updateUI() {
+            const pPct = (player.hp / player.maxHp) * 100;
+            document.getElementById('player-hp-bar').style.width = `${pPct}%`;
+            document.getElementById('player-hp-text').innerText = `${player.hp} / ${player.maxHp}`;
+
+            const mPct = (monster.hp / monster.maxHp) * 100;
+            document.getElementById('monster-hp-bar').style.width = `${mPct}%`;
+            document.getElementById('monster-hp-text').innerText = `${monster.hp} / ${monster.maxHp}`;
+        }
+
+        // 동적 실시간 스크롤 로그 쌓기
+        function addLog(message, type) {
+            const entry = document.createElement('div');
+            entry.className = `log ${type}`;
+            entry.innerText = message;
+            logPanel.appendChild(entry);
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        // 전투 정상 종료 시 제어 흐름
+        function handleBattleEnd(isPlayerWin) {
+            btnStrike.disabled = true;
+            btnNext.disabled = false;
+            simCount++; // 다음 시뮬레이션 난이도 상승
+        }
+
+        // 이벤트 리스너 바인딩
+        btnStrike.addEventListener('click', () => {
+            btnStrike.disabled = true;
+            currentFight.startBattle();
+        });
+
+        btnNext.addEventListener('click', () => {
+            initNewSimulation();
+        });
+
+        // 어플리케이션 최초 실행 구동
+        initNewSimulation();
+    </script>
+</body>
+</html>
