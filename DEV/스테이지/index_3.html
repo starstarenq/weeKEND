@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>던전 스테이지 루프 시뮬레이터</title>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #262626;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #00ffcc;
+        }
+        .status-panel {
+            background-color: #333333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 5px solid #00ffcc;
+        }
+        .log-panel {
+            background-color: #111111;
+            padding: 15px;
+            height: 250px;
+            overflow-y: auto;
+            border-radius: 5px;
+            font-family: 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+        }
+        .reward-panel {
+            display: none;
+            background-color: #2d3748;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #4ade80;
+            margin-bottom: 20px;
+        }
+        .reward-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        button {
+            background-color: #00ffcc;
+            color: #1a1a1a;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background-color: #00ccaa;
+            transform: scale(1.02);
+        }
+        button:disabled {
+            background-color: #555555;
+            color: #888888;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-reward {
+            background-color: #4ade80;
+            color: #111111;
+            flex: 1;
+        }
+        .btn-reward:hover {
+            background-color: #22c55e;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🎮 던전 스테이지 루프 시뮬레이터</h1>
+    <p style="text-align: center; color: #aaa;">UI(HTML)와 로직(JS)이 분리된 환경 테스트베드</p>
+
+    <!-- 실시간 인게임 데이터 동기화 패널 -->
+    <div class="status-panel">
+        <strong>현재 진행 상태:</strong> <span id="txt-stage">대기 중</span> | 
+        <strong>보상 배율:</strong> <span id="txt-multiplier">x1.0</span>
+    </div>
+
+    <h2>실행 로그</h2>
+    <div id="log" class="log-panel">게임 시작 버튼을 눌러 스테이지를 진행하세요.</div>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <button id="btn-next" onclick="GameManager.progressStage()">게임 시작</button>
+    </div>
+
+    <!-- 보상 팝업 UI 존 -->
+    <div id="reward-ui" class="reward-panel">
+        <h3>🎁 스테이지 클리어! 보상을 선택하세요</h3>
+        <div id="reward-list" class="reward-options"></div>
+    </div>
+</div>
+
+<!-- 핵심 런타임 로직 로드 (같은 폴더 위치) -->
+<script src="stage.js"></script>
+
+</body>
+</html>

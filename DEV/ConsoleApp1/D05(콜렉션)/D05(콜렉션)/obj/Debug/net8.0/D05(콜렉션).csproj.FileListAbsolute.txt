@@ -1,0 +1,14 @@
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\bin\Debug\net8.0\D05(콜렉션).exe
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\bin\Debug\net8.0\D05(콜렉션).deps.json
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\bin\Debug\net8.0\D05(콜렉션).runtimeconfig.json
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\bin\Debug\net8.0\D05(콜렉션).dll
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\bin\Debug\net8.0\D05(콜렉션).pdb
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).AssemblyInfoInputs.cache
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).AssemblyInfo.cs
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).dll
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\refint\D05(콜렉션).dll
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).pdb
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\D05(콜렉션).genruntimeconfig.cache
+C:\Users\Administrator\Downloads\weeKEND-main\DEV\ConsoleApp1\D05(콜렉션)\D05(콜렉션)\obj\Debug\net8.0\ref\D05(콜렉션).dll

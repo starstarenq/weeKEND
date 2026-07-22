@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<monsters>
+    <monster id="M001">
+        <name>무기력한 그림자</name>
+        <type>일반</type>
+        <chapter>유년기</chapter>
+        <description>주인공이 유년기 시절 느꼈던 무기력함이 형상화된 기본 몬스터입니다. 느리게 움직이며 플레이어의 감정을 갉아먹습니다.</description>
+        <stats>
+            <hp>150</hp>
+            <atk>15</atk>
+            <def>5</def>
+            <speed>2.0</speed>
+        </stats>
+        <rewards>
+            <exp>20</exp>
+            <death_crystal>10</death_crystal>
+        </rewards>
+    </monster>
+    <monster id="M002">
+        <name>메카 로키 (흑화)</name>
+        <type>중간보스</type>
+        <chapter>유년기</chapter>
+        <description>주인공이 유년기 시절 가장 소중히 여기던 존재였으나, 점차 잊혀지면서 흑화하여 적대감을 품고 덤벼드는 완구 로봇 형태의 보스입니다.</description>
+        <stats>
+            <hp>1500</hp>
+            <atk>85</atk>
+            <def>40</def>
+            <speed>3.5</speed>
+        </stats>
+        <rewards>
+            <exp>200</exp>
+            <death_crystal>150</death_crystal>
+        </rewards>
+    </monster>
+    <monster id="M003">
+        <name>질풍노도의 불꽃</name>
+        <type>일반</type>
+        <chapter>청소년기</chapter>
+        <description>사춘기 시절의 불안정하고 폭발적인 감정이 불꽃의 형태로 나타난 몬스터입니다. 무작위로 돌진하며 빠른 공격을 펼칩니다.</description>
+        <stats>
+            <hp>350</hp>
+            <atk>35</atk>
+            <def>15</def>
+            <speed>4.5</speed>
+        </stats>
+        <rewards>
+            <exp>45</exp>
+            <death_crystal>25</death_crystal>
+        </rewards>
+    </monster>
+    <monster id="M004">
+        <name>큐피트</name>
+        <type>최종보스</type>
+        <chapter>청소년기</chapter>
+        <description>연애의 감정과 이별의 두려움으로 인해 주인공의 기억 속에서 적으로 돌아서게 된 신족입니다. 화살을 이용해 원거리에서 공격하며 플레이어를 싫어합니다.</description>
+        <stats>
+            <hp>5000</hp>
+            <atk>180</atk>
+            <def>70</def>
+            <speed>5.0</speed>
+        </stats>
+        <rewards>
+            <exp>1000</exp>
+            <death_crystal>500</death_crystal>
+        </rewards>
+    </monster>
+    <monster id="M005">
+        <name>사회적 압박</name>
+        <type>중간보스</type>
+        <chapter>성인</chapter>
+        <description>성인이 된 주인공이 일상 속에서 느낀 무거운 책임감과 스트레스가 형상화된 몬스터입니다. 거대하고 무거운 외형으로 플레이어를 찍어누르는 공격을 합니다.</description>
+        <stats>
+            <hp>3000</hp>
+            <atk>140</atk>
+            <def>120</def>
+            <speed>1.5</speed>
+        </stats>
+        <rewards>
+            <exp>600</exp>
+            <death_crystal>350</death_crystal>
+        </rewards>
+    </monster>
+</monsters>

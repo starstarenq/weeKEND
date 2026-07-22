@@ -2,4 +2,6 @@
   <Project Path="ConsoleApp1/ConsoleApp1.csproj" />
   <Project Path="D02(열거형)/D02(열거형).csproj" Id="ba4e6e04-8479-4449-84d1-273d4e8736e8" />
   <Project Path="D03/D03.csproj" Id="c5e2e45a-9097-4052-b0a8-34cf7e613264" />
+  <Project Path="D04(자료구조)/D04(자료구조).csproj" Id="2c18d921-8073-4926-b261-041a82ba8294" />
+  <Project Path="Potfolio/Potfolio.csproj" Id="632f5b4f-c76d-4b3e-96b7-4bffd630502b" />
 </Solution>

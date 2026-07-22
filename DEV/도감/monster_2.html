@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 몬스터 도감</title>
+    <style>
+        body {
+            background-color: #121214;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #2a2b36;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            color: #8b5cf6;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+        }
+        header p {
+            color: #94a3b8;
+            margin: 0;
+        }
+        .pokedex-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .monster-card {
+            background: linear-gradient(145deg, #1e1e24, #151518);
+            border: 1px solid #2d2d39;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .monster-card:hover {
+            transform: translateY(-5px);
+            border-color: #8b5cf6;
+        }
+        .monster-id {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #4b5563;
+        }
+        .monster-name {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 6px;
+            margin-bottom: 15px;
+        }
+        .tag-chapter { background-color: #3b82f6; color: white; }
+        .tag-type { background-color: #ef4444; color: white; }
+        .monster-desc {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.5;
+            height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 20px;
+        }
+        .stats-panel {
+            background-color: #18181b;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+        .stat-row:last-child { margin-bottom: 0; }
+        .stat-label { color: #a1a1aa; }
+        .stat-value { font-weight: bold; color: #f4f4f5; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>회고인생 몬스터 도감</h1>
+        <p>기억 속 파편들이 만들어낸 존재들의 기록</p>
+    </header>
+
+    <div class="pokedex-container" id="pokedex">
+        <!-- 스크립트에 의해 데이터가 동적 추가됩니다 -->
+    </div>
+
+    <script>
+        // monster.json 파일 대용 데이터 배열 정의
+        const monsterData = [
+            {
+                "id": "No.001",
+                "name": "메카 로키",
+                "chapter": "유년기",
+                "type": "기계 / 어둠",
+                "description": "유년 시절 가장 소중히 여기던 존재의 흑화체. 본래 다정했으나 현재는 거칠고 성격이 나쁩니다.",
+                "hp": 2500, "atk": 120, "def": 85
+            },
+            {
+                "id": "No.002",
+                "name": "학폭의 잔재",
+                "chapter": "청소년기",
+                "type": "유령 / 공포",
+                "description": "학창 시절 기억 속 어두운 감정들이 뭉쳐져 만들어진 형상입니다. 학교 건물 그림자 모습을 띱니다.",
+                "hp": 1200, "atk": 95, "def": 60
+            },
+            {
+                "id": "No.003",
+                "name": "큐피트",
+                "chapter": "청소년기",
+                "type": "천사 / 혼돈",
+                "description": "이별의 두려움이 신족과 융합한 청소년기 최종 보스. 주인공을 마주하자마자 강하게 적대합니다.",
+                "hp": 4800, "atk": 180, "def": 110
+            },
+            {
+                "id": "No.004",
+                "name": "압박과 부담",
+                "chapter": "성인",
+                "type": "정신 / 중력",
+                "description": "사회생활 속 책임감과 스트레스가 괴물로 구현된 보스. 플레이어를 무겁게 짓누릅니다.",
+                "hp": 6000, "atk": 210, "def": 190
+            },
+            {
+                "id": "No.005",
+                "name": "무에르떼",
+                "chapter": "성인",
+                "type": "신족 / 죽음",
+                "description": "죽음을 관장하며 주인공을 사후세계로 인도한 장본인. 감정이 전혀 없고 절대적인 힘을 씁니다.",
+                "hp": 12000, "atk": 350, "def": 250
+            }
+        ];
+
+        const container = document.getElementById('pokedex');
+
+        monsterData.forEach(monster => {
+            const card = document.createElement('div');
+            card.className = 'monster-card';
+            card.innerHTML = `
+                <div class="monster-id">${monster.id}</div>
+                <h2 class="monster-name">${monster.name}</h2>
+                <div>
+                    <span class="tag tag-chapter">${monster.chapter}</span>
+                    <span class="tag tag-type">${monster.type}</span>
+                </div>
+                <div class="monster-desc">${monster.description}</div>
+                <div class="stats-panel">
+                    <div class="stat-row"><span class="stat-label">HP</span><span class="stat-value">${monster.hp}</span></div>
+                    <div class="stat-row"><span class="stat-label">공격력</span><span class="stat-value">${monster.atk}</span></div>
+                    <div class="stat-row"><span class="stat-label">방어력</span><span class="stat-value">${monster.def}</span></div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    </script>
+</body>
+</html>

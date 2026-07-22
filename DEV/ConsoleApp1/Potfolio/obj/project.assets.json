@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\Potfolio\\Potfolio.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\Potfolio\\Potfolio.csproj",
       "projectName": "Potfolio",
-      "projectPath": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\Potfolio\\Potfolio.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\Potfolio\\Potfolio.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\Potfolio\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\Potfolio\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
