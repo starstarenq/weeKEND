@@ -1,0 +1,15 @@
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\bin\Debug\net8.0\Potfolio.exe
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\bin\Debug\net8.0\Potfolio.deps.json
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\bin\Debug\net8.0\Potfolio.runtimeconfig.json
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\bin\Debug\net8.0\Potfolio.dll
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\bin\Debug\net8.0\Potfolio.pdb
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.sourcelink.json
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.dll
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\refint\Potfolio.dll
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.pdb
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\Potfolio.genruntimeconfig.cache
+C:\Users\Administrator\Desktop\weeKEND\DEV\ConsoleApp1\Potfolio\obj\Debug\net8.0\ref\Potfolio.dll

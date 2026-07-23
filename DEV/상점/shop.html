@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 시스템 프로토타입</title>
+    <style>
+        body { background-color: #121212; color: #fff; font-family: 'Malgun Gothic', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { max-width: 600px; width: 100%; background: #1e1e1e; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px rgba(0,0,0,0.5); }
+        h2 { text-align: center; color: #e0e0e0; margin-bottom: 5px; }
+        
+        /* 감정 게이지 스타일 */
+        .gauge-container { margin: 20px 0; background: #333; border-radius: 5px; position: relative; height: 30px; overflow: hidden; border: 1px solid #444; }
+        .gauge-bar { height: 100%; width: 50%; background: linear-gradient(90deg, #ff4d4d 0%, #4d79ff 100%); transition: width 0.3s; }
+        .gauge-text { position: absolute; width: 100%; text-align: center; top: 5px; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; }
+        
+        /* 상태창 */
+        .status-board { background: #2a2a2a; padding: 10px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; display: flex; justify-content: space-between; }
+        .status-board span { font-weight: bold; color: #ffcc00; }
+
+        /* 화면 전환 */
+        .screen { display: none; }
+        .active { display: block; }
+
+        /* 삶의 갈림길 카드 */
+        .cards-container { display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; }
+        .card { flex: 1; background: #2d2d2d; border: 2px solid #444; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .card:hover { border-color: #ffcc00; background: #383838; transform: translateY(-3px); }
+        .card.item-type { border-color: #a333ff; }
+        .card.buff-type { border-color: #33ff77; }
+        .card.money-type { border-color: #ffaa33; }
+
+        /* 상점 아이템 리스트 */
+        .shop-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .shop-item { display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; padding: 12px; border-radius: 6px; border-left: 4px solid #ffcc00; }
+        .shop-item button { background: #ffcc00; color: #000; border: none; padding: 6px 12px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        .shop-item button:disabled { background: #555; color: #aaa; cursor: not-allowed; }
+        
+        /* 시스템 로그 및 버튼 */
+        .log-box { background: #151515; border: 1px solid #333; padding: 10px; height: 80px; overflow-y: auto; font-size: 12px; color: #aaa; border-radius: 4px; margin-top: 15px; }
+        .action-btn { width: 100%; background: #444; color: #fff; border: none; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .action-btn:hover { background: #555; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>회고인생 시스템 검증</h2>
+    
+    <!-- 실시간 감정 게이지 화면 -->
+    <div class="gauge-container">
+        <div id="gaugeBar" class="gauge-bar"></div>
+        <div id="gaugeText" class="gauge-text">감정 상태: 무난함 (50%)</div>
+    </div>
+
+    <!-- 유저 스펙 상태판 -->
+    <div class="status-board">
+        <div>체력: <span id="hp">100</span> / 100</div>
+        <div>궁극기 횟수: <span id="ult">0</span>회</div>
+        <div>데스 크리스탈: <span id="crystal">0</span>개</div>
+    </div>
+
+    <!-- [화면 1] 삶의 갈림길 시스템 -->
+    <div id="forkScreen" class="screen active">
+        <h3 style="text-align: center; color: #ffaa33;">✦ 삶의 갈림길 ✦</h3>
+        <p style="text-align: center; font-size: 13px; color: #aaa;">스테이지를 클리어했습니다. 보상을 선택하세요.</p>
+        <div class="cards-container" id="forkCards">
+            <!-- JS에서 동적으로 카드 생성 -->
+        </div>
+    </div>
+
+    <!-- [화면 2] 기억의 휴식처 시스템 -->
+    <div id="shopScreen" class="screen">
+        <h3 style="text-align: center; color: #33ff77;">⛺ 기억의 휴식처 (상점)</h3>
+        <p style="text-align: center; font-size: 13px; color: #aaa;">휴식처에서 정비를 마치고 다음 스테이지로 이동하세요.</p>
+        
+        <div class="shop-list">
+            <div class="shop-item">
+                <div><strong>체력 회복</strong><br><small style="color:#aaa;">체력을 완전히 회복합니다.</small></div>
+                <button onclick="buyShopItem('heal', 50)">50 크리스탈</button>
+            </div>
+            <div class="shop-item">
+                <div><strong>에스페란사</strong><br><small style="color:#aaa;">체력 전회복 + 궁극기 횟수 +1</small></div>
+                <button onclick="buyShopItem('esperanza', 150)">150 크리스탈</button>
+            </div>
+            <div class="shop-item">
+                <div><strong>응원의 구슬</strong><br><small style="color:#aaa;">무작위 능력치 획득 (중첩 가능)</small></div>
+                <button onclick="buyShopItem('cheer', 80)">80 크리스탈</button>
+            </div>
+        </div>
+
+        <button class="action-btn" onclick="nextStage()">정비 완료 (다음 스테이지 가기)</button>
+    </div>
+
+    <!-- 시스템 실시간 작동 로그 -->
+    <div class="log-box" id="systemLog">시스템이 가동되었습니다. 스테이지 1 클리어 상태입니다.</div>
+</div>
+
+<script src="shop.js"></script>
+</body>
+</html>

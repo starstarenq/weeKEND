@@ -1,17 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\",
+  "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\downloads\\weekend-main\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|solutionrelative:d05(\uCF5C\uB809\uC158)\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\downloads\\weekend-main\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|solutionrelative:d05(\uCF5C\uB809\uC158)\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\downloads\\weekend-main\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|solutionrelative:d05(\uCF5C\uB809\uC158)\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d05(\uCF5C\uB809\uC158)\\d05(\uCF5C\uB809\uC158)\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{22C57F9D-4CEA-4DD2-868B-8B074B1D147A}|D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158).csproj|solutionrelative:d05(\uCF5C\uB809\uC158)\\inventory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -22,45 +22,39 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Monster.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Monster.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Monster.cs",
               "RelativeDocumentMoniker": "D05(\uCF5C\uB809\uC158)\\Monster.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Monster.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Monster.cs",
               "RelativeToolTip": "D05(\uCF5C\uB809\uC158)\\Monster.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-22T10:22:20.337Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-22T10:22:20.337Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "Inventory.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Inventory.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Inventory.cs",
               "RelativeDocumentMoniker": "D05(\uCF5C\uB809\uC158)\\Inventory.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Inventory.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Inventory.cs",
               "RelativeToolTip": "D05(\uCF5C\uB809\uC158)\\Inventory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAADwvxMAAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-22T09:17:17.907Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-22T09:17:17.907Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Program.cs",
               "RelativeDocumentMoniker": "D05(\uCF5C\uB809\uC158)\\Program.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\weeKEND-main\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Program.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D05(\uCF5C\uB809\uC158)\\D05(\uCF5C\uB809\uC158)\\Program.cs",
               "RelativeToolTip": "D05(\uCF5C\uB809\uC158)\\Program.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAkwC4AAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",

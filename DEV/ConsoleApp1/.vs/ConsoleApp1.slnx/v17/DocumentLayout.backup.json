@@ -3,8 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|solutionrelative:d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|solutionrelative:d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5B68813F-23C2-8DF2-1B1F-9033A2893F62}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\consoleapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5B68813F-23C2-8DF2-1B1F-9033A2893F62}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|c:\\users\\administrator\\desktop\\weekend\\dev\\consoleapp1\\d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\d06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{78A9D90B-C724-4957-9167-1141AB6854F7}|D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj|solutionrelative:d06(\uC911\uCCA9\uD074\uB798\uC2A4)\\d06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,21 +26,55 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj",
+              "RelativeDocumentMoniker": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj",
+              "RelativeToolTip": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\D06(\uC911\uCCA9\uD074\uB798\uC2A4).csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-07-23T09:45:51.936Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Player.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Player.cs",
+              "RelativeDocumentMoniker": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Player.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Player.cs",
+              "RelativeToolTip": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Player.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA4AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-23T09:05:30.192Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Program.cs",
+              "RelativeDocumentMoniker": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Program.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Program.cs",
+              "RelativeToolTip": "D06(\uC911\uCCA9\uD074\uB798\uC2A4)\\Program.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAAwB4AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-23T09:05:00.904Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\ConsoleApp1\\Program.cs",
               "RelativeDocumentMoniker": "ConsoleApp1\\Program.cs",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\weeKEND\\DEV\\ConsoleApp1\\ConsoleApp1\\Program.cs",
               "RelativeToolTip": "ConsoleApp1\\Program.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAADwvwAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAAwA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-22T08:55:25.968Z",
               "EditorCaption": ""

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GameDatabase>
+    <!-- 글로벌 게임 설정 및 상수 데이터 -->
+    <GameConfig>
+        <Title>회고인생</Title>
+        <Genre>Realtime Action RPG</Genre>
+        <MaxEquippedSkills>5</MaxEquippedSkills>
+        <MaxActiveDebuffs>3</MaxActiveDebuffs>
+    </GameConfig>
+
+    <!-- 게임 내 핵심 통화 및 재화 시스템 -->
+    <Currencies>
+        <Currency Id="CUR_MEMORY_ORB" Type="Permanent">
+            <Name>기억의 구슬</Name>
+            <Description>회차 클리어 시 지급되는 메인 로비 영구 재화 (스킨 및 특수 아이템 해금용)</Description>
+        </Currency>
+        <Currency Id="CUR_DEATH_CRYSTAL" Type="InGameLoop">
+            <Name>데스 크리스탈</Name>
+            <Description>기억 던전 내 스테이지 클리어 및 처치 시 획득. 해당 회차 종료 시 소멸</Description>
+        </Currency>
+    </Currencies>
+
+    <!-- 등장 캐릭터 데이터베이스 (전투/비전투 개체 통합 관리) -->
+    <Characters>
+        <!-- 플레이어블 캐릭터 데이터 마스터 -->
+        <Character Id="CHAR_PROTAGONIST" Type="Playable">
+            <Name>주인공</Name>
+            <BaseHp>1250</BaseHp>
+            <BaseMp>150</BaseMp>
+            <Description>기억에 간섭하며 선택을 내리는 유저 플레이 캐릭터</Description>
+        </Character>
+
+        <!-- 중립 및 조력자 NPC 데이터 마스터 -->
+        <Character Id="NPC_COSMO" Type="Npc">
+            <Name>코스모</Name>
+            <Faction>Angel</Faction>
+            <Description>행복하고 좋은 기억을 보여주며 긍정적인 선택을 유도하는 천사</Description>
+        </Character>
+        <Character Id="NPC_OCYUSIS" Type="Npc">
+            <Name>오큐시스</Name>
+            <Faction>Demon</Faction>
+            <Description>불행하고 나쁜 기억을 보여주며 부정적인 선택을 유도하는 악마</Description>
+        </Character>
+        <Character Id="NPC_MINOS" Type="Npc">
+            <Name>미노스</Name>
+            <Faction>God</Faction>
+            <Description>지옥의 법원 최고 재판장. 환생과 사후세계 잔류 선택권 부여</Description>
+        </Character>
+
+        <!-- 챕터별 보스 에너미 데이터 마스터 -->
+        <Character Id="BOSS_MECHA_LOKI" Type="Boss">
+            <Name>메카 로키</Name>
+            <SpawnChapterId>CH_1_CHILDHOOD</SpawnChapterId>
+            <Description>유년기 시절 가장 소중히 여기던 존재가 흑화하여 형상화된 중간 보스</Description>
+        </Character>
+        <Character Id="BOSS_CUPID" Type="Boss">
+            <Name>큐피트</Name>
+            <SpawnChapterId>CH_2_TEENAGE</SpawnChapterId>
+            <Description>청소년기 이별의 상처와 사랑에 대한 두려움이 투영된 최종 보스</Description>
+        </Character>
+        <Character Id="BOSS_MUERTE" Type="Boss">
+            <Name>무에르떼</Name>
+            <SpawnChapterId>CH_3_ADULT</SpawnChapterId>
+            <Description>주인공을 사후세계로 이끈 죽음을 관장하는 신. 최종 장 마스터 보스</Description>
+        </Character>
+    </Characters>
+
+    <!-- 맵 환경 및 레벨 디자인 챕터 데이터 -->
+    <WorldStructure>
+        <Chapter Id="CH_1_CHILDHOOD" Order="1">
+            <Name>유년기 던전</Name>
+            <TotalStages>5</TotalStages>
+            <Events>
+                <Event StageIndex="2" Type="MidBossSpawn" TargetCharacterId="BOSS_MECHA_LOKI" />
+                <Event StageIndex="5" Type="FinalBossSpawn" Description="학교 건물 오브젝트 파괴 및 특수 기믹 클리어" />
+            </Events>
+        </Chapter>
+        <Chapter Id="CH_2_TEENAGE" Order="2">
+            <Name>청소년기 던전</Name>
+            <TotalStages>5</TotalStages>
+            <Events>
+                <Event StageIndex="3" Type="MidBossSpawn" Description="사춘기 환영 몬스터 조우" />
+                <Event StageIndex="5" Type="FinalBossSpawn" TargetCharacterId="BOSS_CUPID" />
+            </Events>
+        </Chapter>
+        <Chapter Id="CH_3_ADULT" Order="3">
+            <Name>성인 던전</Name>
+            <TotalStages>7</TotalStages>
+            <Events>
+                <Event StageIndex="2" Type="MidBossSpawn" Description="압박의 보스전 진행" />
+                <Event StageIndex="3" Type="MidBossSpawn" Description="부담의 보스전 진행" />
+                <Event StageIndex="4" Type="MidBossSpawn" Description="압박과 부담 동시 상대 복합 매치" />
+                <Event StageIndex="7" Type="FinalBossSpawn" TargetCharacterId="BOSS_MUERTE" />
+            </Events>
+        </Chapter>
+    </WorldStructure>
+
+    <!-- 시스템 기믹 및 컨디션 테이블 -->
+    <SystemMechanics>
+        <!-- 실시간 난이도 조절용 핵심 감정 게이지 상태 구조 -->
+        <EmotionGaugeSystem>
+            <DefaultValue>50</DefaultValue>
+            <Direction Left="Unhappy" Right="Happy" />
+            <Effects>
+                <Effect OnState="Unhappy" MonsterSpawnRateModifier="+0.2" MonsterStatMultiplier="1.2" Description="난이도 상승" />
+                <Effect OnState="Happy" MonsterSpawnRateModifier="-0.1" MonsterStatMultiplier="0.9" Description="난이도 하락" />
+            </Effects>
+        </EmotionGaugeSystem>
+
+        <!-- 인게임 난입 인카운터 규칙 정의 -->
+        <NpcInteractions>
+            <TriggerCh2Count LimitPerChapter="5" Type="Negative" NpcId="NPC_OCYUSIS">
+                <Name>오큐시스의 장난</Name>
+                <TargetChapterFrom>2</TargetChapterFrom>
+                <RandomPool>
+                    <Debuff>MonsterCountIncrease</Debuff>
+                    <Debuff>MonsterStatBuff</Debuff>
+                    <Debuff>PreemptiveAggroActive</Debuff>
+                </RandomPool>
+                <CompensationDescription>디메리트 활성화 수치에 비례한 데스 크리스탈 보상 보너스 적용</CompensationDescription>
+            </TriggerCh2Count>
+            <TriggerCh1Count LimitPerChapter="3" Type="Positive" NpcId="NPC_COSMO">
+                <Name>코스모의 가호</Name>
+                <TargetChapterFrom>1</TargetChapterFrom>
+                <RandomPool>
+                    <Buff>AttackPowerIncrease</Buff>
+                    <Buff>MaxHpIncrease</Buff>
+                </RandomPool>
+                <InteractionRuleDescription>오큐시스의 장난과 충돌 시 상호 확정 상쇄 처리</InteractionRuleDescription>
+            </TriggerCh1Count>
+        </NpcInteractions>
+    </SystemMechanics>
+
+    <!-- 스킬 데이터베이스 (C# Dictionary 매핑 최적화용) -->
+    <Skills>
+        <Skill Id="SKILL_ULTIMATE" SlotType="Q">
+            <Name>캐릭터 고유 궁극기</Name>
+            <LimitCountPerChapter>3</LimitCountPerChapter>
+            <UnlockCondition>전생 메모리실 첫 기억 챕터 클리어 (회차 진행 시 잠금 초기화)</UnlockCondition>
+        </Skill>
+        <Skill Id="SKILL_SUB_COSMO" SlotType="MouseRight">
+            <Name>코스모의 가호 스킬</Name>
+            <QuestCondition>불행했던 기억 스테이지를 감정 게이지 100% 상태로 클리어</QuestCondition>
+            <EquipRestriction>오큐시스 스킬과 동시 장착 불가</EquipRestriction>
+        </Skill>
+        <Skill Id="SKILL_SUB_OCYUSIS" SlotType="MouseRight">
+            <Name>오큐시스의 장난 스킬</Name>
+            <QuestCondition>행복했던 기억 스테이지를 감정 게이지 10% 이하 상태로 클리어</QuestCondition>
+            <EquipRestriction>코스모 스킬과 동시 장착 불가</EquipRestriction>
+        </Skill>
+    </Skills>
+
+    <!-- 드롭 및 상점 판매 아이템 데이터베이스 -->
+    <ItemDatabase>
+        <Item Id="ITEM_ESPERANZA" Type="Consumable">
+            <Name>에스페란사</Name>
+            <Effects>
+                <Effect Type="FullHpRecovery" Value="0" />
+                <Effect Type="UltimateChargeCount" Value="1" />
+            </Effects>
+        </Item>
+        <Item Id="ITEM_CHEERING_BALL" Type="Gacha">
+            <Name>응원의 구슬</Name>
+            <Price CurrencyId="CUR_DEATH_CRYSTAL">100</Price>
+            <EffectDescription>구매 즉시 무작위 버프 효과 및 스탯 계수를 랜덤하게 영구 중첩 적용</EffectDescription>
+        </Item>
+    </ItemDatabase>
+</GameDatabase>

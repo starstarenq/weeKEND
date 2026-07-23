@@ -1,0 +1,16 @@
+[
+  {
+    "Id": "ITEM_ESPERANZA",
+    "Name": "에스페란사",
+    "Type": "Consumable",
+    "Description": "체력을 모두 회복하고 궁극기 횟수를 1 증가시킵니다.",
+    "Value": 1
+  },
+  {
+    "Id": "ITEM_CHEERING_BALL",
+    "Name": "응원의 구슬",
+    "Type": "Gacha",
+    "Description": "사용 시 랜덤한 버프 스탯을 획득합니다.",
+    "Value": 0
+  }
+]

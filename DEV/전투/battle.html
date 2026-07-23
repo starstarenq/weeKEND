@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 무한 전투 시스템 프로토타입</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Malgun Gothic', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 { margin-bottom: 10px; color: #e0e0e0; }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1000px;
+            width: 100%;
+        }
+        canvas {
+            background-color: #2d2d2d;
+            border: 2px solid #444;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            cursor: crosshair;
+        }
+        .panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .controls {
+            background-color: #252526;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #3c3c3c;
+        }
+        .controls ul { margin: 5px 0 0 0; padding-left: 20px; color: #cccccc; }
+        .controls li { margin-bottom: 5px; }
+        .battle-log {
+            background-color: #000000;
+            border: 1px solid #3c3c3c;
+            border-radius: 6px;
+            padding: 15px;
+            height: 280px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+            color: #00ff00;
+        }
+        .log-system { color: #888888; }
+        .log-hit { color: #4fc1ff; font-weight: bold; }
+        .log-ult { color: #ffcc00; font-weight: bold; }
+        .log-miss { color: #ff8888; }
+        .log-aggro { color: #ff00ff; font-weight: bold; }
+        .log-spawn { color: #107c41; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>회고인생 (Realtime Action RPG) - 전방 부채꼴 및 무한 젠 테스트</h2>
+    
+    <div class="container">
+        <!-- 게임 화면 렌더링 영역 -->
+        <canvas id="gameCanvas" width="600" height="450"></canvas>
+        
+        <!-- 우측 컨트롤 및 실시간 로그 패널 -->
+        <div class="panel">
+            <div class="controls">
+                <strong>[전투 조작 가이드]</strong>
+                <ul>
+                    <li><span style="color: #569cd6; font-weight: bold;">W, A, S, D</span> : 플레이어 이동 (이동 방향으로 조준선 변경)</li>
+                    <li><span style="color: #4fc1ff; font-weight: bold;">마우스 좌클릭</span> : 일반 공격 (전방 <span style="color: #ffcc00;">부채꼴 범위 80도</span> 판정)</li>
+                    <li><span style="color: #ffcc00; font-weight: bold;">Q</span> : 궁극기 (화면 전체 판정, 챕터당 3회 제한)</li>
+                    <li>적이 쓰러지면 새로운 몬스터가 즉시 다른 좌표에 무한 스폰됩니다.</li>
+                </ul>
+            </div>
+            
+            <div class="battle-log" id="battleLog">
+                <div class="log-system">[시스템] 무한 전투 프로토타입 시뮬레이터가 시작되었습니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 외부 스크립트 파일 연동 -->
+    <script src="battle.js"></script>
+</body>
+</html>

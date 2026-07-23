@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "D04(자료구조)/1.0.0": {
+        "runtime": {
+          "D04(자료구조).dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "D04(자료구조)/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

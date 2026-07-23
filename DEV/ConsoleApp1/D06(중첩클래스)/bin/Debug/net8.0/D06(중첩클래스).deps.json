@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "D06(중첩클래스)/1.0.0": {
+        "runtime": {
+          "D06(중첩클래스).dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "D06(중첩클래스)/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
