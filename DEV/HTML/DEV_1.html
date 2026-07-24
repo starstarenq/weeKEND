@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>웹 게임 데이터 관리자</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #ffffff;
+            font-family: 'Malgun Gothic', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 380px;
+        }
+        h2 { text-align: center; color: #4caf50; margin-top: 0; }
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        label { font-weight: bold; width: 120px; }
+        input {
+            width: 200px;
+            padding: 8px;
+            background-color: #3d3d3d;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4caf50;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover { background-color: #45a049; }
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 6px;
+            border-left: 5px solid #555;
+            min-height: 100px;
+            white-space: pre-line;
+            font-family: monospace;
+        }
+        .success { border-left-color: #4caf50; color: #a3e635; }
+        .error { border-left-color: #f44336; color: #f87171; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🎮 GAME DATABASE UI</h2>
+    
+    <!-- 1. UI 입력 창 구성 -->
+    <div class="input-group"><label>최대 체력:</label><input type="text" id="txtMaxHp" value="100"></div>
+    <div class="input-group"><label>현재 체력:</label><input type="text" id="txtCurrentHp" value="100"></div>
+    <div class="input-group"><label>점수:</label><input type="text" id="txtScore" value="0"></div>
+    <div class="input-group"><label>돈 (재화):</label><input type="text" id="txtMoney" value="0"></div>
+    <div class="input-group"><label>폭탄 개수:</label><input type="text" id="txtBomb" value="3"></div>
+    <div class="input-group"><label>이동 속도:</label><input type="text" id="txtSpeed" value="5.0"></div>
+
+    <button onclick="applyGameData()">데이터 변수 적용</button>
+
+    <!-- 2. 결과 출력 영역 -->
+    <div id="resultBox" class="result-box">[결과 대기 중]</div>
+</div>
+
+<script>
+    // 3. 실제 데이터를 저장할 전역 게임 변수
+    let maxHp = 100;
+    let currentHp = 100;
+    let score = 0;
+    let money = 0;
+    let bombCount = 3;
+    let speed = 5.0;
+
+    // C#의 TryParse 기능을 자바스크립트로 흉내 낸 안전 변환 함수
+    function tryParseInt(value) {
+        let parsed = parseInt(value, 10);
+        // 공백이거나, 소수점이 포함되었거나, 숫자가 아니면 실패(null) 반환
+        if (isNaN(parsed) || value.includes('.') || parsed.toString() !== value.trim()) return null;
+        return parsed;
+    }
+
+    function tryParseFloat(value) {
+        let parsed = parseFloat(value);
+        if (isNaN(parsed) || parsed.toString() !== value.trim() && !value.endsWith('.')) return null;
+        return parsed;
+    }
+
+    // 4. 버튼 클릭 시 데이터 검증 및 적용 로직
+    function applyGameData() {
+        const resBox = document.getElementById("resultBox");
+        
+        // 입력 박스에서 문자열 가져오기
+        let rawMaxHp = document.getElementById("txtMaxHp").value;
+        let rawCurrentHp = document.getElementById("txtCurrentHp").value;
+        let rawScore = document.getElementById("txtScore").value;
+        let rawMoney = document.getElementById("txtMoney").value;
+        let rawBomb = document.getElementById("txtBomb").value;
+        let rawSpeed = document.getElementById("txtSpeed").value;
+
+        let failedFields = [];
+
+        // TryParse 검증 수행
+        let pMaxHp = tryParseInt(rawMaxHp);
+        if (pMaxHp === null) failedFields.push("최대체력(정수)");
+
+        let pCurrentHp = tryParseInt(rawCurrentHp);
+        if (pCurrentHp === null) failedFields.push("현재체력(정수)");
+
+        let pScore = tryParseInt(rawScore);
+        if (pScore === null) failedFields.push("점수(정수)");
+
+        let pMoney = tryParseInt(rawMoney);
+        if (pMoney === null) failedFields.push("돈(정수)");
+
+        let pBomb = tryParseInt(rawBomb);
+        if (pBomb === null) failedFields.push("폭탄개수(정수)");
+
+        let pSpeed = tryParseFloat(rawSpeed);
+        if (pSpeed === null) failedFields.push("속도(실수)");
+
+        // 5. 결과 화면 처리
+        if (failedFields.length === 0) {
+            // 변출에 실제 값 대입
+            maxHp = pMaxHp;
+            currentHp = pCurrentHp;
+            score = pScore;
+            money = pMoney;
+            bombCount = pBomb;
+            speed = pSpeed;
+
+            resBox.className = "result-box success";
+            resBox.innerHTML = ` [변수 데이터 적용 완료]
+            • 체력: ${currentHp} / ${maxHp}
+            • 점수: ${score}
+            • 재화: ${money} G
+            • 폭탄: ${bombCount} 개
+            • 속도: ${speed} f`;
+        } else {
+            resBox.className = "result-box error";
+            resBox.innerHTML = ` [입력 오류 발생]
+            잘못된 타입 항목:
+            (${failedFields.join(", ")})`;
+        }
+    }
+</script>
+
+</body>
+</html>
