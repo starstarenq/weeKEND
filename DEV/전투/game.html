@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 실시간 심리스 배틀 시뮬레이터</title>
+    <style>
+        body {
+            background-color: #0b0b11;
+            color: #e2e8f0;
+            font-family: 'Malgun Gothic', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #f1f5f9;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        #game-container {
+            width: 900px;
+            background: #1e1e2f;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .system-bar {
+            background: #11111b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #334155;
+        }
+
+        .gauge-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .gauge-container {
+            width: 100%;
+            height: 24px;
+            background: #334155;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, #ef4444 0%, #3b82f6 100%);
+            transition: width 0.3s ease;
+        }
+
+        .gauge-center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: #ffffff;
+            opacity: 0.5;
+        }
+
+        .status-effects {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .effect-card {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .effect-cosmo {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid #3b82f6;
+            color: #60a5fa;
+        }
+
+        .effect-ocyusis {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #ef4444;
+            color: #f87171;
+        }
+
+        .battle-field {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            height: 320px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .actor {
+            position: absolute;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .player {
+            width: 40px;
+            height: 40px;
+            background: #6366f1;
+            border: 2px solid #fff;
+            box-shadow: 0 0 15px #6366f1;
+            z-index: 10;
+            cursor: default;
+        }
+
+        .monster {
+            width: 35px;
+            height: 35px;
+            background: #94a3b8;
+            border: 1px solid #cbd5e1;
+        }
+
+        .monster.hostile {
+            background: #dc2626;
+            box-shadow: 0 0 10px #dc2626;
+            border: 1px solid #f87171;
+        }
+
+        .player-status {
+            display: flex;
+            justify-content: space-between;
+            background: #11111b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .hp-bar-bg {
+            width: 200px;
+            height: 15px;
+            background: #475569;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            width: 100%;
+            background: #10b981;
+            transition: width 0.1s ease;
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-log {
+            flex: 2;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            height: 140px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+            color: #cbd5e1;
+        }
+
+        .skills-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        button.ult-btn {
+            background: #8b5cf6;
+            grid-column: span 2;
+        }
+
+        button.ult-btn:hover {
+            background: #7c3aed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>회고인생 (Realtime Action RPG)</h1>
+    <div class="subtitle">ES6 독립 모듈 파이프라인 결합 아키텍처</div>
+
+    <div id="game-container">
+
+        <!-- 1. 감정 게이지 시스템 연동 영역 -->
+        <div class="system-bar">
+            <div class="gauge-title">
+                <span style="color: #f87171;">🔴 불행 (난이도 상승)</span>
+                <span id="gauge-text">인프라 모듈 로드 중...</span>
+                <span style="color: #60a5fa;">🔵 행복 (난이도 하락)</span>
+            </div>
+            <div class="gauge-container">
+                <div class="gauge-fill" id="emotion-gauge"></div>
+                <div class="gauge-center-line"></div>
+            </div>
+        </div>
+
+        <!-- 2. 신족 상태바 데이터 출력 영역 -->
+        <div class="status-effects">
+            <div class="effect-card effect-cosmo" id="cosmo-status">😇 코스모의 가호: 시스템 스캔 중</div>
+            <div class="effect-card effect-ocyusis" id="ocyusis-status">😈 오큐시스의 장난: 시스템 스캔 중</div>
+        </div>
+
+        <!-- 3. 실시간 배틀 필드 컴포넌트 -->
+        <div class="battle-field" id="battle-field">
+            <div class="actor player" id="player" style="left: 100px; top: 140px;">주인공</div>
+
+            <div class="actor monster" id="mob-1">인물 A</div>
+            <div class="actor monster" id="mob-2">인물 B</div>
+            <div class="actor monster" id="mob-3">인물 C</div>
+        </div>
+
+        <!-- 4. 상태창 컴포넌트 -->
+        <div class="player-status">
+            <div class="stat-group">
+                <div><strong>주인공 상태:</strong> <span id="player-condition">--</span></div>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span>HP:</span>
+                    <div class="hp-bar-bg">
+                        <div class="hp-bar-fill" id="hp-fill"></div>
+                    </div>
+                    <span id="hp-text">-- / --</span>
+                </div>
+            </div>
+            <div class="stat-group" style="text-align: right;">
+                <div>보유 재화(데스 크리스탈): <span id="crystal-count" style="color:#fbbf24; font-weight:bold;">0</span> DC</div>
+                <div>궁극기 가능 횟수: <span id="ult-count" style="color:#a78bfa; font-weight:bold;">0</span>/3 회</div>
+            </div>
+        </div>
+
+        <!-- 5. 유저 명령 입력 컨트롤 패널 -->
+        <div class="control-panel">
+            <div class="action-log" id="log-box">
+                [시스템] 외부 개별 모듈들이 정밀 동기화되었습니다. 필드의 인물을 마우스로 선택하면 자율 선제전투 시스템이 가동됩니다.
+            </div>
+            <div class="skills-grid">
+                <button onclick="window.game.executeBasicAttack()">일반 공격 (L-Click)</button>
+                <button onclick="window.game.executeEvasion()">회피 (Shift)</button>
+                <button class="ult-btn" id="ult-btn" onclick="window.game.executeUltimate()">궁극기 발동 (Q)</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 
+      [핵심 바인딩] 
+      type="module" 설정을 통해 분리된 모든 서브 모듈(Player, Monster, EmotionSystem)들을 
+      내부적으로 병렬 호출 및 연결하는 GameManager 중추 코어 파일을 최종 마운트합니다.
+    -->
+    <script type="module" src="./GameManager.js"></script>
+    <script type="module">
+        // 로드 레이턴시 방지: 모듈 가동이 완전히 확보된 시점에 DOM 이벤트 리스너를 결합합니다.
+        document.getElementById('mob-1').onclick = () => window.game.startCombatWith('mob-1');
+        document.getElementById('mob-2').onclick = () => window.game.startCombatWith('mob-2');
+        document.getElementById('mob-3').onclick = () => window.game.startCombatWith('mob-3');
+    </script>
+</body>
+
+</html>

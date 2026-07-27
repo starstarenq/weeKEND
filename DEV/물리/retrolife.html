@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>회고인생 요약 시뮬레이터</title>
+    <style>
+        body {
+            background: #0b0c10;
+            color: #fff;
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        canvas {
+            background: #121212;
+            border: 2px solid #66fcf1;
+            margin-top: 10px;
+        }
+
+        .ui-box {
+            margin: 10px auto;
+            width: 750px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+    <!-- 고도 객체 지향 및 모듈러 설계에 입각한 외부 컴포넌트 클래스 선적 결합부 -->
+    <script src="bounce.js"></script>
+    <script src="player.js"></script>
+    <script src="boss.js"></script>
+</head>
+
+<body>
+    <h2>회고인생 (Realtime Action RPG) 완벽 클래스 분리형 시뮬레이터</h2>
+    <p>[조작] 이동: W, A, S, D | 대시: Shift | 공격: 마우스 클릭 (선제 타격 시 전투 개시)</p>
+
+    <div class="ui-box">
+        <div>감정 지수: <span id="txt-emo">50</span>% (낮을수록 보스 가속/데미지 감소)</div>
+        <div>데스 크리스탈: <span id="txt-cry">0</span></div>
+    </div>
+
+    <canvas id="gameCanvas" width="750" height="400"></canvas>
+
+    <div style="margin-top:10px;">
+        <button onclick="changeChapter(1)">1챕터 (메카 로키)</button>
+        <button onclick="changeChapter(2)">2챕터 (큐피트)</button>
+        <button onclick="changeChapter(3)">3챕터 (무에르떼)</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 1. 상태 데이터 모델 세팅
+        let game = { emotion: 50, crystal: 0, keys: {} };
+
+        // 외부 분리 클래스 생성을 통한 완벽 객체 지향 매핑 연동
+        let player = new Player(100, 200);
+        let boss = new Boss();
+
+        let projectiles = [];
+
+        // 가상 이펙트 대체 구조체
+        let breakEngine = { shakeTime: 0, shakeIntensity: 0, fragments: [] };
+
+        // 2. 입력 감지 수용 파트
+        window.addEventListener('keydown', (e) => {
+            game.keys[e.key.toLowerCase()] = true;
+            if (e.key === 'Shift') player.triggerDash();
+        });
+        window.addEventListener('keyup', (e) => game.keys[e.key.toLowerCase()] = false);
+
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            let targetX = e.clientX - rect.left;
+            let targetY = e.clientY - rect.top;
+
+            if (breakEngine.shakeTime > 0) {
+                targetX -= (Math.random() * 2 - 1) * breakEngine.shakeIntensity;
+                targetY -= (Math.random() * 2 - 1) * breakEngine.shakeIntensity;
+            }
+
+            const angle = Math.atan2(targetY - player.y, targetX - player.x);
+            projectiles.push({ x: player.x, y: player.y, vx: Math.cos(angle) * 8, vy: Math.sin(angle) * 8, r: 5 });
+        });
+
+        function applyImpact(intensity, duration) {
+            breakEngine.shakeIntensity = intensity;
+            breakEngine.shakeTime = duration;
+        }
+
+        function createFragments(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 4 + 2;
+                breakEngine.fragments.push({
+                    x: x, y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed - 1,
+                    radius: Math.random() * 3 + 1.5,
+                    alpha: 1,
+                    decay: Math.random() * 0.03 + 0.02,
+                    gravity: 0.12,
+                    friction: 0.96,
+                    color: color
+                });
+            }
+        }
+
+        // 3. 동적 업데이트 루프 파이프라인
+        function update() {
+            // 객체 인스턴스 메서드를 호출하여 물리 연산 명령 하달
+            player.update(game.keys, canvas.width, canvas.height);
+            boss.update(player, game.emotion);
+
+            // 파편 입자 시뮬레이션 감쇠 연산
+            if (breakEngine.shakeTime > 0) breakEngine.shakeTime--;
+            for (let i = breakEngine.fragments.length - 1; i >= 0; i--) {
+                let f = breakEngine.fragments[i];
+                f.vy += f.gravity;
+                f.vx *= f.friction; f.vy *= f.friction;
+                f.x += f.vx; f.y += f.vy;
+                f.alpha -= f.decay;
+                if (f.alpha <= 0) breakEngine.fragments.splice(i, 1);
+            }
+
+            // 투사체 충돌 루프 검사
+            for (let i = projectiles.length - 1; i >= 0; i--) {
+                let p = projectiles[i]; p.x += p.vx; p.y += p.vy;
+                let dist = Math.hypot(boss.x - p.x, boss.y - p.y);
+
+                if (dist < boss.r + p.r && boss.hp > 0) {
+                    projectiles.splice(i, 1);
+
+                    if (!boss.isAggro) {
+                        boss.isAggro = true;
+                        game.emotion = Math.max(0, game.emotion - 15);
+                    }
+
+                    let dmg = game.emotion < 40 ? 9 : 15;
+                    boss.hp -= dmg;
+
+                    applyImpact(4, 6);
+                    createFragments(boss.x, boss.y, 8, boss.color);
+
+                    if (boss.hp <= 0) {
+                        applyImpact(12, 20);
+                        createFragments(boss.x, boss.y, 30, boss.color);
+                        game.crystal += 250;
+                        game.emotion = Math.min(100, game.emotion + 20);
+                    }
+                }
+            }
+
+            // 주인공 몸체 원형 히트박스 충돌 및 넉백 연동 처리 검사
+            if (boss.isAggro && boss.hp > 0) {
+                let distToPlayer = Math.hypot(player.x - boss.x, player.y - boss.y);
+
+                if (distToPlayer < player.r + boss.r && !player.isDash) {
+                    if (boss.state === 'dashing') {
+                        player.hp = Math.max(0, player.hp - 15);
+
+                        // ==========================================
+                        // 외부 독립 분리 파일 bounce.js의 핵심 넉백 연동
+                        // ==========================================
+                        if (typeof BounceEngine !== 'undefined') {
+                            BounceEngine.applyRandomKnockback(player, 18);
+                        }
+
+                        applyImpact(10, 15);
+                        createFragments(player.x, player.y, 15, '#66fcf1');
+
+                        boss.state = 'normal';
+                        boss.nextDashTime = Date.now() + 2000;
+                    } else {
+                        player.hp = Math.max(0, player.hp - 0.5);
+                    }
+
+                    if (player.hp <= 0) {
+                        resetGame();
+                    }
+                }
+            }
+
+            document.getElementById('txt-emo').innerText = game.emotion;
+            document.getElementById('txt-cry').innerText = game.crystal;
+        }
+
+        // 4. 스크린 드로잉 파이프라인
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+
+            if (breakEngine.shakeTime > 0) {
+                ctx.translate((Math.random() * 2 - 1) * breakEngine.shakeIntensity, (Math.random() * 2 - 1) * breakEngine.shakeIntensity);
+            }
+
+            // 인스턴스 위임 그래픽 렌더
+            player.draw(ctx);
+            boss.draw(ctx);
+
+            projectiles.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill(); });
+            breakEngine.fragments.forEach(f => {
+                ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                ctx.fillStyle = f.color; ctx.globalAlpha = f.alpha; ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+            ctx.restore();
+        }
+
+        // 5. 정비 및 리로더 인터페이스
+        function changeChapter(ch) {
+            boss.loadChapterData(ch);
+            player.x = 100; player.y = 200; player.hp = 100; player.vx = 0; player.vy = 0;
+            projectiles = [];
+            breakEngine.fragments = [];
+        }
+
+        function resetGame() {
+            game.emotion = 50; game.crystal = 0;
+            player = new Player(100, 200);
+            boss = new Boss();
+            projectiles = [];
+            breakEngine.fragments = [];
+        }
+
+        function loop() { update(); draw(); requestAnimationFrame(loop); }
+        loop();
+    </script>
+</body>
+
+</html>
