@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이미지 크기 조절 시뮬레이터</title>
+    <style>
+        /* 화면 전체 여백을 없애고 정중앙 정렬 환경 구축 */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+            font-family: sans-serif;
+        }
+
+        /* 왼쪽 상단 크기 조절 컨트롤러 */
+        .control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-group label {
+            display: inline-block;
+            width: 50px;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 80px;
+            padding: 4px;
+            border: 1px solid #555;
+            background: #333;
+            color: #fff;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* 중앙 이미지 스타일 (초기 크기는 JS로 제어) */
+        #center-image {
+            object-fit: fill;
+            /* 지정한 크기대로 강제 맞춤, 비율 유지를 원하면 contain으로 변경 */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: width 0.1s, height 0.1s;
+            /* 크기 변경 시 부드러운 효과 */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 크기 설정 컨트롤러 -->
+    <div class="control-panel">
+        <div class="input-group">
+            <label for="img-width">너비:</label>
+            <input type="number" id="img-width" value="500" min="10"> px
+        </div>
+        <div class="input-group">
+            <label for="img-height">높이:</label>
+            <input type="number" id="img-height" value="500" min="10"> px
+        </div>
+    </div>
+
+    <!-- 이미지 태그 -->
+    <img id="center-image" src="회고인생.png" alt="회고인생 이미지">
+
+    <script>
+        const img = document.getElementById('center-image');
+        const widthInput = document.getElementById('img-width');
+        const heightInput = document.getElementById('img-height');
+
+        // 입력값을 이미지 크기에 적용하는 함수
+        function updateImageSize() {
+            img.style.width = widthInput.value + 'px';
+            img.style.height = heightInput.value + 'px';
+        }
+
+        // 입력창 값이 바뀔 때마다 실시간 적용
+        widthInput.addEventListener('input', updateImageSize);
+        heightInput.addEventListener('input', updateImageSize);
+
+        // 이미지 로드 완료 시 원본 크기를 자동으로 입력창에 세팅 (선택 사항)
+        img.onload = function () {
+            widthInput.value = img.naturalWidth;
+            heightInput.value = img.naturalHeight;
+            updateImageSize();
+        };
+    </script>
+</body>
+
+</html>

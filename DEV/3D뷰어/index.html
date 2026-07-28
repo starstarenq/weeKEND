@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FBX 애니메이션 시뮬레이터</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            font-family: sans-serif;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #ui-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 10;
+        }
+
+        .btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #45a049;
+        }
+
+        #info {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 5px;
+        }
+
+        #anim-list {
+            margin-top: 10px;
+            font-size: 13px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .anim-item {
+            padding: 4px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+        }
+
+        .anim-item:hover {
+            background: #333;
+        }
+
+        .active-anim {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+    </style>
+    <!-- Three.js 및 FBX Loader, OrbitControls 로드 (file:// 호환 CDN) -->
+
+</head>
+
+<body>
+
+    <div id="ui-panel">
+        <h3>FBX 시뮬레이터</h3>
+        <!-- 브라우저 CORS 보안 우회를 위해 input play 사용 -->
+        <label for="file-input" style="font-size: 13px; color: #ffeb3b; display: block; margin-bottom: 5px;">
+            ⚠️ 브라우저 보안으로 인해 아래 [파일 선택]을 누르고 같은 폴더의 <b>a.fbx</b>를 한 번 선택해주세요.
+        </label>
+        <input type="file" id="file-input" accept=".fbx">
+        <div id="info">모델 상태: 대기 중...</div>
+        <div id="anim-list"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script>
+        // 1. 기본 씬 설정
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a1a1a);
+        scene.fog = new THREE.FogExp2(0x1a1a1a, 0.005);
+
+        // 카메라
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+        camera.position.set(100, 200, 300);
+
+        // 렌더러
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        container.appendChild(renderer.domElement);
+
+        // 컨트롤
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, 100, 0);
+        controls.update();
+
+        // 조명
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.4);
+        hemiLight.position.set(0, 200, 0);
+        scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(0, 200, 100);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        // 바닥 격자
+        const grid = new THREE.GridHelper(2000, 20, 0x000000, 0x555555);
+        scene.add(grid);
+
+        // 변수 초기화
+        let mixer;
+        const clock = new THREE.Clock();
+        let currentModel = null;
+        let actions = {};
+
+        // 2. 파일 입력 처리 (CORS 우회 핵심)
+        document.getElementById('file-input').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('info').innerText = "로딩 중...";
+
+            // 기존 모델 제거
+            if (currentModel) scene.remove(currentModel);
+            actions = {};
+            document.getElementById('anim-list').innerHTML = '';
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const contents = event.target.result;
+                const loader = new THREE.FBXLoader();
+
+                try {
+                    // ArrayBuffer 데이터로부터 FBX 파싱
+                    const fbx = loader.parse(contents, '');
+                    currentModel = fbx;
+
+                    // 모델 크기 조절 및 씬 추가
+                    fbx.scale.setScalar(1); // 모델이 너무 크거나 작으면 이 값을 조절하세요 (예: 0.1 또는 10)
+                    scene.add(fbx);
+
+                    document.getElementById('info').innerText = `모델 로드 완료!`;
+
+                    // 애니메이션 처리
+                    if (fbx.animations && fbx.animations.length > 0) {
+                        mixer = new THREE.AnimationMixer(fbx);
+                        let mixamoAction = null;
+
+                        fbx.animations.forEach((clip, index) => {
+                            const action = mixer.clipAction(clip);
+                            actions[clip.name] = action;
+
+                            // UI 목록 추가
+                            const item = document.createElement('div');
+                            item.className = 'anim-item';
+                            item.innerText = `${index + 1}. ${clip.name}`;
+                            item.onclick = () => playAnimation(clip.name);
+                            document.getElementById('anim-list').appendChild(item);
+
+                            // mixamo.com 이름이 포함된 애니메이션 탐색
+                            if (clip.name.toLowerCase().includes('mixamo.com')) {
+                                mixamoAction = clip.name;
+                            }
+                        });
+
+                        // 우선순위: mixamo.com 애니메이션 -> 없으면 첫 번째 애니메이션 자동 재생
+                        const defaultAnim = mixamoAction || fbx.animations[0].name;
+                        playAnimation(defaultAnim);
+                    } else {
+                        document.getElementById('info').innerText += " (애니메이션 없음)";
+                    }
+
+                    // 카메라 포커스 맞추기
+                    const box = new THREE.Box3().setFromObject(fbx);
+                    const center = box.getCenter(new THREE.Vector3());
+                    controls.target.copy(center);
+                    camera.position.set(center.x, center.y + (box.getSize(new THREE.Vector3()).y * 1.2), center.z + (box.getSize(new THREE.Vector3()).z * 2));
+                    controls.update();
+
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('info').innerText = "에러: FBX 형식을 확인하세요.";
+                }
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+
+        // 3. 애니메이션 재생 함수
+        function playAnimation(name) {
+            // 모든 애니메이션 정지
+            Object.values(actions).forEach(action => action.stop());
+
+            // 선택한 애니메이션 재생
+            if (actions[name]) {
+                actions[name].play();
+                document.getElementById('info').innerText = `재생 중: ${name}`;
+
+                // UI 하이라이트 활성화
+                const items = document.querySelectorAll('.anim-item');
+                items.forEach(item => {
+                    if (item.innerText.includes(name)) item.classList.add('active-anim');
+                    else item.classList.remove('active-anim');
+                });
+            }
+        }
+
+        // 4. 애니메이션 루프
+        window.addEventListener('resize', onWindowResize);
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const delta = clock.getDelta();
+            if (mixer) mixer.update(delta);
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+
+</html>
