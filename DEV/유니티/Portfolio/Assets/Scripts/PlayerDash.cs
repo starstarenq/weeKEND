@@ -6,14 +6,30 @@ public class PlayerDash : MonoBehaviour
 {
     private CharacterController controller;
 
-    [Header("회피/돌진(Dash) 설정")]
-    public float dashSpeed = 15f;       // 돌진 속도 (원하는 속도감에 맞게 인스펙터에서 수정)
-    public float dashDuration = 0.2f;    // 돌진 지속 시간 (초 단위)
-    public float dashCooldown = 1.0f;    // 회피 재사용 대기시간
+    [Header("Movement Settings")]
+    public float moveSpeed = 6f;
+    public float gravity = -20f;        // 점프 후 더 빠르게 내려오도록 중력 기본값 강화
+    public float jumpHeight = 2f;
 
-    private bool isDashing = false;      // 현재 돌진 중인지 여부
-    private bool isCooldown = false;     // 쿨타임 여부
-    public bool isInvincible = false;    // 무적 상태 플래그 (타 스크립트에서 참조 가능)
+    private Vector3 moveDirection;
+    private Vector3 velocity;
+
+    [Header("Ground Check Settings")]
+    public Transform groundCheck;       // 캐릭터 발밑에 배치할 빈 오브젝트 (가장 중요)
+    public float groundDistance = 0.3f; // 바닥 감지 반경
+    public LayerMask groundMask;        // 바닥으로 인식할 레이어
+    private bool isGrounded;            // 실시간 바닥 체크 결과
+
+    [Header("Dash Settings")]
+    public float dashSpeed = 25f;
+    public float dashDuration = 1f;
+    public float dashCooldown = 2f;
+
+    private bool isDashing = false;
+    private bool canDash = true;
+
+    [HideInInspector]
+    public bool isInvincible = false;
 
     void Start()
     {
@@ -22,59 +38,73 @@ public class PlayerDash : MonoBehaviour
 
     void Update()
     {
-        // 대시 중이 아니고 쿨타임이 아닐 때, Shift 키 입력 감지
-        if (!isDashing && !isCooldown && Input.GetKeyDown(KeyCode.LeftShift))
+        if (isDashing) return;
+
+        // 1. 물리 기반 물리 구체(CheckSphere)로 정확한 바닥 감지
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f; // 바닥에 안정적으로 붙어있도록 유도
+        }
+
+        // 2. 키보드 이동 입력
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        moveDirection = transform.right * x + transform.forward * z;
+        controller.Move(moveDirection * moveSpeed * Time.deltaTime);
+
+        // 3. 점프 입력 처리 (개선된 바닥 체크 변수 사용)
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
+
+        // 4. 대쉬 입력 처리
+        if (Input.GetKeyDown(KeyCode.LeftShift) && canDash)
         {
             StartCoroutine(DashCoroutine());
+            return;
         }
+
+        // 5. 중력 적용
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 
-    // 자연스러운 대시 및 무적 판정 코루틴
-    IEnumerator DashCoroutine()
+    private IEnumerator DashCoroutine()
     {
+        canDash = false;
         isDashing = true;
-        isInvincible = true; // 무적 판정 시작
-        Debug.Log("★ 회피 시작! (무적 상태 활성화)");
+        isInvincible = true;
 
-        // 현재 눌려 있는 WASD 입력 방향만 체크하여 대시 방향 결정 (이동은 시키지 않음)
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveZ = Input.GetAxisRaw("Vertical");
-        Vector3 dashDirection = new Vector3(moveX, 0f, moveZ).normalized;
-
-        // 만약 정지 상태(입력 없음)라면 캐릭터가 현재 바라보고 있는 정면 방향으로 대시
-        if (dashDirection.magnitude < 0.1f)
-        {
-            dashDirection = transform.forward;
-        }
-
-        // 대시할 방향으로 캐릭터의 회전 고정
-        float targetAngle = Mathf.Atan2(dashDirection.x, dashDirection.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        Vector3 dashDir = moveDirection.magnitude > 0.1f ? moveDirection.normalized : transform.forward;
+        velocity.y = 0;
 
         float startTime = Time.time;
 
-        // 지정된 시간(dashDuration) 동안 매 프레임 부드럽게 미끄러지듯 이동
         while (Time.time < startTime + dashDuration)
         {
-            // CharacterController를 통해 벽을 뚫지 않고 미끄러지듯 이동 구현
-            controller.Move(dashDirection * dashSpeed * Time.deltaTime);
+            controller.Move(dashDir * dashSpeed * Time.deltaTime);
             yield return null;
         }
 
         isDashing = false;
-        isInvincible = false; // 무적 판정 종료
-        Debug.Log("☆ 회피 종료! (무적 상태 해제)");
+        isInvincible = false;
+        velocity.y = -2f;
 
-        // 회피 재사용 대기시간(쿨타임) 작동
-        StartCoroutine(DashCooldownCoroutine());
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;
     }
 
-    // 회피 재사용 대기시간 처리 코루틴
-    IEnumerator DashCooldownCoroutine()
+    // 인스펙터창 밖에서도 바닥 감지 범위를 시각적으로 볼 수 있게 해주는 기능
+    private void OnDrawGizmosSelected()
     {
-        isCooldown = true;
-        yield return new WaitForSeconds(dashCooldown);
-        isCooldown = false;
-        Debug.Log("회피 재사용 가능(쿨타임 완료)");
+        if (groundCheck != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheck.position, groundDistance);
+        }
     }
 }
