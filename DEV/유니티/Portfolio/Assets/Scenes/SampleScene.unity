@@ -136,9 +136,10 @@ GameObject:
   - component: {fileID: 221838263}
   - component: {fileID: 221838262}
   - component: {fileID: 221838264}
+  - component: {fileID: 221838265}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -354,6 +355,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &221838265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221838253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6653d93e505b8b4aa2fb25d7b048814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  attackRange: 3
+  attackAngle: 65
+  attackDamage: 20
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,8 +960,8 @@ GameObject:
   - component: {fileID: 1089241213}
   - component: {fileID: 1089241212}
   - component: {fileID: 1089241218}
-  - component: {fileID: 1089241219}
-  m_Layer: 0
+  - component: {fileID: 1089241220}
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1064,7 +1083,7 @@ NavMeshAgent:
   m_BaseOffset: 0.44
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &1089241219
+--- !u!114 &1089241220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1073,12 +1092,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1089241211}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77264994e81be8e4087d051710579799, type: 3}
+  m_Script: {fileID: 11500000, guid: be578f1ebb9d78e48a309b9fff101aa4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterRoam
-  roamRadius: 10
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterRoamAndChase
+  currentState: 0
+  maxHp: 100
+  roamRadius: 5
   minWaitTime: 2
   maxWaitTime: 5
+  playerTransform: {fileID: 221838259}
+  chaseSpeed: 5
+  attackTargetDistance: 3
+  chaseBufferDistance: 0.5
 --- !u!1 &1634474995
 GameObject:
   m_ObjectHideFlags: 0

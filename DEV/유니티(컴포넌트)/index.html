@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>컴포넌트 게임 시뮬레이터</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, Pretendard, "Noto Sans KR", system-ui, sans-serif;
+      background: #080d17;
+      color: #eef4ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(61, 113, 255, .16), transparent 34rem),
+        #080d17;
+    }
+
+    main {
+      width: min(1120px, 100%);
+      padding: 28px;
+    }
+
+    .heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(24px, 4vw, 38px);
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: #8fa1bd;
+      font-size: 14px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #a9b9cf;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .status::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #5cf2a5;
+      box-shadow: 0 0 12px #5cf2a5;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .stage,
+    .panel {
+      border: 1px solid #1d2a40;
+      border-radius: 18px;
+      background: rgba(12, 20, 34, .92);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .32);
+    }
+
+    .stage {
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 500px;
+      cursor: crosshair;
+    }
+
+    .hint {
+      position: absolute;
+      left: 16px;
+      bottom: 14px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 9px;
+      color: #b6c5da;
+      background: rgba(4, 9, 17, .72);
+      font-size: 12px;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h2 {
+      margin: 0 0 14px;
+      color: #8fa1bd;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .metric {
+      padding: 12px 0;
+      border-bottom: 1px solid #1b273b;
+    }
+
+    .metric:last-of-type {
+      border: 0;
+    }
+
+    .label {
+      color: #7f91ac;
+      font-size: 12px;
+    }
+
+    .value {
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 11px 14px;
+      border: 1px solid #2d4265;
+      border-radius: 10px;
+      color: #dce8f8;
+      background: #17243a;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #203250;
+    }
+
+    .legend {
+      display: grid;
+      gap: 9px;
+      margin-top: 18px;
+      color: #8fa1bd;
+      font-size: 12px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 7px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        padding: 16px;
+      }
+
+      .heading {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stage,
+      canvas {
+        min-height: 420px;
+        height: 420px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header class="heading">
+      <div>
+        <h1>Game Component Lab</h1>
+        <p class="subtitle">분리된 컴포넌트를 조립한 로컬 물리·충돌 시뮬레이터</p>
+      </div>
+      <div class="status">SIMULATION RUNNING</div>
+    </header>
+
+    <section class="layout">
+      <div class="stage">
+        <canvas id="game" aria-label="플레이어, 몬스터, NPC 시뮬레이션"></canvas>
+        <div class="hint">WASD / 방향키로 이동 · Space로 대시</div>
+      </div>
+      <aside class="panel">
+        <h2>Telemetry</h2>
+        <div class="metric">
+          <div class="label">프레임</div>
+          <div class="value" id="fps">0 FPS</div>
+        </div>
+        <div class="metric">
+          <div class="label">플레이어 속도</div>
+          <div class="value" id="speed">0 px/s</div>
+        </div>
+        <div class="metric">
+          <div class="label">충돌 횟수</div>
+          <div class="value" id="hits">0</div>
+        </div>
+        <button id="reset" type="button">시뮬레이션 초기화</button>
+        <div class="legend">
+          <div><span class="dot" style="background:#69a8ff"></span>Player</div>
+          <div><span class="dot" style="background:#ff6d78"></span>Monster</div>
+          <div><span class="dot" style="background:#4ade80"></span>NPC</div>
+          <div><span class="dot" style="background:#f6c85f"></span>Collision pulse</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- 의존성 순서대로 로드 -->
+  <script src="./component/rendering.js"></script>
+  <script src="./component/animation.js"></script>
+  <script src="./component/collision.js"></script>
+  <script src="./component/physics.js"></script>
+  <script src="./component/game-loop.js"></script>
+  <script src="./player.js"></script>
+  <script src="./monster.js"></script>
+  <script src="./npc.js"></script> <!-- NPC 스크립트 추가 -->
+  <script src="./skill.js"></script> <!-- 추가 -->
+  <script>
+    (() => {
+      "use strict";
+      const canvas = document.querySelector("#game");
+      const ctx = canvas.getContext("2d");
+      const fpsNode = document.querySelector("#fps");
+      const speedNode = document.querySelector("#speed");
+      const hitsNode = document.querySelector("#hits");
+      const keys = new Set();
+      let player;
+      let monster;
+      let npc;
+      let hitCount = 0;
+      let collisionCooldown = 0;
+      let pulse = 0;
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(rect.width * ratio);
+        canvas.height = Math.round(rect.height * ratio);
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      }
+
+      function reset() {
+        const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
+        player = new Player({ x: bounds.width * .24, y: bounds.height * .5 });
+        monster = new Monster({ x: bounds.width * .72, y: bounds.height * .5 });
+
+        // NPC 패트롤 경로 설정 및 인스턴스 생성
+        const waypoints = [
+          { x: 80, y: 80 },
+          { x: bounds.width - 80, y: 80 },
+          { x: bounds.width - 80, y: bounds.height - 80 },
+          { x: 80, y: bounds.height - 80 }
+        ];
+        npc = new Npc({ x: 80, y: 80, waypoints });
+
+        hitCount = 0;
+        pulse = 0;
+        hitsNode.textContent = "0";
+      }
+
+      function update(dt) {
+        const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
+        player.update(dt, keys, bounds);
+        monster.update(dt, player, bounds);
+        npc.update(dt, bounds); // NPC 위치 업데이트
+
+        collisionCooldown = Math.max(0, collisionCooldown - dt);
+
+        // 플레이어 <-> 몬스터 충돌
+        const contactPM = GameComponents.collision.resolveCircleCollision(player, monster, .82);
+        if (contactPM.collided) {
+          pulse = 1;
+          player.onCollision(contactPM.normal);
+          monster.onCollision({ x: -contactPM.normal.x, y: -contactPM.normal.y });
+          if (collisionCooldown === 0) {
+            hitCount += 1;
+            hitsNode.textContent = String(hitCount);
+            collisionCooldown = .24;
+          }
+        }
+
+        // 플레이어 <-> NPC 충돌
+        const contactPN = GameComponents.collision.resolveCircleCollision(player, npc, .82);
+        if (contactPN.collided) {
+          player.onCollision(contactPN.normal);
+          npc.onCollision({ x: -contactPN.normal.x, y: -contactPN.normal.y });
+        }
+
+        // 몬스터 <-> NPC 충돌
+        const contactMN = GameComponents.collision.resolveCircleCollision(monster, npc, .82);
+        if (contactMN.collided) {
+          monster.onCollision(contactMN.normal);
+          npc.onCollision({ x: -contactMN.normal.x, y: -contactMN.normal.y });
+        }
+
+        pulse = Math.max(0, pulse - dt * 2.7);
+      }
+
+      function render() {
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        GameComponents.rendering.drawArena(ctx, width, height);
+
+        // 이동 잔상(Trail) 그리기
+        GameComponents.rendering.drawTrail(ctx, monster.trail, "#ff6574");
+        GameComponents.rendering.drawTrail(ctx, player.trail, "#65a8ff");
+        GameComponents.rendering.drawTrail(ctx, npc.trail, "#4ade80");
+
+        // 오브젝트 그리기
+        monster.render(ctx);
+        player.render(ctx);
+        npc.render(ctx);
+
+        if (pulse > 0) {
+          const x = (player.x + monster.x) / 2;
+          const y = (player.y + monster.y) / 2;
+          GameComponents.rendering.drawPulse(ctx, x, y, pulse);
+        }
+      }
+
+      const loop = new GameComponents.GameLoop(update, render, ({ fps }) => {
+        fpsNode.textContent = `${Math.round(fps)} FPS`;
+        speedNode.textContent = `${Math.round(Math.hypot(player.vx, player.vy))} px/s`;
+      });
+
+      window.addEventListener("resize", () => { resize(); reset(); });
+      window.addEventListener("keydown", (event) => {
+        keys.add(event.code);
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
+          event.preventDefault();
+        }
+      });
+      window.addEventListener("keyup", (event) => keys.delete(event.code));
+      window.addEventListener("blur", () => keys.clear());
+      document.querySelector("#reset").addEventListener("click", reset);
+
+      resize();
+      reset();
+      loop.start();
+    })();
+  </script>
+</body>
+
+</html>
