@@ -1,22 +1,20 @@
+// skill.js
 (() => {
   "use strict";
 
-  const { PhysicsBody, rendering } = window.GameComponents;
-
-  // 1초 동안 유지되는 고정 탄환 클래스
-  class StasisBullet extends PhysicsBody {
+  class StasisBullet extends window.GameComponents.PhysicsBody {
     constructor({ x, y }) {
       super({
         x,
         y,
         radius: 12,
-        mass: 9999, // 매우 무겁게 설정하여 다른 밀침 효과 최소화
+        mass: 9999,
         drag: 10,
         restitution: 0.2
       });
-      this.duration = 1.0; // 1초 지속
+      this.duration = 1.0; // 탄환 자체의 존속 시간
       this.isExpired = false;
-      this.flash = 1;
+      this.hitEntities = new Set(); // 이미 맞은 대상 중복 적용 방지
     }
 
     update(dt, bounds) {
@@ -24,15 +22,14 @@
       if (this.duration <= 0) {
         this.isExpired = true;
       }
-      // 멈춰있도록 속도 고정
       this.vx = 0;
       this.vy = 0;
       this.integrate(dt, bounds);
     }
 
     render(ctx) {
-      rendering.drawEntity(ctx, this, {
-        color: "#a855f7",       // 보라색 계열
+      window.GameComponents.rendering.drawEntity(ctx, this, {
+        color: "#a855f7",
         darkColor: "#6b21a8",
         label: `${Math.max(0, this.duration).toFixed(1)}s`,
         eyeColor: "#f3e8ff"
@@ -40,42 +37,50 @@
     }
   }
 
-  // 스킬 상태 및 발사 관리자 클래스
   class SkillManager {
     constructor({ cooldown = 3.0 } = {}) {
-      this.cooldown = cooldown;      // 쿨타임 (3초)
-      this.currentCooldown = 0;      // 남은 쿨타임
-      this.bullets = [];            // 현재 필드에 존재하는 탄환들
+      this.cooldown = cooldown;
+      this.currentCooldown = 0;
+      this.bullets = [];
     }
 
-    // Q 키 입력을 받아 탄환 발사
     useSkill(player) {
-      if (this.currentCooldown > 0) return false; // 쿨타임 중이면 사용 불가
+      if (this.currentCooldown > 0) return false;
 
-      // 플레이어 위치에 1초 동안 멈추는 탄환 생성
       const bullet = new StasisBullet({ x: player.x, y: player.y });
       this.bullets.push(bullet);
 
-      // 쿨타임 재설정
       this.currentCooldown = this.cooldown;
       return true;
     }
 
     update(dt, bounds, entities = []) {
-      // 쿨타임 감소
       this.currentCooldown = Math.max(0, this.currentCooldown - dt);
 
-      // 탄환 업데이트 및 만료된 탄환 제거
       for (let i = this.bullets.length - 1; i >= 0; i--) {
         const bullet = this.bullets[i];
         bullet.update(dt, bounds);
 
-        // 몬스터 / NPC / 플레이어 등 다른 객체와 충돌 체크
         entities.forEach(entity => {
-          if (entity && entity !== bullet) {
-            const contact = window.GameComponents.collision.resolveCircleCollision(bullet, entity, 0.5);
-            if (contact.collided && entity.onCollision) {
-              entity.onCollision(contact.normal);
+          // 플레이어(Player)가 아니고 탄환 자신도 아닌 경우(Monster, Npc)만 스탯시스 적용
+          const isPlayer = entity && entity.constructor && entity.constructor.name === "Player";
+
+          if (entity && entity !== bullet && !isPlayer) {
+            const collisionModule = window.GameComponents.collision;
+            if (collisionModule && collisionModule.resolveCircleCollision) {
+              const contact = collisionModule.resolveCircleCollision(bullet, entity, 0.5);
+
+              if (contact.collided) {
+                // 대상에게 3초간 멈춤 효과(stasis) 부여
+                if (typeof entity.applyStasis === "function" && !bullet.hitEntities.has(entity)) {
+                  entity.applyStasis(3.0);
+                  bullet.hitEntities.add(entity); // 한 탄환에 다중 중복 적중 방지
+                }
+
+                if (entity.onCollision) {
+                  entity.onCollision(contact.normal);
+                }
+              }
             }
           }
         });

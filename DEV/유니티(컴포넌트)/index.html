@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>컴포넌트 게임 시뮬레이터</title>
+  <title>Game Component Lab - Integrated Simulation</title>
   <style>
     :root {
       color-scheme: dark;
@@ -34,9 +34,26 @@
 
     .heading {
       display: flex;
-      align-items: end;
+      align-items: center;
       justify-content: space-between;
       gap: 18px;
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* 제목 옆 스킬 UI 컨테이너 스타일 */
+    .header-skill-ui {
+      width: 200px;
+      height: 54px;
     }
 
     h1 {
@@ -95,6 +112,19 @@
       width: 100%;
       height: 500px;
       cursor: crosshair;
+    }
+
+    .ui-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .ui-overlay svg * {
+      pointer-events: auto;
     }
 
     .hint {
@@ -186,6 +216,11 @@
         flex-direction: column;
       }
 
+      .header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
       .layout {
         grid-template-columns: 1fr;
       }
@@ -202,17 +237,22 @@
 <body>
   <main>
     <header class="heading">
-      <div>
+      <div class="header-left">
         <h1>Game Component Lab</h1>
-        <p class="subtitle">분리된 컴포넌트를 조립한 로컬 물리·충돌 시뮬레이터</p>
+        <p class="subtitle">수정된 엔티티 컴포넌트와 SVG UI가 통합된 시스템</p>
       </div>
-      <div class="status">SIMULATION RUNNING</div>
+      <div class="header-right">
+        <!-- 게임 제목 옆 Skill UI 컨테이너 추가 -->
+        <div id="header-ui-container" class="header-skill-ui"></div>
+        <div class="status" id="status-indicator">SIMULATION RUNNING</div>
+      </div>
     </header>
 
     <section class="layout">
       <div class="stage">
         <canvas id="game" aria-label="플레이어, 몬스터, NPC 시뮬레이션"></canvas>
-        <div class="hint">WASD / 방향키로 이동 · Space로 대시</div>
+        <div id="ui-container" class="ui-overlay"></div>
+        <div class="hint">WASD / 방향키 이동 · Space 대시 · Q 스킬 사용 · ESC 일시정지</div>
       </div>
       <aside class="panel">
         <h2>Telemetry</h2>
@@ -233,37 +273,180 @@
           <div><span class="dot" style="background:#69a8ff"></span>Player</div>
           <div><span class="dot" style="background:#ff6d78"></span>Monster</div>
           <div><span class="dot" style="background:#4ade80"></span>NPC</div>
-          <div><span class="dot" style="background:#f6c85f"></span>Collision pulse</div>
+          <div><span class="dot" style="background:#a855f7"></span>Stasis Bullet</div>
         </div>
       </aside>
     </section>
   </main>
 
-  <!-- 의존성 순서대로 로드 -->
+  <!-- 1. 코어 게임 엔진 컴포넌트 -->
   <script src="./component/rendering.js"></script>
   <script src="./component/animation.js"></script>
   <script src="./component/collision.js"></script>
   <script src="./component/physics.js"></script>
   <script src="./component/game-loop.js"></script>
+
+  <!-- 2. 수정된 엔티티 스크립트 -->
   <script src="./player.js"></script>
   <script src="./monster.js"></script>
-  <script src="./npc.js"></script> <!-- NPC 스크립트 추가 -->
-  <script src="./skill.js"></script> <!-- 추가 -->
+  <script src="./npc.js"></script>
+  <script src="./skill.js"></script>
+
+  <!-- 3. SVG UI 컴포넌트 -->
+  <script src="./component/UIElement.js"></script>
+  <script src="./component/UIImage.js"></script>
+  <script src="./component/UIText.js"></script>
+  <script src="./component/UIButton.js"></script>
+  <script src="./component/UIBase.js"></script>
+  <script src="./component/SubUI.js"></script>
+  <script src="./component/SceneUI.js"></script>
+  <script src="./component/PopupUI.js"></script>
+  <script src="./component/SkillUI.js"></script>
+
+  <!-- 4. 메인 실행 루프 및 UI 바인딩 -->
   <script>
     (() => {
       "use strict";
+
       const canvas = document.querySelector("#game");
       const ctx = canvas.getContext("2d");
       const fpsNode = document.querySelector("#fps");
       const speedNode = document.querySelector("#speed");
       const hitsNode = document.querySelector("#hits");
       const keys = new Set();
-      let player;
-      let monster;
-      let npc;
+
+      let player, monster, npc, skillManager;
       let hitCount = 0;
       let collisionCooldown = 0;
       let pulse = 0;
+      let isPaused = false;
+
+      // SVG UI 클래스 연결
+      const { UI } = window.GameComponents;
+
+      // 초기화 확인 팝업 UI
+      class ConfirmPopupUI extends UI.PopupUI {
+        constructor({ scene, onConfirm, onCancel }) {
+          super({
+            scene,
+            width: 320,
+            height: 180,
+            dim: true,
+            closeOnBackdrop: false,
+            name: "confirm-reset-popup"
+          });
+
+          const width = 320;
+          const height = 180;
+
+          // 배경 카드
+          this.content.add(new UI.UIImage({
+            width: width,
+            height: height,
+            fill: "#0f172a",
+            radius: 16
+          }));
+
+          // 질문 문구
+          this.content.add(new UI.UIText({
+            x: width / 2,
+            y: 65,
+            text: "초기화하시겠습니까?",
+            fontSize: 18,
+            fill: "#f8fafc",
+            weight: 700,
+            align: "middle"
+          }));
+
+          // '아니요' 버튼 (팝업 제거)
+          this.content.add(new UI.UIButton({
+            x: 24,
+            y: 110,
+            width: 128,
+            height: 42,
+            label: "아니요",
+            fill: "#17243a",
+            hoverFill: "#203250",
+            onClick: () => {
+              this.scene.closePopup(this);
+              if (typeof onCancel === "function") onCancel();
+            }
+          }));
+
+          // '예' 버튼 (게임 재시작 실행)
+          this.content.add(new UI.UIButton({
+            x: 168,
+            y: 110,
+            width: 128,
+            height: 42,
+            label: "예",
+            fill: "#315fd7",
+            hoverFill: "#4272f5",
+            onClick: () => {
+              this.scene.closePopup(this);
+              if (typeof onConfirm === "function") onConfirm();
+            }
+          }));
+        }
+      }
+
+      class GameMenuPopup extends UI.PopupUI {
+        constructor({ scene, onResume, onResetRequest }) {
+          super({ scene, width: 280, height: 220, dim: true, name: "pause-menu" });
+
+          this.content.add(new UI.UIImage({ width: 280, height: 220, fill: "#0f172a", radius: 16 }));
+          this.content.add(new UI.UIText({ x: 140, y: 40, text: "PAUSED", fontSize: 18, fill: "#f8fafc", weight: 700, align: "middle" }));
+
+          this.content.add(new UI.UIButton({
+            x: 40, y: 75, width: 200, height: 42, label: "게임 계속하기",
+            fill: "#315fd7", hoverFill: "#4272f5",
+            onClick: () => onResume()
+          }));
+
+          this.content.add(new UI.UIButton({
+            x: 40, y: 130, width: 200, height: 42, label: "시뮬레이션 재시작",
+            fill: "#17243a", hoverFill: "#203250",
+            onClick: () => {
+              onResume();
+              onResetRequest();
+            }
+          }));
+        }
+      }
+
+      // 캔버스 모달 overlay용 SceneUI
+      const mainSceneUI = new UI.SceneUI({ container: "#ui-container", name: "MainHUD" }).mount();
+
+      // 헤더 제목 옆 스킬 전용 SceneUI 마운트
+      const headerSceneUI = new UI.SceneUI({ container: "#header-ui-container", name: "HeaderSkillHUD" }).mount();
+      const skillWidget = new UI.SkillUI({ x: 0, y: 0, width: 200, height: 54, name: "SkillWidget" }).attachTo(headerSceneUI);
+
+      let pausePopup = null;
+
+      function openResetConfirmModal() {
+        const confirmPopup = new ConfirmPopupUI({
+          scene: mainSceneUI,
+          onConfirm: () => reset()
+        });
+        mainSceneUI.openPopup(confirmPopup);
+      }
+
+      function togglePause() {
+        isPaused = !isPaused;
+        if (isPaused) {
+          pausePopup = new GameMenuPopup({
+            scene: mainSceneUI,
+            onResume: () => togglePause(),
+            onResetRequest: () => openResetConfirmModal()
+          });
+          mainSceneUI.openPopup(pausePopup);
+        } else {
+          if (pausePopup) {
+            mainSceneUI.closePopup(pausePopup);
+            pausePopup = null;
+          }
+        }
+      }
 
       function resize() {
         const rect = canvas.getBoundingClientRect();
@@ -275,17 +458,17 @@
 
       function reset() {
         const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
-        player = new Player({ x: bounds.width * .24, y: bounds.height * .5 });
-        monster = new Monster({ x: bounds.width * .72, y: bounds.height * .5 });
+        player = new window.Player({ x: bounds.width * .24, y: bounds.height * .5 });
+        monster = new window.Monster({ x: bounds.width * .72, y: bounds.height * .5 });
 
-        // NPC 패트롤 경로 설정 및 인스턴스 생성
         const waypoints = [
           { x: 80, y: 80 },
           { x: bounds.width - 80, y: 80 },
           { x: bounds.width - 80, y: bounds.height - 80 },
           { x: 80, y: bounds.height - 80 }
         ];
-        npc = new Npc({ x: 80, y: 80, waypoints });
+        npc = new window.Npc({ x: 80, y: 80, waypoints });
+        skillManager = new window.SkillManager({ cooldown: 3.0 });
 
         hitCount = 0;
         pulse = 0;
@@ -293,15 +476,22 @@
       }
 
       function update(dt) {
+        if (isPaused) return;
+
         const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
+
         player.update(dt, keys, bounds);
         monster.update(dt, player, bounds);
-        npc.update(dt, bounds); // NPC 위치 업데이트
+        npc.update(dt, bounds);
+        skillManager.update(dt, bounds, [player, monster, npc]);
+
+        skillWidget.updateCooldown(skillManager.currentCooldown, skillManager.cooldown);
 
         collisionCooldown = Math.max(0, collisionCooldown - dt);
 
-        // 플레이어 <-> 몬스터 충돌
-        const contactPM = GameComponents.collision.resolveCircleCollision(player, monster, .82);
+        // 물리 충돌 동기화
+        const collisionModule = window.GameComponents.collision;
+        const contactPM = collisionModule.resolveCircleCollision(player, monster, .82);
         if (contactPM.collided) {
           pulse = 1;
           player.onCollision(contactPM.normal);
@@ -313,15 +503,13 @@
           }
         }
 
-        // 플레이어 <-> NPC 충돌
-        const contactPN = GameComponents.collision.resolveCircleCollision(player, npc, .82);
+        const contactPN = collisionModule.resolveCircleCollision(player, npc, .82);
         if (contactPN.collided) {
           player.onCollision(contactPN.normal);
           npc.onCollision({ x: -contactPN.normal.x, y: -contactPN.normal.y });
         }
 
-        // 몬스터 <-> NPC 충돌
-        const contactMN = GameComponents.collision.resolveCircleCollision(monster, npc, .82);
+        const contactMN = collisionModule.resolveCircleCollision(monster, npc, .82);
         if (contactMN.collided) {
           monster.onCollision(contactMN.normal);
           npc.onCollision({ x: -contactMN.normal.x, y: -contactMN.normal.y });
@@ -333,14 +521,15 @@
       function render() {
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
-        GameComponents.rendering.drawArena(ctx, width, height);
+        const rendering = window.GameComponents.rendering;
 
-        // 이동 잔상(Trail) 그리기
-        GameComponents.rendering.drawTrail(ctx, monster.trail, "#ff6574");
-        GameComponents.rendering.drawTrail(ctx, player.trail, "#65a8ff");
-        GameComponents.rendering.drawTrail(ctx, npc.trail, "#4ade80");
+        rendering.drawArena(ctx, width, height);
 
-        // 오브젝트 그리기
+        if (monster.trail) rendering.drawTrail(ctx, monster.trail, "#ff6574");
+        if (player.trail) rendering.drawTrail(ctx, player.trail, "#65a8ff");
+        if (npc.trail) rendering.drawTrail(ctx, npc.trail, "#4ade80");
+
+        skillManager.render(ctx);
         monster.render(ctx);
         player.render(ctx);
         npc.render(ctx);
@@ -348,25 +537,36 @@
         if (pulse > 0) {
           const x = (player.x + monster.x) / 2;
           const y = (player.y + monster.y) / 2;
-          GameComponents.rendering.drawPulse(ctx, x, y, pulse);
+          rendering.drawPulse(ctx, x, y, pulse);
         }
       }
 
-      const loop = new GameComponents.GameLoop(update, render, ({ fps }) => {
+      const loop = new window.GameComponents.GameLoop(update, render, ({ fps }) => {
         fpsNode.textContent = `${Math.round(fps)} FPS`;
         speedNode.textContent = `${Math.round(Math.hypot(player.vx, player.vy))} px/s`;
       });
 
       window.addEventListener("resize", () => { resize(); reset(); });
+
       window.addEventListener("keydown", (event) => {
+        if (event.code === "KeyQ" && !isPaused) {
+          skillManager.useSkill(player);
+        }
+        if (event.code === "Escape" || event.code === "KeyP") {
+          togglePause();
+        }
+
         keys.add(event.code);
         if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
           event.preventDefault();
         }
       });
+
       window.addEventListener("keyup", (event) => keys.delete(event.code));
       window.addEventListener("blur", () => keys.clear());
-      document.querySelector("#reset").addEventListener("click", reset);
+
+      // 시뮬레이션 초기화 버튼 클릭 시 확인 팝업 모달 호출
+      document.querySelector("#reset").addEventListener("click", openResetConfirmModal);
 
       resize();
       reset();
