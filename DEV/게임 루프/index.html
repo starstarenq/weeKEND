@@ -50,7 +50,6 @@
       gap: 16px;
     }
 
-    /* 제목 옆 스킬 UI 컨테이너 스타일 */
     .header-skill-ui {
       width: 200px;
       height: 54px;
@@ -86,11 +85,95 @@
       box-shadow: 0 0 12px #5cf2a5;
     }
 
+    /* ----------------------------------
+       화면 관리 (Screen System)
+    ---------------------------------- */
+    .screen {
+      display: none;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .card-screen {
+      border: 1px solid #1d2a40;
+      border-radius: 18px;
+      background: rgba(12, 20, 34, .92);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .32);
+      padding: 48px 24px;
+      text-align: center;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-screen h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #f8fafc;
+    }
+
+    .card-screen p {
+      color: #8fa1bd;
+      margin-bottom: 24px;
+    }
+
+    /* 스테이지 선택 버튼 배치 */
+    #stage-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .stage-btn {
+      width: auto;
+      min-width: 140px;
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .stage-btn:hover {
+      background: #315fd7;
+      border-color: #60a5fa;
+      transform: translateY(-2px);
+    }
+
+    .action-btn {
+      width: auto;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 12px;
+      background: #315fd7;
+      border: 1px solid #5382ff;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: #4272f5;
+    }
+
+    /* ----------------------------------
+       플레이 화면 레이아웃
+    ---------------------------------- */
     .layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr) 230px;
       gap: 16px;
-      margin-top: 20px;
     }
 
     .stage,
@@ -174,34 +257,6 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* 스테이지 선택 셀렉터 스타일 */
-    .stage-selector {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .stage-btn {
-      padding: 8px 4px;
-      margin-top: 0;
-      font-size: 12px;
-      border-radius: 8px;
-      background: #111a2e;
-      border: 1px solid #233554;
-      color: #8fa1bd;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .stage-btn.active {
-      background: #315fd7;
-      color: #ffffff;
-      border-color: #5382ff;
-      font-weight: bold;
-      box-shadow: 0 0 10px rgba(49, 95, 215, 0.5);
-    }
-
     button {
       width: 100%;
       margin-top: 18px;
@@ -270,64 +325,83 @@
         <p class="subtitle">수정된 엔티티 컴포넌트와 SVG UI가 통합된 시스템</p>
       </div>
       <div class="header-right">
-        <!-- 게임 제목 옆 Skill UI 컨테이너 추가 -->
         <div id="header-ui-container" class="header-skill-ui"></div>
         <div class="status" id="status-indicator">SIMULATION RUNNING</div>
       </div>
     </header>
 
-    <section class="layout">
-      <div class="stage">
-        <canvas id="game" aria-label="플레이어, 몬스터, NPC 시뮬레이션"></canvas>
-        <div id="ui-container" class="ui-overlay"></div>
-        <div class="hint">WASD / 방향키 이동 · Space 대시 · Q 스킬 사용 · ESC 일시정지</div>
-      </div>
-      <aside class="panel">
-        <h2>Stage Select</h2>
-        <div class="stage-selector">
-          <button type="button" class="stage-btn active" data-stage="1">Stage 1</button>
-          <button type="button" class="stage-btn" data-stage="2">Stage 2</button>
-          <button type="button" class="stage-btn" data-stage="3">Stage 3</button>
-        </div>
+    <!-- 1. 시작 화면 -->
+    <section id="start-screen" class="screen card-screen active">
+      <h2>Game Simulation</h2>
+      <p>스테이지 선택 후 시뮬레이션을 시작하세요.</p>
+      <button class="action-btn" onclick="window.StageManager.changeStage('SELECT')">시작하기</button>
+    </section>
 
-        <h2>Telemetry</h2>
-        <div class="metric">
-          <div class="label">프레임</div>
-          <div class="value" id="fps">0 FPS</div>
+    <!-- 2. 스테이지 선택 화면 -->
+    <section id="select-screen" class="screen card-screen">
+      <h2>스테이지 선택</h2>
+      <p>도전할 스테이지를 선택하세요.</p>
+      <div id="stage-buttons"></div>
+    </section>
+
+    <!-- 3. 플레이 화면 -->
+    <section id="play-screen" class="screen">
+      <section class="layout">
+        <div class="stage">
+          <canvas id="game" aria-label="플레이어, 몬스터, NPC 시뮬레이션"></canvas>
+          <div id="ui-container" class="ui-overlay"></div>
+          <div class="hint">WASD / 방향키 이동 · Space 대시 · Q 스킬 사용 · ESC 일시정지</div>
         </div>
-        <div class="metric">
-          <div class="label">플레이어 속도</div>
-          <div class="value" id="speed">0 px/s</div>
-        </div>
-        <div class="metric">
-          <div class="label">충돌 횟수</div>
-          <div class="value" id="hits">0</div>
-        </div>
-        <button id="reset" type="button">시뮬레이션 초기화</button>
-        <div class="legend">
-          <div><span class="dot" style="background:#69a8ff"></span>Player</div>
-          <div><span class="dot" style="background:#ff6d78"></span>Monster</div>
-          <div><span class="dot" style="background:#4ade80"></span>NPC</div>
-          <div><span class="dot" style="background:#a855f7"></span>Stasis Bullet</div>
-        </div>
-      </aside>
+        <aside class="panel">
+          <h2 id="current-stage-title">Stage</h2>
+          <div class="metric">
+            <div class="label">프레임</div>
+            <div class="value" id="fps">0 FPS</div>
+          </div>
+          <div class="metric">
+            <div class="label">플레이어 속도</div>
+            <div class="value" id="speed">0 px/s</div>
+          </div>
+          <div class="metric">
+            <div class="label">충돌 횟수 (최대 5회)</div>
+            <div class="value" id="hits">0</div>
+          </div>
+          <button id="reset" type="button">시뮬레이션 재시작</button>
+          <button id="giveup-btn" type="button" style="margin-top: 8px; background: #3f1d24; border-color: #7f2332;" onclick="window.StageManager.completeStage(false)">포기하기</button>
+          <div class="legend">
+            <div><span class="dot" style="background:#69a8ff"></span>Player</div>
+            <div><span class="dot" style="background:#ff6d78"></span>Monster</div>
+            <div><span class="dot" style="background:#4ade80"></span>NPC</div>
+            <div><span class="dot" style="background:#a855f7"></span>Stasis Bullet</div>
+          </div>
+        </aside>
+      </section>
+    </section>
+
+    <!-- 4. 결과 화면 -->
+    <section id="result-screen" class="screen card-screen">
+      <h2 id="result-message">플레이 결과</h2>
+      <div style="display: flex; gap: 12px; margin-top: 18px;">
+        <button class="action-btn" onclick="window.StageManager.changeStage('PLAY', window.StageManager.selectedStage)">다시하기</button>
+        <button class="action-btn" style="background: #1e293b; border-color: #334155;" onclick="window.StageManager.changeStage('SELECT')">스테이지 목록</button>
+      </div>
     </section>
   </main>
 
-  <!-- 1. 코어 게임 엔진 컴포넌트 -->
+  <!-- 코어 게임 컴포넌트 -->
   <script src="./component/rendering.js"></script>
   <script src="./component/animation.js"></script>
   <script src="./component/collision.js"></script>
   <script src="./component/physics.js"></script>
   <script src="./component/game-loop.js"></script>
 
-  <!-- 2. 수정된 엔티티 스크립트 -->
+  <!-- 엔티티 스크립트 -->
   <script src="./player.js"></script>
   <script src="./monster.js"></script>
   <script src="./npc.js"></script>
   <script src="./skill.js"></script>
 
-  <!-- 3. SVG UI 컴포넌트 -->
+  <!-- SVG UI 컴포넌트 -->
   <script src="./component/UIElement.js"></script>
   <script src="./component/UIImage.js"></script>
   <script src="./component/UIText.js"></script>
@@ -338,7 +412,7 @@
   <script src="./component/PopupUI.js"></script>
   <script src="./component/SkillUI.js"></script>
 
-  <!-- 4. 메인 실행 루프 및 UI 바인딩 -->
+  <!-- 메인 스크립트 및 StageManager 연동 -->
   <script>
     (() => {
       "use strict";
@@ -348,7 +422,6 @@
       const fpsNode = document.querySelector("#fps");
       const speedNode = document.querySelector("#speed");
       const hitsNode = document.querySelector("#hits");
-      const stageButtons = document.querySelectorAll(".stage-btn");
       const keys = new Set();
 
       let player, monster, npc, skillManager;
@@ -356,69 +429,101 @@
       let collisionCooldown = 0;
       let pulse = 0;
       let isPaused = false;
-      let currentStage = 1;
+      let loop = null;
 
-      // SVG UI 클래스 연결
       const { UI } = window.GameComponents;
 
-      // 초기화 확인 팝업 UI
+      // ----------------------------------
+      // 전역 StageManager 통합 정의
+      // ----------------------------------
+      window.StageManager = {
+        currentStatus: 'START',
+        selectedStage: null,
+        totalStages: 3,
+
+        init: function() {
+          this.renderSelectScreen();
+          this.updateDOM();
+        },
+
+        changeStage: function(nextStatus, stageNum = null) {
+          this.currentStatus = nextStatus;
+          if (stageNum !== null) {
+            this.selectedStage = stageNum;
+          }
+          this.updateDOM();
+
+          if (this.currentStatus === 'PLAY') {
+            resize();
+            resetGame();
+            if (loop && !loop.running) loop.start();
+          } else {
+            if (loop) loop.stop();
+          }
+        },
+
+        renderSelectScreen: function() {
+          const container = document.getElementById('stage-buttons');
+          if (!container) return;
+          container.innerHTML = '';
+
+          for (let i = 1; i <= this.totalStages; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'stage-btn';
+            btn.innerText = `스테이지 ${i}`;
+            btn.onclick = () => this.changeStage('PLAY', i);
+            container.appendChild(btn);
+          }
+        },
+
+        completeStage: function(isSuccess) {
+          const message = isSuccess
+            ? `🎉 스테이지 ${this.selectedStage} 클리어 성공!`
+            : `💀 스테이지 ${this.selectedStage} 플레이 실패...`;
+
+          document.getElementById('result-message').innerText = message;
+          this.changeStage('RESULT');
+        },
+
+        updateDOM: function() {
+          document.getElementById('start-screen').classList.remove('active');
+          document.getElementById('select-screen').classList.remove('active');
+          document.getElementById('play-screen').classList.remove('active');
+          document.getElementById('result-screen').classList.remove('active');
+
+          if (this.currentStatus === 'START') {
+            document.getElementById('start-screen').classList.add('active');
+          } else if (this.currentStatus === 'SELECT') {
+            document.getElementById('select-screen').classList.add('active');
+          } else if (this.currentStatus === 'PLAY') {
+            document.getElementById('current-stage-title').innerText = `스테이지 ${this.selectedStage} 플레이 중`;
+            document.getElementById('play-screen').classList.add('active');
+          } else if (this.currentStatus === 'RESULT') {
+            document.getElementById('result-screen').classList.add('active');
+          }
+        }
+      };
+
+      // 팝업 UI 클래스 정의
       class ConfirmPopupUI extends UI.PopupUI {
         constructor({ scene, onConfirm, onCancel }) {
-          super({
-            scene,
-            width: 320,
-            height: 180,
-            dim: true,
-            closeOnBackdrop: false,
-            name: "confirm-reset-popup"
-          });
-
+          super({ scene, width: 320, height: 180, dim: true, closeOnBackdrop: false, name: "confirm-reset-popup" });
           const width = 320;
           const height = 180;
 
-          // 배경 카드
-          this.content.add(new UI.UIImage({
-            width: width,
-            height: height,
-            fill: "#0f172a",
-            radius: 16
-          }));
+          this.content.add(new UI.UIImage({ width: width, height: height, fill: "#0f172a", radius: 16 }));
+          this.content.add(new UI.UIText({ x: width / 2, y: 65, text: "초기화하시겠습니까?", fontSize: 18, fill: "#f8fafc", weight: 700, align: "middle" }));
 
-          // 질문 문구
-          this.content.add(new UI.UIText({
-            x: width / 2,
-            y: 65,
-            text: "초기화하시겠습니까?",
-            fontSize: 18,
-            fill: "#f8fafc",
-            weight: 700,
-            align: "middle"
-          }));
-
-          // '아니요' 버튼 (팝업 제거)
           this.content.add(new UI.UIButton({
-            x: 24,
-            y: 110,
-            width: 128,
-            height: 42,
-            label: "아니요",
-            fill: "#17243a",
-            hoverFill: "#203250",
+            x: 24, y: 110, width: 128, height: 42, label: "아니요", fill: "#17243a", hoverFill: "#203250",
             onClick: () => {
               this.scene.closePopup(this);
               if (typeof onCancel === "function") onCancel();
             }
           }));
 
-          // '예' 버튼 (게임 재시작 실행)
           this.content.add(new UI.UIButton({
-            x: 168,
-            y: 110,
-            width: 128,
-            height: 42,
-            label: "예",
-            fill: "#315fd7",
-            hoverFill: "#4272f5",
+            x: 168, y: 110, width: 128, height: 42, label: "예", fill: "#315fd7", hoverFill: "#4272f5",
             onClick: () => {
               this.scene.closePopup(this);
               if (typeof onConfirm === "function") onConfirm();
@@ -435,14 +540,12 @@
           this.content.add(new UI.UIText({ x: 140, y: 40, text: "PAUSED", fontSize: 18, fill: "#f8fafc", weight: 700, align: "middle" }));
 
           this.content.add(new UI.UIButton({
-            x: 40, y: 75, width: 200, height: 42, label: "게임 계속하기",
-            fill: "#315fd7", hoverFill: "#4272f5",
+            x: 40, y: 75, width: 200, height: 42, label: "게임 계속하기", fill: "#315fd7", hoverFill: "#4272f5",
             onClick: () => onResume()
           }));
 
           this.content.add(new UI.UIButton({
-            x: 40, y: 130, width: 200, height: 42, label: "시뮬레이션 재시작",
-            fill: "#17243a", hoverFill: "#203250",
+            x: 40, y: 130, width: 200, height: 42, label: "시뮬레이션 재시작", fill: "#17243a", hoverFill: "#203250",
             onClick: () => {
               onResume();
               onResetRequest();
@@ -451,10 +554,7 @@
         }
       }
 
-      // 캔버스 모달 overlay용 SceneUI
       const mainSceneUI = new UI.SceneUI({ container: "#ui-container", name: "MainHUD" }).mount();
-
-      // 헤더 제목 옆 스킬 전용 SceneUI 마운트
       const headerSceneUI = new UI.SceneUI({ container: "#header-ui-container", name: "HeaderSkillHUD" }).mount();
       const skillWidget = new UI.SkillUI({ x: 0, y: 0, width: 200, height: 54, name: "SkillWidget" }).attachTo(headerSceneUI);
 
@@ -463,7 +563,7 @@
       function openResetConfirmModal() {
         const confirmPopup = new ConfirmPopupUI({
           scene: mainSceneUI,
-          onConfirm: () => reset()
+          onConfirm: () => resetGame()
         });
         mainSceneUI.openPopup(confirmPopup);
       }
@@ -493,8 +593,8 @@
         ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
       }
 
-      function reset() {
-        const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
+      function resetGame() {
+        const bounds = { width: canvas.clientWidth || 800, height: canvas.clientHeight || 500 };
         player = new window.Player({ x: bounds.width * .24, y: bounds.height * .5 });
         monster = new window.Monster({ x: bounds.width * .72, y: bounds.height * .5 });
 
@@ -512,16 +612,8 @@
         hitsNode.textContent = "0";
       }
 
-      function setStage(stageNum) {
-        currentStage = Number(stageNum);
-        stageButtons.forEach(btn => {
-          btn.classList.toggle("active", Number(btn.dataset.stage) === currentStage);
-        });
-        reset();
-      }
-
       function update(dt) {
-        if (isPaused) return;
+        if (isPaused || window.StageManager.currentStatus !== 'PLAY') return;
 
         const bounds = { width: canvas.clientWidth, height: canvas.clientHeight };
 
@@ -534,7 +626,6 @@
 
         collisionCooldown = Math.max(0, collisionCooldown - dt);
 
-        // 물리 충돌 동기화
         const collisionModule = window.GameComponents.collision;
         const contactPM = collisionModule.resolveCircleCollision(player, monster, .82);
         if (contactPM.collided) {
@@ -545,6 +636,11 @@
             hitCount += 1;
             hitsNode.textContent = String(hitCount);
             collisionCooldown = .24;
+
+            // 충돌 5회 누적 시 실패 처리 연동
+            if (hitCount >= 5) {
+              window.StageManager.completeStage(false);
+            }
           }
         }
 
@@ -563,41 +659,34 @@
         pulse = Math.max(0, pulse - dt * 2.7);
       }
 
-      // 스테이지별 배경 렌더링 함수
+      // 스테이지별 동적 배경 연출
       function drawBackground(width, height) {
         ctx.save();
-        if (currentStage === 1) {
-          // [Stage 1] 네온 다크 그리드 배경 (기존 테마)
+        const stage = window.StageManager.selectedStage || 1;
+
+        if (stage === 1) {
           if (window.GameComponents.rendering && window.GameComponents.rendering.drawArena) {
             window.GameComponents.rendering.drawArena(ctx, width, height);
           } else {
             ctx.fillStyle = "#09111e";
             ctx.fillRect(0, 0, width, height);
           }
-        } else if (currentStage === 2) {
-          // [Stage 2] 사이버 딥블루 라인 배경
+        } else if (stage === 2) {
           const grad = ctx.createLinearGradient(0, 0, width, height);
           grad.addColorStop(0, "#031329");
           grad.addColorStop(1, "#082142");
           ctx.fillStyle = grad;
           ctx.fillRect(0, 0, width, height);
 
-          // 다이아몬드 패널 그리드
           ctx.strokeStyle = "rgba(40, 140, 255, 0.12)";
           ctx.lineWidth = 1;
-          const gridSize = 40;
-          for (let x = 0; x < width + height; x += gridSize) {
+          for (let x = 0; x < width + height; x += 40) {
             ctx.beginPath();
             ctx.moveTo(x, 0);
             ctx.lineTo(x - height, height);
             ctx.stroke();
           }
-          // 테두리 글로우
-          ctx.strokeStyle = "rgba(56, 189, 248, 0.3)";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(2, 2, width - 4, height - 4);
-        } else if (currentStage === 3) {
-          // [Stage 3] 볼케이노 레드 그라데이션 배경
+        } else if (stage === 3) {
           const radial = ctx.createRadialGradient(
             width / 2, height / 2, 50,
             width / 2, height / 2, Math.max(width, height) / 1.2
@@ -608,7 +697,6 @@
           ctx.fillStyle = radial;
           ctx.fillRect(0, 0, width, height);
 
-          // 방사형 레이더 동심원 패턴
           ctx.strokeStyle = "rgba(255, 70, 70, 0.1)";
           ctx.lineWidth = 1.5;
           const maxRadius = Math.max(width, height);
@@ -617,21 +705,17 @@
             ctx.arc(width / 2, height / 2, r, 0, Math.PI * 2);
             ctx.stroke();
           }
-
-          // 테두리 경고 글로우
-          ctx.strokeStyle = "rgba(244, 63, 94, 0.35)";
-          ctx.lineWidth = 4;
-          ctx.strokeRect(2, 2, width - 4, height - 4);
         }
         ctx.restore();
       }
 
       function render() {
+        if (window.StageManager.currentStatus !== 'PLAY') return;
+
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
         const rendering = window.GameComponents.rendering;
 
-        // 스테이지 배경 커스텀 그리기
         drawBackground(width, height);
 
         if (monster.trail) rendering.drawTrail(ctx, monster.trail, "#ff6574");
@@ -650,14 +734,21 @@
         }
       }
 
-      const loop = new window.GameComponents.GameLoop(update, render, ({ fps }) => {
+      loop = new window.GameComponents.GameLoop(update, render, ({ fps }) => {
         fpsNode.textContent = `${Math.round(fps)} FPS`;
         speedNode.textContent = `${Math.round(Math.hypot(player.vx, player.vy))} px/s`;
       });
 
-      window.addEventListener("resize", () => { resize(); reset(); });
+      window.addEventListener("resize", () => {
+        if (window.StageManager.currentStatus === 'PLAY') {
+          resize();
+          resetGame();
+        }
+      });
 
       window.addEventListener("keydown", (event) => {
+        if (window.StageManager.currentStatus !== 'PLAY') return;
+
         if (event.code === "KeyQ" && !isPaused) {
           skillManager.useSkill(player);
         }
@@ -674,20 +765,10 @@
       window.addEventListener("keyup", (event) => keys.delete(event.code));
       window.addEventListener("blur", () => keys.clear());
 
-      // 스테이지 선택 버튼 이벤트 리스너 연결
-      stageButtons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          const selectedStage = e.currentTarget.dataset.stage;
-          setStage(selectedStage);
-        });
-      });
-
-      // 시뮬레이션 초기화 버튼 클릭 시 확인 팝업 모달 호출
       document.querySelector("#reset").addEventListener("click", openResetConfirmModal);
 
-      resize();
-      reset();
-      loop.start();
+      // StageManager 초기화 실행
+      window.StageManager.init();
     })();
   </script>
 </body>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스테이지 관리 시스템</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f0f0f0; }
+        .screen { display: none; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 400px; margin: 0 auto; }
+        .active { display: block; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; margin: 10px; border: none; border-radius: 5px; background: #007bff; color: white; }
+        button:hover { background: #0056b3; }
+        .stage-btn { background: #28a745; }
+        .stage-btn:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 시작 화면 -->
+    <div id="start-screen" class="screen active">
+        <h2>게임 시작</h2>
+        <button onclick="StageManager.changeStage('SELECT')">게임 시작하기</button>
+    </div>
+
+    <!-- 2. 스테이지 선택 화면 -->
+    <div id="select-screen" class="screen">
+        <h2>스테이지 선택</h2>
+        <div id="stage-buttons"></div>
+    </div>
+
+    <!-- 3. 플레이 화면 -->
+    <div id="play-screen" class="screen">
+        <h2 id="current-stage-title">플레이 중</h2>
+        <p>게임이 진행 중입니다...</p>
+        <button onclick="StageManager.completeStage(true)">스테이지 클리어</button>
+        <button onclick="StageManager.completeStage(false)" style="background:#dc3545;">실패</button>
+    </div>
+
+    <!-- 4. 결과 화면 -->
+    <div id="result-screen" class="screen">
+        <h2>게임 결과</h2>
+        <p id="result-message"></p>
+        <button onclick="StageManager.changeStage('SELECT')">스테이지 선택으로</button>
+        <button onclick="StageManager.changeStage('START')" style="background:#6c757d;">처음으로</button>
+    </div>
+
+    <!-- 스크립트 로드 -->
+    <script src="stagemanager.js"></script>
+    <script>
+        // 페이지 로드 시 초기화 실행
+        window.onload = () => StageManager.init();
+    </script>
+</body>
+</html>

@@ -163,11 +163,19 @@ public class EnemyChase : MonoBehaviour
             agent.SetDestination(hit.position);
         }
     }
-
+    [Header("사망 시 증가시킬 감정 수치")]
+    public float emotionReward = 10f; // 적이 죽었을 때 획득할 감정 수치
     void Die()
     {
         Debug.Log($"{gameObject.name} 사망.");
         Destroy(gameObject);
+        // [추가] 인게임 UI 싱글톤을 찾아 감정 게이지 증가
+        if (UI_InGameScene.Instance != null)
+        {
+            UI_InGameScene.Instance.AddEmotion(emotionReward);
+        }
+
+    
     }
 
     private void OnDrawGizmosSelected()

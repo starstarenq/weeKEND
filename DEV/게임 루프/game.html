@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVG Web Game</title>
+    <title>SVG Stage Survival Game</title>
     <style>
         body {
             margin: 0;
@@ -14,6 +15,7 @@
             overflow: hidden;
             user-select: none;
         }
+
         #game-container {
             position: relative;
             width: 100vw;
@@ -22,10 +24,12 @@
             justify-content: center;
             align-items: center;
         }
+
         svg {
             background-color: #111;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
+
         #ui-layer {
             position: absolute;
             top: 0;
@@ -36,6 +40,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
+
         .ui-element {
             position: absolute;
             background: rgba(0, 0, 0, 0.6);
@@ -44,16 +49,27 @@
             font-weight: bold;
             border: 1px solid #444;
         }
+
         #fps-counter {
             top: 20px;
             right: 20px;
             color: #00ffcc;
         }
+
+        #stage-timer {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffcc00;
+            font-size: 1.2rem;
+        }
+
         #player-stats {
             bottom: 20px;
             left: 20px;
             color: #ff4d4d;
         }
+
         #action-log {
             bottom: 20px;
             right: 20px;
@@ -64,25 +80,28 @@
             display: flex;
             flex-direction: column-reverse;
         }
-        #game-over-screen {
+
+        /* 모달 overlay 스타일 (선택 화면, 오버, 클리어 공통) */
+        .overlay-screen {
             display: none;
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.85);
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
         }
-        #game-over-screen h1 {
+
+        .overlay-screen h1 {
             font-size: 3rem;
-            color: #ff4d4d;
             margin-bottom: 20px;
         }
-        #restart-btn {
+
+        .btn {
             padding: 12px 24px;
             font-size: 1.2rem;
             background: #00ffcc;
@@ -93,478 +112,553 @@
             font-weight: bold;
             transition: 0.2s;
             pointer-events: auto;
+            margin: 8px;
         }
-        #restart-btn:hover {
+
+        .btn:hover {
             background: #00ccaa;
             transform: scale(1.05);
         }
+
+        .stage-select-btn {
+            background: #28a745;
+            color: #fff;
+            min-width: 150px;
+        }
+
+        .stage-select-btn:hover {
+            background: #218838;
+        }
     </style>
 </head>
+
 <body>
 
-<div id="game-container">
-    <svg id="gameCanvas" width="800" height="600">
-        <!-- 배경 격자선 (애니메이션감 부여용) -->
-        <defs>
-            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222" stroke-width="1"/>
-            </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#grid)" />
-        
-        <!-- 동적 오브젝트가 렌더링될 그룹 -->
-        <g id="render-group"></g>
-    </svg>
+    <div id="game-container">
+        <svg id="gameCanvas" width="800" height="600">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+            <g id="render-group"></g>
+        </svg>
 
-    <div id="ui-layer">
-        <div id="fps-counter" class="ui-element">FPS: 0</div>
-        <div id="player-stats" class="ui-element">HP: 100 / 100</div>
-        <div id="action-log" class="ui-element">게임 시작 완료!</div>
+        <div id="ui-layer">
+            <div id="fps-counter" class="ui-element">FPS: 0</div>
+            <div id="stage-timer" class="ui-element">STAGE 1 - 01:00</div>
+            <div id="player-stats" class="ui-element">HP: 100 / 100</div>
+            <div id="action-log" class="ui-element">게임 준비 완료!</div>
+        </div>
+
+        <!-- 1. 스테이지 선택 화면 -->
+        <div id="stage-select-screen" class="overlay-screen" style="display: flex;">
+            <h1 style="color: #00ffcc;">스테이지 선택</h1>
+            <div id="stage-buttons-container"></div>
+        </div>
+
+        <!-- 2. 게임 오버 화면 -->
+        <div id="game-over-screen" class="overlay-screen">
+            <h1 style="color: #ff4d4d;">GAME OVER</h1>
+            <button class="btn" onclick="retryCurrentStage()">다시 시도</button>
+            <button class="btn" onclick="showStageSelect()">스테이지 선택으로</button>
+        </div>
+
+        <!-- 3. 스테이지 클리어 화면 -->
+        <div id="stage-clear-screen" class="overlay-screen">
+            <h1 style="color: #00ffcc;">STAGE CLEAR!</h1>
+            <p id="clear-message" style="font-size: 1.5rem; margin-bottom: 20px;">1분간 생존에 성공했습니다!</p>
+            <button class="btn" onclick="nextStage()">다음 스테이지</button>
+            <button class="btn" onclick="showStageSelect()">스테이지 선택으로</button>
+        </div>
     </div>
 
-    <div id="game-over-screen">
-        <h1>GAME OVER</h1>
-        <button id="restart-btn" onclick="resetGame()">다시 시작</button>
-    </div>
-</div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const renderGroup = document.getElementById('render-group');
+        const fpsCounter = document.getElementById('fps-counter');
+        const playerStats = document.getElementById('player-stats');
+        const actionLog = document.getElementById('action-log');
+        const stageTimerUI = document.getElementById('stage-timer');
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const renderGroup = document.getElementById('render-group');
-    const fpsCounter = document.getElementById('fps-counter');
-    const playerStats = document.getElementById('player-stats');
-    const actionLog = document.getElementById('action-log');
-    const gameOverScreen = document.getElementById('game-over-screen');
+        const stageSelectScreen = document.getElementById('stage-select-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const stageClearScreen = document.getElementById('stage-clear-screen');
+        const stageButtonsContainer = document.getElementById('stage-buttons-container');
 
-    const WIDTH = 800;
-    const HEIGHT = 600;
+        const WIDTH = 800;
+        const HEIGHT = 600;
 
-    // 게임 상태 정의
-    let isGameOver = false;
-    let lastTime = 0;
-    let accumulator = 0;
-    const timeStep = 1000 / 60; // 60 FPS 제어용 시간 간격 (약 16.67ms)
+        // 스테이지 시스템 관리 변수
+        const TOTAL_STAGES = 5;
+        const SURVIVAL_TIME = 60; // 목표 생존 시간 (60초)
+        let currentStage = 1;
+        let stageTimer = SURVIVAL_TIME;
+        let stageTimeAccumulator = 0;
 
-    // FPS 계산 변수
-    let fps = 0;
-    let frameCount = 0;
-    let fpsLastTime = 0;
+        // 게임 상태 정의
+        let isGameRunning = false;
+        let isGameOver = false;
+        let lastTime = 0;
+        let accumulator = 0;
+        const timeStep = 1000 / 60;
 
-    // 입력 상태 객체
-    const input = {
-        w: false, a: false, s: false, d: false,
-        mouseLeft: false,
-        q: false,
-        skills: { 1: false, 2: false, 3: false, 4: false, 5: false }
-    };
+        // FPS 계산 변수
+        let fps = 0;
+        let frameCount = 0;
+        let fpsLastTime = 0;
 
-    // 플레이어 객체
-    let player = {
-        x: WIDTH / 2,
-        y: HEIGHT / 2,
-        radius: 15,
-        speed: 4,
-        hp: 100,
-        maxHp: 100,
-        pulseTimer: 0 // 애니메이션용 타이머
-    };
+        // 입력 상태 객체
+        const input = {
+            w: false, a: false, s: false, d: false,
+            mouseLeft: false,
+            q: false,
+            skills: { 1: false, 2: false, 3: false, 4: false, 5: false }
+        };
 
-    // 몬스터 및 발사체 관리 배열
-    let monsters = [];
-    let projectiles = [];
-    let particles = [];
+        // 플레이어 객체
+        let player = {
+            x: WIDTH / 2,
+            y: HEIGHT / 2,
+            radius: 15,
+            speed: 4,
+            hp: 100,
+            maxHp: 100,
+            pulseTimer: 0
+        };
 
-    // 몬스터 생성 관리 객체 (monsterSpawner)
-    const monsterSpawner = {
-        spawnRate: 1500, // 생성 주기 (ms 단위, 1.5초마다)
-        lastSpawnTime: 0,
-        update: function(currentTime) {
-            if (currentTime - this.lastSpawnTime >= this.spawnRate) {
-                this.spawn();
-                this.lastSpawnTime = currentTime;
-                // 난이도 상승을 위해 소환 주기 점진적 감소 (최소 500ms)
-                if (this.spawnRate > 500) this.spawnRate -= 20;
+        let monsters = [];
+        let projectiles = [];
+        let particles = [];
+
+        // 몬스터 생성 스파우너
+        const monsterSpawner = {
+            spawnRate: 1500,
+            lastSpawnTime: 0,
+            update: function (currentTime) {
+                if (currentTime - this.lastSpawnTime >= this.spawnRate) {
+                    this.spawn();
+                    this.lastSpawnTime = currentTime;
+                    if (this.spawnRate > 300) this.spawnRate -= 15; // 난이도 조절
+                }
+            },
+            spawn: function () {
+                const corners = [
+                    { x: 20, y: 20 },
+                    { x: WIDTH - 20, y: 20 },
+                    { x: 20, y: HEIGHT - 20 },
+                    { x: WIDTH - 20, y: HEIGHT - 20 }
+                ];
+
+                const spawnPoint = corners[Math.floor(Math.random() * corners.length)];
+                // 스테이지가 높아질수록 몬스터 속도 증가
+                const speedBoost = (currentStage - 1) * 0.3;
+
+                const monster = {
+                    id: Date.now() + Math.random(),
+                    x: spawnPoint.x,
+                    y: spawnPoint.y,
+                    radius: 12,
+                    speed: 1.5 + Math.random() * 1.0 + speedBoost,
+                    attackRate: Math.max(400, (800 + Math.random() * 1000) - (currentStage * 50)),
+                    lastAttackTime: 0,
+                    color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+                    animOffset: Math.random() * Math.PI * 2
+                };
+
+                monsters.push(monster);
             }
-        },
-        spawn: function() {
-            // 네 모서리 좌표 정의
-            const corners = [
-                { x: 20, y: 20 },          // 좌상단
-                { x: WIDTH - 20, y: 20 },  // 우상단
-                { x: 20, y: HEIGHT - 20 }, // 좌하단
-                { x: WIDTH - 20, y: HEIGHT - 20 } // 우하단
-            ];
-            
-            // 랜덤 모서리 선택
-            const spawnPoint = corners[Math.floor(Math.random() * corners.length)];
-            
-            // 고유한 AttackRate(공격 딜레이 ms)를 가진 몬스터 생성
-            const monster = {
-                id: Date.now() + Math.random(),
-                x: spawnPoint.x,
-                y: spawnPoint.y,
-                radius: 12,
-                speed: 1.5 + Math.random() * 1.0, // 속도 다양화
-                attackRate: 800 + Math.random() * 1000, // 각자 고유한 공격 주기 (800ms ~ 1800ms)
-                lastAttackTime: 0,
-                color: `hsl(${Math.random() * 360}, 80%, 60%)`, // 고유 색상
-                animOffset: Math.random() * Math.PI * 2 // 애니메이션 위상차
-            };
-            
-            monsters.push(monster);
+        };
+
+        // 스테이지 선택 버튼 생성
+        function initStageButtons() {
+            stageButtonsContainer.innerHTML = '';
+            for (let i = 1; i <= TOTAL_STAGES; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn stage-select-btn';
+                btn.textContent = `STAGE ${i}`;
+                btn.onclick = () => startStage(i);
+                stageButtonsContainer.appendChild(btn);
+            }
         }
-    };
 
-    // 로그 기록 함수
-    function logAction(message) {
-        const div = document.createElement('div');
-        div.textContent = message;
-        actionLog.appendChild(div);
-        if (actionLog.children.length > 5) {
-            actionLog.removeChild(actionLog.firstChild);
+        function showStageSelect() {
+            isGameRunning = false;
+            gameOverScreen.style.display = 'none';
+            stageClearScreen.style.display = 'none';
+            stageSelectScreen.style.display = 'flex';
         }
-    }
 
-    // 키보드 및 마우스 입력 리스너 설정
-    window.addEventListener('keydown', (e) => {
-        if (isGameOver) return;
-        const key = e.key.toLowerCase();
-        if (['w', 'a', 's', 'd'].includes(key)) input[key] = true;
-        if (key === 'q') {
-            if (!input.q) { logAction("궁극기(Q) 시전!"); triggerUltimate(); }
-            input.q = true;
+        function startStage(stageNum) {
+            currentStage = stageNum;
+            stageTimer = SURVIVAL_TIME;
+            stageTimeAccumulator = 0;
+
+            // 몬스터 난이도 초기화 (스테이지 반영)
+            monsterSpawner.spawnRate = Math.max(400, 1500 - (currentStage - 1) * 200);
+
+            resetGame();
+
+            stageSelectScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            stageClearScreen.style.display = 'none';
+
+            isGameRunning = true;
+            logAction(`STAGE ${currentStage} 시작! 1분간 생존하세요.`);
         }
-        if (['1', '2', '3', '4', '5'].includes(key)) {
-            if (!input.skills[key]) { logAction(`스킬 ${key}번 사용!`); triggerSkill(key); }
-            input.skills[key] = true;
+
+        function nextStage() {
+            if (currentStage < TOTAL_STAGES) {
+                startStage(currentStage + 1);
+            } else {
+                logAction("모든 스테이지를 클리어했습니다!");
+                showStageSelect();
+            }
         }
-    });
 
-    window.addEventListener('keyup', (e) => {
-        const key = e.key.toLowerCase();
-        if (['w', 'a', 's', 'd'].includes(key)) input[key] = false;
-        if (key === 'q') input.q = false;
-        if (['1', '2', '3', '4', '5'].includes(key)) input.skills[key] = false;
-    });
-
-    canvas.addEventListener('mousedown', (e) => {
-        if (isGameOver) return;
-        if (e.button === 0) { // 좌클릭
-            input.mouseLeft = true;
-            logAction("일반 공격 발사!");
-            fireProjectile(e);
+        function retryCurrentStage() {
+            startStage(currentStage);
         }
-    });
 
-    canvas.addEventListener('mouseup', (e) => {
-        if (e.button === 0) input.mouseLeft = false;
-    });
+        function logAction(message) {
+            const div = document.createElement('div');
+            div.textContent = message;
+            actionLog.appendChild(div);
+            if (actionLog.children.length > 5) {
+                actionLog.removeChild(actionLog.firstChild);
+            }
+        }
 
-    // 공격 기능 구현들
-    function fireProjectile(e) {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        
-        const angle = Math.atan2(mouseY - player.y, mouseX - player.x);
-        projectiles.push({
-            x: player.x,
-            y: player.y,
-            vx: Math.cos(angle) * 7,
-            vy: Math.sin(angle) * 7,
-            radius: 5,
-            color: '#00ffcc'
+        // 입력 처리
+        window.addEventListener('keydown', (e) => {
+            if (!isGameRunning || isGameOver) return;
+            const key = e.key.toLowerCase();
+            if (['w', 'a', 's', 'd'].includes(key)) input[key] = true;
+            if (key === 'q') {
+                if (!input.q) { logAction("궁극기(Q) 시전!"); triggerUltimate(); }
+                input.q = true;
+            }
+            if (['1', '2', '3', '4', '5'].includes(key)) {
+                if (!input.skills[key]) { logAction(`스킬 ${key}번 사용!`); triggerSkill(key); }
+                input.skills[key] = true;
+            }
         });
-    }
 
-    function triggerUltimate() {
-        // 전방위 충격파 시각 효과 파티클 생성
-        for (let i = 0; i < 36; i++) {
-            const angle = (i * 10) * Math.PI / 180;
-            particles.push({
+        window.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 'a', 's', 'd'].includes(key)) input[key] = false;
+            if (key === 'q') input.q = false;
+            if (['1', '2', '3', '4', '5'].includes(key)) input.skills[key] = false;
+        });
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!isGameRunning || isGameOver) return;
+            if (e.button === 0) {
+                input.mouseLeft = true;
+                logAction("일반 공격 발사!");
+                fireProjectile(e);
+            }
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            if (e.button === 0) input.mouseLeft = false;
+        });
+
+        function fireProjectile(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const angle = Math.atan2(mouseY - player.y, mouseX - player.x);
+            projectiles.push({
                 x: player.x,
                 y: player.y,
-                vx: Math.cos(angle) * 5,
-                vy: Math.sin(angle) * 5,
-                life: 30,
-                maxLife: 30,
-                color: '#ff00ff',
-                radius: 4
+                vx: Math.cos(angle) * 7,
+                vy: Math.sin(angle) * 7,
+                radius: 5,
+                color: '#00ffcc'
             });
         }
-        // 화면 안의 모든 몬스터에게 넉백 및 처치 효과(시연용)
-        monsters = [];
-        logAction("궁극기가 전장을 휩쓸었습니다!");
-    }
 
-    function triggerSkill(slot) {
-        // 스킬 번호에 따른 화려한 파티클 분출 효과
-        const colors = ['#ff3333', '#33ff33', '#3333ff', '#ffff33', '#33ffff'];
-        const color = colors[slot - 1] || '#ffffff';
-        for (let i = 0; i < 12; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const speed = 2 + Math.random() * 4;
-            particles.push({
-                x: player.x,
-                y: player.y,
-                vx: Math.cos(angle) * speed,
-                vy: Math.sin(angle) * speed,
-                life: 20,
-                maxLife: 20,
-                color: color,
-                radius: 6 - slot * 0.5
-            });
-        }
-    }
-
-    // 메인 게임 루프 (60Frame update 분리 보정 구조)
-    function gameLoop(currentTime) {
-        if (!lastTime) lastTime = currentTime;
-        let elapsed = currentTime - lastTime;
-        lastTime = currentTime;
-
-        // 타임스텝 누적 (기기 성능에 무관하게 초당 정확히 60번 갱신하게 함)
-        accumulator += elapsed;
-        while (accumulator >= timeStep) {
-            if (!isGameOver) {
-                updateGame(currentTime);
-            }
-            accumulator -= timeStep;
-        }
-
-        // FPS 측정 및 상단 UI 업데이트
-        frameCount++;
-        if (currentTime - fpsLastTime >= 1000) {
-            fps = frameCount;
-            frameCount = 0;
-            fpsLastTime = currentTime;
-            fpsCounter.textContent = `FPS: ${fps}`;
-        }
-
-        // 화면 렌더링 호출
-        renderGame(currentTime);
-
-        requestAnimationFrame(gameLoop);
-    }
-
-    // 게임 로직 업데이트 (Fixed Update: 60FPS 기준)
-    function updateGame(currentTime) {
-        // 1. 플레이어 이동
-        if (input.w) player.y -= player.speed;
-        if (input.s) player.y += player.speed;
-        if (input.a) player.x -= player.speed;
-        if (input.d) player.x += player.speed;
-
-        // 화면 경계 제한
-        player.x = Math.max(player.radius, Math.min(WIDTH - player.radius, player.x));
-        player.y = Math.max(player.radius, Math.min(HEIGHT - player.radius, player.y));
-
-        // 플레이어 애니메이션 타이머 카운트
-        player.pulseTimer += 0.05;
-
-        // 2. 스파우너 작동
-        monsterSpawner.update(currentTime);
-
-        // 3. 몬스터 로직 업데이트 및 공격 판단
-        for (let i = monsters.length - 1; i >= 0; i--) {
-            let m = monsters[i];
-            
-            // 플레이어를 향해 추적 이동
-            let dx = player.x - m.x;
-            let dy = player.y - m.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist > 0) {
-                m.x += (dx / dist) * m.speed;
-                m.y += (dy / dist) * m.speed;
-            }
-
-            // 고유 AttackRate 기반 주기적 원거리 투사체 공격 발사
-            if (currentTime - m.lastAttackTime >= m.attackRate) {
-                m.lastAttackTime = currentTime;
-                // 플레이어 방향으로 몬스터 투사체 생성
-                let attackAngle = Math.atan2(dy, dx);
-                projectiles.push({
-                    x: m.x,
-                    y: m.y,
-                    vx: Math.cos(attackAngle) * 3.5,
-                    vy: Math.sin(attackAngle) * 3.5,
-                    radius: 4,
-                    color: '#ff4d4d',
-                    isMonsterAttack: true
+        function triggerUltimate() {
+            for (let i = 0; i < 36; i++) {
+                const angle = (i * 10) * Math.PI / 180;
+                particles.push({
+                    x: player.x,
+                    y: player.y,
+                    vx: Math.cos(angle) * 5,
+                    vy: Math.sin(angle) * 5,
+                    life: 30,
+                    maxLife: 30,
+                    color: '#ff00ff',
+                    radius: 4
                 });
             }
+            monsters = [];
+            logAction("궁극기가 전장을 휩쓸었습니다!");
+        }
 
-            // 몸체 충돌 (몸에 닿아도 피해)
-            if (dist < player.radius + m.radius) {
-                playerDamage(10);
-                monsters.splice(i, 1); // 부딪힌 몬스터 소멸
+        function triggerSkill(slot) {
+            const colors = ['#ff3333', '#33ff33', '#3333ff', '#ffff33', '#33ffff'];
+            const color = colors[slot - 1] || '#ffffff';
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 4;
+                particles.push({
+                    x: player.x,
+                    y: player.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 20,
+                    maxLife: 20,
+                    color: color,
+                    radius: 6 - slot * 0.5
+                });
             }
         }
 
-        // 4. 발사체(투사체) 업데이트 및 충돌 검사
-        for (let i = projectiles.length - 1; i >= 0; i--) {
-            let p = projectiles[i];
-            p.x += p.vx;
-            p.y += p.vy;
+        // 메인 게임 루프
+        function gameLoop(currentTime) {
+            if (!lastTime) lastTime = currentTime;
+            let elapsed = currentTime - lastTime;
+            lastTime = currentTime;
 
-            // 벽 밖으로 나가면 제거
-            if (p.x < 0 || p.x > WIDTH || p.y < 0 || p.y > HEIGHT) {
-                projectiles.splice(i, 1);
-                continue;
+            accumulator += elapsed;
+            while (accumulator >= timeStep) {
+                if (isGameRunning && !isGameOver) {
+                    updateGame(currentTime, timeStep);
+                }
+                accumulator -= timeStep;
             }
 
-            if (p.isMonsterAttack) {
-                // 플레이어가 몬스터 공격에 맞았을 때
-                let dx = p.x - player.x;
-                let dy = p.y - player.y;
-                let dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < player.radius + p.radius) {
-                    playerDamage(15); // 피해 적용 및 게임오버 검증
-                    projectiles.splice(i, 1);
+            // FPS 측정
+            frameCount++;
+            if (currentTime - fpsLastTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                fpsLastTime = currentTime;
+                fpsCounter.textContent = `FPS: ${fps}`;
+            }
+
+            renderGame(currentTime);
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 게임 업데이트 (시간 타이머 포함)
+        function updateGame(currentTime, delta) {
+            // 타이머 계산
+            stageTimeAccumulator += delta;
+            if (stageTimeAccumulator >= 1000) {
+                stageTimer--;
+                stageTimeAccumulator -= 1000;
+
+                if (stageTimer <= 0) {
+                    stageTimer = 0;
+                    stageClear();
                 }
-            } else {
-                // 플레이어 공격이 몬스터에 맞았을 때
-                for (let j = monsters.length - 1; j >= 0; j--) {
-                    let m = monsters[j];
-                    let dx = p.x - m.x;
-                    let dy = p.y - m.y;
+            }
+
+            // UI 타이머 업데이트 (00:00 포맷)
+            const min = String(Math.floor(stageTimer / 60)).padStart(2, '0');
+            const sec = String(stageTimer % 60).padStart(2, '0');
+            stageTimerUI.textContent = `STAGE ${currentStage} - ${min}:${sec}`;
+
+            // 1. 플레이어 이동
+            if (input.w) player.y -= player.speed;
+            if (input.s) player.y += player.speed;
+            if (input.a) player.x -= player.speed;
+            if (input.d) player.x += player.speed;
+
+            player.x = Math.max(player.radius, Math.min(WIDTH - player.radius, player.x));
+            player.y = Math.max(player.radius, Math.min(HEIGHT - player.radius, player.y));
+            player.pulseTimer += 0.05;
+
+            // 2. 몬스터 스파우너
+            monsterSpawner.update(currentTime);
+
+            // 3. 몬스터 로직
+            for (let i = monsters.length - 1; i >= 0; i--) {
+                let m = monsters[i];
+                let dx = player.x - m.x;
+                let dy = player.y - m.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist > 0) {
+                    m.x += (dx / dist) * m.speed;
+                    m.y += (dy / dist) * m.speed;
+                }
+
+                if (currentTime - m.lastAttackTime >= m.attackRate) {
+                    m.lastAttackTime = currentTime;
+                    let attackAngle = Math.atan2(dy, dx);
+                    projectiles.push({
+                        x: m.x,
+                        y: m.y,
+                        vx: Math.cos(attackAngle) * 3.5,
+                        vy: Math.sin(attackAngle) * 3.5,
+                        radius: 4,
+                        color: '#ff4d4d',
+                        isMonsterAttack: true
+                    });
+                }
+
+                if (dist < player.radius + m.radius) {
+                    playerDamage(10);
+                    monsters.splice(i, 1);
+                }
+            }
+
+            // 4. 발사체
+            for (let i = projectiles.length - 1; i >= 0; i--) {
+                let p = projectiles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > WIDTH || p.y < 0 || p.y > HEIGHT) {
+                    projectiles.splice(i, 1);
+                    continue;
+                }
+
+                if (p.isMonsterAttack) {
+                    let dx = p.x - player.x;
+                    let dy = p.y - player.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < m.radius + p.radius) {
-                        // 피격 파티클 생성
-                        createHitEffect(m.x, m.y, m.color);
-                        monsters.splice(j, 1);
+                    if (dist < player.radius + p.radius) {
+                        playerDamage(15);
                         projectiles.splice(i, 1);
-                        break;
+                    }
+                } else {
+                    for (let j = monsters.length - 1; j >= 0; j--) {
+                        let m = monsters[j];
+                        let dx = p.x - m.x;
+                        let dy = p.y - m.y;
+                        let dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < m.radius + p.radius) {
+                            createHitEffect(m.x, m.y, m.color);
+                            monsters.splice(j, 1);
+                            projectiles.splice(i, 1);
+                            break;
+                        }
                     }
                 }
             }
+
+            // 5. 파티클
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                if (p.life <= 0) particles.splice(i, 1);
+            }
+
+            playerStats.textContent = `HP: ${Math.max(0, player.hp)} / ${player.maxHp}`;
         }
 
-        // 5. 이펙트 파티클 업데이트
-        for (let i = particles.length - 1; i >= 0; i--) {
-            let p = particles[i];
-            p.x += p.vx;
-            p.y += p.vy;
-            p.life--;
-            if (p.life <= 0) particles.splice(i, 1);
+        function createHitEffect(x, y, color) {
+            for (let i = 0; i < 6; i++) {
+                let angle = Math.random() * Math.PI * 2;
+                let speed = 1 + Math.random() * 3;
+                particles.push({
+                    x: x, y: y,
+                    vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+                    life: 15, maxLife: 15, radius: 3, color: color
+                });
+            }
         }
 
-        // UI 데이터 동기화
-        playerStats.textContent = `HP: ${Math.max(0, player.hp)} / ${player.maxHp}`;
-    }
+        function playerDamage(amount) {
+            if (isGameOver || !isGameRunning) return;
+            player.hp -= amount;
+            logAction(`피해를 입었습니다! -${amount} HP`);
+            if (player.hp <= 0) {
+                player.hp = 0;
+                isGameOver = true;
+                isGameRunning = false;
+                gameOverScreen.style.display = 'flex';
+                logAction("게임 오버! 플레이어가 쓰러졌습니다.");
+            }
+        }
 
-    function createHitEffect(x, y, color) {
-        for (let i = 0; i < 6; i++) {
-            let angle = Math.random() * Math.PI * 2;
-            let speed = 1 + Math.random() * 3;
-            particles.push({
-                x: x, y: y,
-                vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
-                life: 15, maxLife: 15, radius: 3, color: color
+        function stageClear() {
+            isGameRunning = false;
+            document.getElementById('clear-message').textContent = `STAGE ${currentStage} 클리어 성공!`;
+            stageClearScreen.style.display = 'flex';
+            logAction(`STAGE ${currentStage} 성공!`);
+        }
+
+        // SVG 렌더링
+        function renderGame(currentTime) {
+            renderGroup.innerHTML = '';
+
+            const currentRadius = player.radius + Math.sin(player.pulseTimer) * 2;
+            const playerSvg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            playerSvg.setAttribute("cx", player.x);
+            playerSvg.setAttribute("cy", player.y);
+            playerSvg.setAttribute("r", currentRadius);
+            playerSvg.setAttribute("fill", "#00ffcc");
+            playerSvg.setAttribute("stroke", "#ffffff");
+            playerSvg.setAttribute("stroke-width", "2");
+            renderGroup.appendChild(playerSvg);
+
+            const playerCore = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            playerCore.setAttribute("cx", player.x);
+            playerCore.setAttribute("cy", player.y);
+            playerCore.setAttribute("r", currentRadius * 0.4);
+            playerCore.setAttribute("fill", "#ffffff");
+            renderGroup.appendChild(playerCore);
+
+            monsters.forEach(m => {
+                const bounce = Math.abs(Math.sin((currentTime * 0.005) + m.animOffset)) * 4;
+                const monsterG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                const r = m.radius + bounce;
+                const points = `${m.x},${m.y - r} ${m.x - r},${m.y + r / 2} ${m.x + r},${m.y + r / 2}`;
+                polygon.setAttribute("points", points);
+                polygon.setAttribute("fill", m.color);
+                polygon.setAttribute("stroke", "#111");
+                polygon.setAttribute("stroke-width", "1.5");
+
+                monsterG.appendChild(polygon);
+                renderGroup.appendChild(monsterG);
+            });
+
+            projectiles.forEach(p => {
+                const proj = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                proj.setAttribute("cx", p.x);
+                proj.setAttribute("cy", p.y);
+                proj.setAttribute("r", p.radius);
+                proj.setAttribute("fill", p.color);
+                renderGroup.appendChild(proj);
+            });
+
+            particles.forEach(p => {
+                const part = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                part.setAttribute("cx", p.x);
+                part.setAttribute("cy", p.y);
+                part.setAttribute("r", p.radius * (p.life / p.maxLife));
+                part.setAttribute("fill", p.color);
+                part.setAttribute("opacity", p.life / p.maxLife);
+                renderGroup.appendChild(part);
             });
         }
-    }
 
-    function playerDamage(amount) {
-        if (isGameOver) return;
-        player.hp -= amount;
-        logAction(`피해를 입었습니다! -${amount} HP`);
-        if (player.hp <= 0) {
-            player.hp = 0;
-            isGameOver = true;
-            gameOverScreen.style.display = 'flex';
-            logAction("게임 오버! 플레이어가 쓰러졌습니다.");
+        function resetGame() {
+            player.x = WIDTH / 2;
+            player.y = HEIGHT / 2;
+            player.hp = player.maxHp;
+            monsters = [];
+            projectiles = [];
+            particles = [];
+            isGameOver = false;
         }
-    }
 
-    // SVG 엘리먼트 동적 생성 및 렌더링
-    function renderGame(currentTime) {
-        // 기존 SVG 내부 싹 비우기
-        renderGroup.innerHTML = '';
-
-        // 1. 플레이어 그리기 (간단한 수축/팽창 크기 애니메이션 내장)
-        const currentRadius = player.radius + Math.sin(player.pulseTimer) * 2;
-        const playerSvg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        playerSvg.setAttribute("cx", player.x);
-        playerSvg.setAttribute("cy", player.y);
-        playerSvg.setAttribute("r", currentRadius);
-        playerSvg.setAttribute("fill", "#00ffcc");
-        playerSvg.setAttribute("stroke", "#ffffff");
-        playerSvg.setAttribute("stroke-width", "2");
-        renderGroup.appendChild(playerSvg);
-
-        // 플레이어 중심 코어 원형 데코
-        const playerCore = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        playerCore.setAttribute("cx", player.x);
-        playerCore.setAttribute("cy", player.y);
-        playerCore.setAttribute("r", currentRadius * 0.4);
-        playerCore.setAttribute("fill", "#ffffff");
-        renderGroup.appendChild(playerCore);
-
-        // 2. 몬스터 그리기 (위치 이동 + 고유 회전/진동 애니메이션)
-        monsters.forEach(m => {
-            // 시간 경과에 따른 통통 튀는 애니메이션 계산
-            const bounce = Math.abs(Math.sin((currentTime * 0.005) + m.animOffset)) * 4;
-            const monsterG = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            
-            // 삼각형 형태의 변칙 도형 사양으로 몬스터 렌더링
-            const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            const r = m.radius + bounce;
-            // 위를 바라보는 삼각형 꼭짓점 계산
-            const points = `
-                ${m.x},${m.y - r} 
-                ${m.x - r},${m.y + r/2} 
-                ${m.x + r},${m.y + r/2}
-            `;
-            polygon.setAttribute("points", points);
-            polygon.setAttribute("fill", m.color);
-            polygon.setAttribute("stroke", "#111");
-            polygon.setAttribute("stroke-width", "1.5");
-            
-            monsterG.appendChild(polygon);
-            renderGroup.appendChild(monsterG);
-        });
-
-        // 3. 발사체 그리기
-        projectiles.forEach(p => {
-            const proj = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            proj.setAttribute("cx", p.x);
-            proj.setAttribute("cy", p.y);
-            proj.setAttribute("r", p.radius);
-            proj.setAttribute("fill", p.color);
-            renderGroup.appendChild(proj);
-        });
-
-        // 4. 이펙트 파티클 그리기 (투명도 애니메이션 포함)
-        particles.forEach(p => {
-            const part = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            part.setAttribute("cx", p.x);
-            part.setAttribute("cy", p.y);
-            part.setAttribute("r", p.radius * (p.life / p.maxLife));
-            part.setAttribute("fill", p.color);
-            part.setAttribute("opacity", p.life / p.maxLife);
-            renderGroup.appendChild(part);
-        });
-    }
-
-    // 게임 재시작 세팅 함수
-    function resetGame() {
-        player.x = WIDTH / 2;
-        player.y = HEIGHT / 2;
-        player.hp = player.maxHp;
-        monsters = [];
-        projectiles = [];
-        particles = [];
-        monsterSpawner.spawnRate = 1500;
-        isGameOver = false;
-        gameOverScreen.style.display = 'none';
-        logAction("게임이 재시작되었습니다!");
-    }
-
-    // 최초 게임 루프 구동 실행
-    requestAnimationFrame(gameLoop);
-</script>
+        // 초기화 및 게임 루프 가동
+        initStageButtons();
+        requestAnimationFrame(gameLoop);
+    </script>
 
 </body>
+
 </html>
