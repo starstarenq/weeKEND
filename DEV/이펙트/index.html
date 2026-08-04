@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Noise Effects (WebGL)</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #controls {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #eee;
+      font: 12px/1.6 sans-serif;
+      border-radius: 6px;
+      user-select: none;
+    }
+
+    #controls label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    #controls input[type="range"] {
+      width: 140px;
+    }
+
+    #controls span {
+      min-width: 2.5em;
+      display: inline-block;
+      text-align: right;
+    }
+
+    #modeButtons {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 6px;
+    }
+
+    #modeButtons button {
+      padding: 8px 14px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #eee;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 6px;
+      font: 12px sans-serif;
+      cursor: pointer;
+    }
+
+    #modeButtons button:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    #modeButtons button.active {
+      background: #2b7fff;
+      border-color: #2b7fff;
+      color: #fff;
+    }
+
+    /* Slash 모드 — SVG 사이드뷰 캐릭터가 검을 휘두르면 Classic 검흔 스프라이트가
+     같은 회전각으로 따라붙는다. WebGL 캔버스를 대체하는 별도 DOM 레이어. */
+    #slashStage {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse 70% 55% at 50% 40%, #141a24, #000 75%);
+    }
+
+    #slashStage.active {
+      display: flex;
+    }
+
+    #slashStage svg {
+      width: min(100%, 1400px);
+      height: min(100%, 820px);
+      cursor: pointer;
+    }
+
+    #slashHint {
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      color: #6b7384;
+      font: 12px/1.6 sans-serif;
+      letter-spacing: .04em;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="glcanvas"></canvas>
+
+  <div id="slashStage">
+    <svg id="slashSvg" viewBox="0 0 1200 680" role="img" aria-label="사이드뷰 캐릭터의 검 베기와 검흔 이펙트">
+      <defs>
+        <linearGradient id="slashGroundGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#12161f" />
+          <stop offset="1" stop-color="#0a0c11" />
+        </linearGradient>
+      </defs>
+      <path d="M0 560C220 530 340 575 520 545C720 510 920 575 1200 530V680H0Z" fill="url(#slashGroundGrad)" />
+      <line x1="0" y1="560" x2="1200" y2="560" stroke="#252a36" stroke-width="2" />
+
+      <g transform="translate(300 480)">
+        <g id="slashBody">
+          <circle cy="-12" r="27" fill="#d9c3aa" stroke="#0b0d12" stroke-width="4" />
+          <path d="M-26 18L25 12L38 112L-34 112Z" fill="#1d2838" stroke="#6a8cb5" stroke-width="4" />
+          <path d="M-12 5L20-25L34 8Z" fill="#c9a36b" />
+          <path d="M-8 112L-34 205H0L18 112Z" fill="#151a24" stroke="#6a8cb5" stroke-width="4" />
+          <path d="M24 112L20 205H55L50 105Z" fill="#151a24" stroke="#6a8cb5" stroke-width="4" />
+          <path d="M-18 35L-68 90" stroke="#d9c3aa" stroke-width="18" stroke-linecap="round" />
+
+          <g transform="translate(-62 87)">
+            <g id="slashFx">
+              <image id="slashFxArc" href="Classic/1/Classic_01.png" x="-140" y="-330" width="280" height="333" />
+              <image id="slashFxSpark" href="Classic/4/Classic_19.png" x="-63" y="-283" width="126" height="150"
+                opacity="0" />
+            </g>
+            <g id="slashSword">
+              <rect x="-9" y="-8" width="18" height="48" rx="5" fill="#a07f4a" />
+              <rect x="-30" y="-14" width="60" height="12" rx="6" fill="#c9a36b" />
+              <path d="M-8-13L-3-205L10-237L12-12Z" fill="#dce5ef" stroke="#9bb5d6" stroke-width="4" />
+              <path d="M1-22L3-205" stroke="#eef0f4" stroke-width="3" />
+            </g>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div id="slashHint">SVG 캐릭터 또는 Slash 버튼 클릭 시 베기 재생</div>
+
+  <div id="modeButtons">
+    <button data-effect="texture">단일 텍스처</button>
+    <button data-effect="dissolve">디졸브</button>
+    <button data-effect="fog">안개</button>
+    <button data-effect="slash">Slash</button>
+    <button data-effect="glitch">홀로그램</button>
+    <button data-effect="curtain">커튼</button>
+    <button data-effect="transition">디졸브화면전환</button>
+    <button data-effect="scanline">스캔라인</button>
+
+  </div>
+
+  <div id="controls"></div>
+
+  <!-- 서버 없이 file://로 직접 열어도 동작하도록, TGA 원본 대신
+     base64로 인코딩된 데이터를 별도 JS 파일에서 <script src>로 불러온다.
+     (fetch/XHR은 file:// 환경에서 CORS로 차단되지만 <script src>는 허용된다) -->
+  <script src="noise_data.js"></script>
+
+  <script src="js/tga-loader.js"></script>
+  <script src="js/gl-utils.js"></script>
+
+  <script src="js/effects/texture.js"></script>
+  <script src="js/effects/dissolve.js"></script>
+  <script src="js/effects/fog.js"></script>
+  <script src="js/effects/glitch.js"></script>
+  <script src="js/effects/curtain.js"></script>
+  <script src="js/effects/curtain_vertical.js"></script>
+  <script src="js/effects/transition.js"></script> <!-- 추가 -->
+  <script src="js/effects/scanline.js"></script>
+
+  <script src="js/slash-scene.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

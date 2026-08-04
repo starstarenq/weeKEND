@@ -9,15 +9,20 @@ public class UI_PausePopup : PopUI
         ExitButton
     }
 
+    enum Images
+    {
+        SelectionArrowImage
+    }
+
     private bool _initAlready = false;
-    private int _selectedIndex = 0; // 0: 이어하기, 1: 나가기
+    private int _selectedIndex = 0;
 
     public override void Init()
     {
         if (_initAlready) return;
 
-        // 1. 버튼 컴포넌트 자동 바인딩
         Bind<Button>(typeof(Buttons));
+        Bind<Image>(typeof(Images));
 
         _initAlready = true;
     }
@@ -27,70 +32,77 @@ public class UI_PausePopup : PopUI
         Init();
         base.ShowPopup();
 
-        // 팝업이 켜질 때 항상 첫 번째 메뉴(이어하기)가 선택되도록 초기화
         _selectedIndex = 0;
         UpdateMenuVisual();
     }
 
     private void Update()
     {
-        // 팝업이 활성화되어 있고, 일시정지 상태(Time.timeScale = 0)에서도 키 입력을 받기 위해 UnscaledDeltaTime 계열 작동
         if (!gameObject.activeSelf) return;
 
-        // 1. 위 화살표 입력 시
+        // 키보드 방향키 입력 처리
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            _selectedIndex = 0; // 첫 번째 메뉴로 이동
+            _selectedIndex = 0;
             UpdateMenuVisual();
         }
-        // 2. 아래 화살표 입력 시
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            _selectedIndex = 1; // 두 번째 메뉴로 이동
+            _selectedIndex = 1;
             UpdateMenuVisual();
         }
-        // 3. 엔터(Return) 키 입력 시 선택된 기능 실행
         else if (Input.GetKeyDown(KeyCode.Return))
         {
             ExecuteSelectedMenu();
         }
+
+        // ⚠️ 흔들림 연출(AnimateArrow) 함수 호출을 삭제하여 움직이지 않게 합니다.
     }
 
     /// <summary>
-    /// 선택된 버튼의 글자 색상을 바꾸어 시각적으로 강조하는 함수
+    /// 화살표 UI의 위치와 글자 색상을 선택된 메뉴에 맞게 고정 연결하는 함수
     /// </summary>
     private void UpdateMenuVisual()
     {
         Button resumeBtn = Get<Button>((int)Buttons.ResumeButton);
         Button exitBtn = Get<Button>((int)Buttons.ExitButton);
+        Image arrowImg = Get<Image>((int)Images.SelectionArrowImage);
 
-        // 버튼 하위의 Text 컴포넌트를 가져옴
         Text resumeText = resumeBtn.GetComponentInChildren<Text>();
         Text exitText = exitBtn.GetComponentInChildren<Text>();
 
-        // 0번(이어하기)이 선택된 경우
+        Button targetButton = (_selectedIndex == 0) ? resumeBtn : exitBtn;
+
+        // 1. 글자 색상 실시간 연동
         if (_selectedIndex == 0)
         {
-            if (resumeText != null) resumeText.color = Color.yellow; // 선택됨 (노란색)
-            if (exitText != null) exitText.color = Color.white;     // 선택 안 됨 (흰색)
+            if (resumeText != null) resumeText.color = Color.yellow;
+            if (exitText != null) exitText.color = Color.white;
         }
-        // 1번(나가기)이 selected된 경우
         else
         {
-            if (resumeText != null) resumeText.color = Color.white;  // 선택 안 됨 (흰색)
-            if (exitText != null) exitText.color = Color.yellow;    // 선택됨 (노란색)
+            if (resumeText != null) resumeText.color = Color.white;
+            if (exitText != null) exitText.color = Color.yellow;
+        }
+
+        // 2. ⚠️ 화살표 위치 고정 연동 (흔들리지 않고 지정된 자리에 정지)
+        if (arrowImg != null && targetButton != null)
+        {
+            // 화살표를 선택된 버튼의 자식으로 등록
+            arrowImg.transform.SetParent(targetButton.transform);
+
+            // 버튼의 왼쪽 앞에 딱 멈춰 서 있도록 로컬 좌표계 정렬
+            // (화살표가 글자와 너무 가깝거나 멀다면 -120f 숫자를 조절해 보세요)
+            arrowImg.transform.localPosition = new Vector3(-300f, 0f, 0f);
         }
     }
 
-    /// <summary>
-    /// 엔터를 쳤을 때 실제 로직을 실행하는 브릿지 함수
-    /// </summary>
     private void ExecuteSelectedMenu()
     {
         if (_selectedIndex == 0)
         {
             Debug.Log("키보드 엔터 선택: 게임을 재개합니다.");
-            ClosePopup(); // 부모(PopUI)의 ClosePopup 호출
+            ClosePopup();
         }
         else if (_selectedIndex == 1)
         {
