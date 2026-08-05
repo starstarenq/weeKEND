@@ -1,58 +1,82 @@
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
+public class TestInputManager : MonoBehaviour
 {
     [Header("Scene UI")]
     [SerializeField] private UI_InGameScene inGameSceneUI;
 
     [Header("Pop UI")]
-    // ºÎ¸ğ Å¬·¡½º°¡ PopUI ±¸Á¶ÀÌ¹Ç·Î È®Àå¼ºÀ» À§ÇØ UI_PausePopup ÄÄÆ÷³ÍÆ®·Î ¿¬°áÇÕ´Ï´Ù.
     [SerializeField] private UI_PausePopup pausePopupUI;
+    [SerializeField] private UI_TraitBook traitBookUI;
 
     [Header("Game Objects")]
     [SerializeField] private GameObject enemyObject;
 
-    private float _currentEmotion = 50f; // ÃÊ±â °¨Á¤ °ª
+    private float _currentEmotion = 50f;
+
+    private void Start()
+    {
+        // ì²˜ìŒ ê²Œì„ì„ ì‹œì‘í•  ë•ŒëŠ” íŠ¹ì„± ì‚¬ì „(ë„ê°) í™”ë©´ì´ í™•ì‹¤í•˜ê²Œ êº¼ì ¸ ìˆë„ë¡ ë¹„í™œì„±í™”í•©ë‹ˆë‹¤.
+        if (traitBookUI != null)
+        {
+            traitBookUI.gameObject.SetActive(false);
+        }
+    }
 
     private void Update()
     {
-        // 1. Q ÀÔ·Â ½Ã Àû ÆÄ±« ¹× °¨Á¤ °ÔÀÌÁö 30 »ó½Â
+        // 1. Q í‚¤ ì…ë ¥: ì  ì˜¤ë¸Œì íŠ¸ë¥¼ íŒŒê´´í•˜ê³  ê°ì • ê²Œì´ì§€ ìˆ˜ì¹˜ë¥¼ 30 ì¦ê°€ì‹œí‚µë‹ˆë‹¤.
         if (Input.GetKeyDown(KeyCode.Q))
         {
             if (enemyObject != null)
             {
                 Destroy(enemyObject);
-                Debug.Log("ÀûÀÌ Ã³Ä¡µÇ¾ú½À´Ï´Ù! ¿ÀºêÁ§Æ®°¡ »èÁ¦µË´Ï´Ù.");
-
                 _currentEmotion = Mathf.Clamp(_currentEmotion + 30f, 0f, 100f);
-
                 if (inGameSceneUI != null)
                 {
                     inGameSceneUI.UpdateEmotion(_currentEmotion);
                 }
             }
-            else
+        }
+
+        // 2. ESC í‚¤ ì…ë ¥: íŒì—… UI ì°½ ë‹«ê¸° ë° ì¼ì‹œì •ì§€ ë©”ë‰´ í† ê¸€
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // íŠ¹ì„± ì‚¬ì „(ë„ê°)ì´ ì—´ë ¤ìˆë‹¤ë©´ ESC í‚¤ë¡œ ë„ê°ë¶€í„° ë¨¼ì € ë‹«ìŠµë‹ˆë‹¤.
+            if (traitBookUI != null && traitBookUI.gameObject.activeSelf)
             {
-                Debug.LogWarning("Ã³Ä¡ÇÒ ÀûÀÌ ÀÌ¹Ì Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù.");
+                traitBookUI.ClosePopup();
+            }
+            // ì¼œì§„ íŒì—…ì´ ì—†ë‹¤ë©´ ì¼ë°˜ ì¼ì‹œì •ì§€ ì°½ì„ ì¼œê±°ë‚˜ ë•ë‹ˆë‹¤.
+            else if (pausePopupUI != null)
+            {
+                if (pausePopupUI.gameObject.activeSelf)
+                    pausePopupUI.ClosePopup();
+                else
+                    pausePopupUI.ShowPopup();
             }
         }
 
-        // 2. ESC ÀÔ·Â ½Ã ÀÏ½ÃÁ¤Áö ÆË¾÷(PopUI »ó¼Ó ±¸Á¶) Åä±Û ±â´É
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // 3. O í‚¤ ì…ë ¥: íŠ¹ì„± ì‚¬ì „(ë„ê°) ì—´ê³  ë‹«ê¸° í† ê¸€
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            if (pausePopupUI != null)
+            // ì¼ì‹œì •ì§€ ë©”ë‰´ê°€ ì´ë¯¸ ì¼œì ¸ ìˆë‹¤ë©´ ë„ê°ì´ ì—´ë¦¬ì§€ ì•Šë„ë¡ ë°©ì–´í•©ë‹ˆë‹¤.
+            if (pausePopupUI != null && pausePopupUI.gameObject.activeSelf) return;
+
+            if (traitBookUI != null)
             {
-                // ÆË¾÷ÀÌ ÀÌ¹Ì ÄÑÁ® ÀÖ´Ù¸é ºÎ¸ğ(PopUI)ÀÇ ClosePopup È£Ãâ
-                if (pausePopupUI.gameObject.activeSelf)
+                // ì´ë¯¸ ì¼œì ¸ ìˆë‹¤ë©´ ë‹«ê³ , êº¼ì ¸ ìˆë‹¤ë©´ ì—½ë‹ˆë‹¤.
+                if (traitBookUI.gameObject.activeSelf)
                 {
-                    pausePopupUI.ClosePopup();
+                    traitBookUI.ClosePopup();
                 }
-                // ÆË¾÷ÀÌ ²¨Á® ÀÖ´Ù¸é ºÎ¸ğ(PopUI)ÀÇ ShowPopup È£Ãâ
                 else
                 {
-                    pausePopupUI.ShowPopup();
+                    traitBookUI.ShowPopup();
                 }
             }
         }
+
     }
+
 }

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 - 통합 게이밍 포털 & 모듈 테스터</title>
+    <style>
+        :root {
+            --bg-color: #0f111a;
+            --card-bg: #1a1d2e;
+            --accent-color: #6c5ce7;
+            --accent-light: #a29bfe;
+            --text-color: #e2e8f0;
+            --text-dim: #94a3b8;
+            --danger-color: #ff7675;
+            --success-color: #55efc4;
+            --warning-color: #ffeaa7;
+            --border-color: #2d3748;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: rgba(26, 29, 46, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-light);
+        }
+
+        .logo-badge {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Top HUD Section */
+        .hud-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hud-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .hud-label {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .hud-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .progress-bar-bg {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+            width: 50%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar-fill.emotion {
+            background: linear-gradient(90deg, var(--danger-color), var(--warning-color), var(--success-color));
+        }
+
+        /* Grid Layout for Modules */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .module-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .module-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .module-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            background-color: rgba(85, 239, 196, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(85, 239, 196, 0.2);
+        }
+
+        .module-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-dim);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5b4bc4;
+        }
+
+        .btn-danger {
+            background-color: rgba(255, 118, 117, 0.2);
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-success {
+            background-color: rgba(85, 239, 196, 0.2);
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-color);
+            color: black;
+        }
+
+        .log-box {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            height: 120px;
+            overflow-y: auto;
+            color: #a0aec0;
+        }
+
+        .log-entry {
+            margin-bottom: 0.25rem;
+        }
+
+        .log-entry.info { color: var(--accent-light); }
+        .log-entry.warning { color: var(--warning-color); }
+        .log-entry.danger { color: var(--danger-color); }
+        .log-entry.success { color: var(--success-color); }
+
+        /* Modal Overlay for Boss Choice & Event */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-color);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--warning-color);
+            margin-bottom: 1rem;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Console Section */
+        .system-console {
+            margin-top: 1.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .console-header {
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-dim);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .console-log {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.85rem;
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <span>🔮 회고인생</span>
+            <span class="logo-badge">Core Integration v1.0</span>
+        </div>
+        <nav>
+            <button class="nav-btn active" onclick="switchView('dashboard')">통합 대시보드</button>
+            <button class="nav-btn" onclick="resetGlobalState()">시스템 리셋</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Global HUD -->
+        <section class="hud-panel">
+            <div class="hud-item">
+                <div class="hud-label">체력 (HP)</div>
+                <div class="hud-value" id="hud-hp">100 / 100</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="hp-bar" style="width: 100%;"></div>
+                </div>
+            </div>
+
+            <div class="hud-item">
+                <div class="hud-label">감정 수치 (Emotion)</div>
+                <div class="hud-value" id="hud-emotion">50% (보통)</div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill emotion" id="emotion-bar" style="width: 50%;"></div>
+                </div>
+            </div>
+
+            <div class="hud-item">
+                <div class="hud-label">난이도 배율 (Difficulty)</div>
+                <div class="hud-value" id="hud-difficulty">x1.00</div>
+            </div>
+
+            <div class="hud-item">
+                <div class="hud-label">보유 재화 (Death Crystal)</div>
+                <div class="hud-value" id="hud-crystal" style="color: var(--accent-light);">💎 150 개</div>
+            </div>
+        </section>
+
+        <!-- 4 Core Modules Grid -->
+        <section class="dashboard-grid">
+            
+            <!-- Module 1: Emotion Gauge -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-title">1. 감정 게이지 시스템</div>
+                    <div class="module-status">ACTIVE</div>
+                </div>
+                <div class="module-content">
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">행복/불행 상태에 따라 실시간 게임 난이도가 조정됩니다.</p>
+                    <div class="controls-group">
+                        <button class="btn btn-success" onclick="EmotionModule.addEmotion(15)">행복 행동 (+15%)</button>
+                        <button class="btn btn-danger" onclick="EmotionModule.addEmotion(-15)">불행 행동 (-15%)</button>
+                    </div>
+                    <div class="log-box" id="log-emotion"></div>
+                </div>
+            </div>
+
+            <!-- Module 2: Joker & Grace System -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-title">2. 오큐시스 장난 & 코스모 가호</div>
+                    <div class="module-status">ACTIVE</div>
+                </div>
+                <div class="module-content">
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">무작위 버프/디버프 및 동시 발동 시 상쇄 로직을 처리합니다.</p>
+                    <div class="controls-group">
+                        <button class="btn" onclick="JokerGraceModule.triggerJoker()">오큐시스의 장난 (디버프)</button>
+                        <button class="btn" onclick="JokerGraceModule.triggerGrace()">코스모의 가호 (버프)</button>
+                        <button class="btn btn-primary" onclick="JokerGraceModule.triggerCollision()">동시 발동 (상쇄 테스트)</button>
+                    </div>
+                    <div class="log-box" id="log-joker"></div>
+                </div>
+            </div>
+
+            <!-- Module 3: Boss Decision System -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-title">3. 보스 처치 / 살려주기 선택</div>
+                    <div class="module-status">ACTIVE</div>
+                </div>
+                <div class="module-content">
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">보스 격파 시 운명을 결정하여 서로 다른 보상을 획득합니다.</p>
+                    <div class="controls-group">
+                        <button class="btn btn-danger" onclick="BossModule.simulateBossDefeat()">보스 처치 직전 시뮬레이션</button>
+                    </div>
+                    <div class="log-box" id="log-boss"></div>
+                </div>
+            </div>
+
+            <!-- Module 4: Rest Area & Shop -->
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-title">4. 기억의 휴식처 & 상점</div>
+                    <div class="module-status">ACTIVE</div>
+                </div>
+                <div class="module-content">
+                    <p style="font-size: 0.85rem; color: var(--text-dim);">재화를 소비하여 체력을 회복하거나 버프 구슬을 구매합니다.</p>
+                    <div class="controls-group">
+                        <button class="btn" onclick="RestAreaModule.buyHP()">체력 회복 (50 💎)</button>
+                        <button class="btn" onclick="RestAreaModule.buyOrb()">응원의 구슬 (100 💎)</button>
+                    </div>
+                    <div class="log-box" id="log-shop"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Global Event Bus Console -->
+        <section class="system-console">
+            <div class="console-header">
+                <span>⚡ GLOBAL EVENT BUS SYSTEM LOG</span>
+                <button class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" onclick="clearConsole()">로그 지우기</button>
+            </div>
+            <div class="console-log" id="global-console"></div>
+        </section>
+    </main>
+
+    <!-- Modal for Boss Decision -->
+    <div class="modal-overlay" id="boss-modal">
+        <div class="modal-card">
+            <div class="modal-title">☠️ 보스 [망각의 기사] 격파!</div>
+            <div class="modal-desc">
+                보스의 생사가 당신의 손에 달려있습니다.<br>
+                어떤 선택을 내리시겠습니까?
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" onclick="BossModule.makeDecision('KILL')">처치한다 (장비/재화 획득)</button>
+                <button class="btn btn-success" onclick="BossModule.makeDecision('SPARE')">살려준다 (특수 버프/무기 획득)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Architecture & Core Modules Implementation -->
+    <script>
+        /* ========================================================
+         * 1. Global Event Bus & State Store
+         * ======================================================== */
+        class EventBus {
+            constructor() {
+                this.listeners = {};
+            }
+            on(event, callback) {
+                if (!this.listeners[event]) this.listeners[event] = [];
+                this.listeners[event].push(callback);
+            }
+            emit(event, data) {
+                logGlobalEvent(`[EVENT] ${event}`, data);
+                if (this.listeners[event]) {
+                    this.listeners[event].forEach(cb => cb(data));
+                }
+            }
+        }
+
+        const GlobalEventBus = new EventBus();
+
+        const StateStore = {
+            hp: 100,
+            maxHp: 100,
+            emotion: 50, // 0 to 100
+            difficultyMultiplier: 1.0,
+            crystals: 150,
+            activeBuffs: [],
+
+            updateHP(amount) {
+                this.hp = Math.min(this.maxHp, Math.max(0, this.hp + amount));
+                GlobalEventBus.emit('HP_CHANGED', { hp: this.hp, maxHp: this.maxHp });
+            },
+
+            updateEmotion(amount) {
+                this.emotion = Math.min(100, Math.max(0, this.emotion + amount));
+                // Calculate Difficulty: Emotion 0 -> 2.0x (Hard), 100 -> 0.5x (Easy)
+                this.difficultyMultiplier = (2.0 - (this.emotion / 100) * 1.5).toFixed(2);
+                GlobalEventBus.emit('EMOTION_CHANGED', { emotion: this.emotion, difficulty: this.difficultyMultiplier });
+            },
+
+            addCrystals(amount) {
+                this.crystals += amount;
+                GlobalEventBus.emit('CURRENCY_CHANGED', { crystals: this.crystals });
+            }
+        };
+
+        /* ========================================================
+         * 2. Core Modules Implementation
+         * ======================================================== */
+
+        // Module 1: Emotion Gauge
+        const EmotionModule = {
+            init() {
+                this.logContainer = document.getElementById('log-emotion');
+            },
+            addEmotion(val) {
+                StateStore.updateEmotion(val);
+                this.log(`감정 수치 변동: ${val > 0 ? '+' + val : val}%`);
+            },
+            log(msg) {
+                appendLog(this.logContainer, msg, 'info');
+            }
+        };
+
+        // Module 2: Joker & Grace
+        const JokerGraceModule = {
+            init() {
+                this.logContainer = document.getElementById('log-joker');
+            },
+            triggerJoker() {
+                GlobalEventBus.emit('JOKER_TRIGGERED', { type: 'DEBUFF', effect: '몬스터 공격력 20% 증가' });
+                this.log(`[오큐시스의 장난] 디버프 발동!`, 'danger');
+            },
+            triggerGrace() {
+                GlobalEventBus.emit('GRACE_TRIGGERED', { type: 'BUFF', effect: '이동 속도 30% 증가' });
+                this.log(`[코스모의 가호] 버프 발동!`, 'success');
+            },
+            triggerCollision() {
+                this.log(`[경고] 장난과 가호 동시 발동 감지!`, 'warning');
+                GlobalEventBus.emit('EFFECT_CANCELLED', { reason: '상쇄(무효화) 처리됨' });
+                this.log(`⚡ 두 효과가 서로 상쇄되어 무효화되었습니다.`, 'info');
+            },
+            log(msg, type='info') {
+                appendLog(this.logContainer, msg, type);
+            }
+        };
+
+        // Module 3: Boss Decision
+        const BossModule = {
+            init() {
+                this.logContainer = document.getElementById('log-boss');
+                this.modal = document.getElementById('boss-modal');
+            },
+            simulateBossDefeat() {
+                this.log('⚔️ 보스 체력 0 도달. 선택 모달 활성화.', 'warning');
+                this.modal.classList.add('active');
+            },
+            makeDecision(choice) {
+                this.modal.classList.remove('active');
+                if (choice === 'KILL') {
+                    StateStore.addCrystals(100);
+                    StateStore.updateEmotion(-10);
+                    GlobalEventBus.emit('BOSS_DECISION', { choice: 'KILL', reward: '100 크리스탈 + 전설 장비' });
+                    this.log('🗡️ 보스를 처치했습니다. (탐욕 상승, 감정 -10%)', 'danger');
+                } else {
+                    StateStore.updateEmotion(+15);
+                    GlobalEventBus.emit('BOSS_DECISION', { choice: 'SPARE', reward: '코스모의 축복 버프' });
+                    this.log('🕊️ 보스를 살려주었습니다. (자비 실천, 감정 +15%)', 'success');
+                }
+            },
+            log(msg, type='info') {
+                appendLog(this.logContainer, msg, type);
+            }
+        };
+
+        // Module 4: Rest Area & Shop
+        const RestAreaModule = {
+            init() {
+                this.logContainer = document.getElementById('log-shop');
+            },
+            buyHP() {
+                if (StateStore.crystals >= 50) {
+                    StateStore.addCrystals(-50);
+                    StateStore.updateHP(30);
+                    this.log('💖 체력 30 회복 구매 완료 (-50 💎)', 'success');
+                } else {
+                    this.log('❌ 크리스탈이 부족합니다.', 'danger');
+                }
+            },
+            buyOrb() {
+                if (StateStore.crystals >= 100) {
+                    StateStore.addCrystals(-100);
+                    GlobalEventBus.emit('ITEM_PURCHASED', { item: '응원의 구슬' });
+                    this.log('🔮 [응원의 구슬] 구매 완료! (+확률 버프)', 'info');
+                } else {
+                    this.log('❌ 크리스탈이 부족합니다.', 'danger');
+                }
+            },
+            log(msg, type='info') {
+                appendLog(this.logContainer, msg, type);
+            }
+        };
+
+        /* ========================================================
+         * 3. HUD Updates & UI Synchronization
+         * ======================================================== */
+        GlobalEventBus.on('HP_CHANGED', data => {
+            document.getElementById('hud-hp').innerText = `${data.hp} / ${data.maxHp}`;
+            document.getElementById('hp-bar').style.width = `${(data.hp / data.maxHp) * 100}%`;
+        });
+
+        GlobalEventBus.on('EMOTION_CHANGED', data => {
+            let statusText = "보통";
+            if (data.emotion >= 75) statusText = "매우 행복";
+            else if (data.emotion >= 55) statusText = "행복";
+            else if (data.emotion <= 25) statusText = "절망";
+            else if (data.emotion <= 45) statusText = "불행";
+
+            document.getElementById('hud-emotion').innerText = `${data.emotion}% (${statusText})`;
+            document.getElementById('hud-difficulty').innerText = `x${data.difficulty}`;
+            document.getElementById('emotion-bar').style.width = `${data.emotion}%`;
+        });
+
+        GlobalEventBus.on('CURRENCY_CHANGED', data => {
+            document.getElementById('hud-crystal').innerText = `💎 ${data.crystals} 개`;
+        });
+
+        /* ========================================================
+         * 4. Utility Functions
+         * ======================================================== */
+        function appendLog(container, message, type = 'info') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const time = new Date().toLocaleTimeString();
+            entry.innerText = `[${time}] ${message}`;
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function logGlobalEvent(event, data) {
+            const consoleBox = document.getElementById('global-console');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry info';
+            entry.innerText = `${event} -> ${JSON.stringify(data)}`;
+            consoleBox.appendChild(entry);
+            consoleBox.scrollTop = consoleBox.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('global-console').innerHTML = '';
+        }
+
+        function resetGlobalState() {
+            StateStore.hp = 100;
+            StateStore.emotion = 50;
+            StateStore.crystals = 150;
+            StateStore.updateHP(0);
+            StateStore.updateEmotion(0);
+            StateStore.addCrystals(0);
+            logGlobalEvent('[SYSTEM]', 'Global State Reset Done.');
+        }
+
+        function switchView(viewName) {
+            // Placeholder for multi-tab views if needed
+            logGlobalEvent('[NAV]', `Switched to ${viewName}`);
+        }
+
+        // Initialize All Modules on DOM Ready
+        window.onload = function() {
+            EmotionModule.init();
+            JokerGraceModule.init();
+            BossModule.init();
+            RestAreaModule.init();
+            logGlobalEvent('[SYSTEM]', 'All Modules Initialized & Event Bus Ready.');
+        };
+    </script>
+</body>
+</html>
