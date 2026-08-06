@@ -1,21 +1,30 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class UI_TraitBook : PopUI
 {
-    // ⚠️ 위에서 만든 UI_TraitItem 컴포넌트 배열을 선언하여 에디터와 연결고리를 만듭니다.
     [Header("Trait Items (SubUI)")]
     [SerializeField] private UI_TraitItem[] traitSubUIItems;
 
-    private bool _initAlready = false;
+    [Header("Right Detail View (TMP)")]
+    [SerializeField] private TextMeshProUGUI detailNameText;
+    [SerializeField] private Image detailIconImage;
+    [SerializeField] private TextMeshProUGUI detailDescriptionText;
 
-    // 기획서 스펙 가상 데이터 (이름, 설명)
+    [Header("Trait Icons")]
+    [SerializeField] private Sprite[] traitIcons;
+
+    private bool _initAlready = false;
+    private int _selectedIndex = 0;
+
     private readonly string[,] _traitData = new string[,]
     {
-        { "강인함", "최대 체력이 영구적으로 증가합니다." },
-        { "민첩함", "이동 속도와 회피율이 소폭 상승합니다." },
-        { "냉철함", "감정 게이지의 불행 방향 변동성이 감소합니다." },
-        { "낙천주의", "행복 감정 수치 획득량이 20% 증가합니다." },
-        { "과몰입", "스킬 재사용 대기시간이 감소하지만 피격 데미지가 늘어납니다." }
+        { "분노", "2개 : 공격력 +10/n 4개 : 체력 +30/n" },
+        { "탐욕", "모든 재화 획득 확률이 상승합니다." },
+        { "슬픔", "방어력과 MP최대치가 증가합니다." },
+        { "사랑", "적들의 공격력과 방어력이 하락합니다." },
+        { "우정", "기억의 휴식처에서의 모든 아이템 가격이 할인됩니다." }
     };
 
     public override void Init()
@@ -28,7 +37,101 @@ public class UI_TraitBook : PopUI
     {
         Init();
         base.ShowPopup();
+
+        // 1. 도감 창이 열릴 때 게임 시간 정지 (캐릭터/적 이동 멈춤)
+        Time.timeScale = 0f;
+
+        _selectedIndex = 0;
         RefreshTraitBook();
+        UpdateSelectionHighlight();
+    }
+
+    public override void ClosePopup()
+    {
+        base.ClosePopup();
+
+        // 2. 도감 창이 닫힐 때 게임 시간 재개
+        Time.timeScale = 1f;
+    }
+
+    private void OnDisable()
+    {
+        // 예외 상황(강제 비활성화 등) 발생 시에도 시간이 멈춰있지 않도록 원상복구
+        Time.timeScale = 1f;
+    }
+
+    private void Update()
+    {
+        // Time.timeScale이 0이어도 Update() 함수와 Input 입력은 정상 작동합니다.
+        HandleInput();
+    }
+
+    private void HandleInput()
+    {
+        int itemCount = Mathf.Min(traitSubUIItems != null ? traitSubUIItems.Length : 0, _traitData.GetLength(0));
+        if (itemCount == 0) return;
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            _selectedIndex--;
+            if (_selectedIndex < 0) _selectedIndex = itemCount - 1;
+            UpdateSelectionHighlight();
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            _selectedIndex++;
+            if (_selectedIndex >= itemCount) _selectedIndex = 0;
+            UpdateSelectionHighlight();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            ConfirmSelection();
+        }
+    }
+
+    private void UpdateSelectionHighlight()
+    {
+        if (traitSubUIItems == null) return;
+        int loopCount = Mathf.Min(traitSubUIItems.Length, _traitData.GetLength(0));
+
+        for (int i = 0; i < loopCount; i++)
+        {
+            if (traitSubUIItems[i] != null)
+            {
+                traitSubUIItems[i].SetSelected(i == _selectedIndex);
+            }
+        }
+    }
+
+    private void ConfirmSelection()
+    {
+        if (_selectedIndex < 0 || _selectedIndex >= _traitData.GetLength(0)) return;
+
+        string name = _traitData[_selectedIndex, 0];
+        string desc = _traitData[_selectedIndex, 1];
+
+        if (detailNameText != null) detailNameText.text = name;
+        if (detailDescriptionText != null) detailDescriptionText.text = desc;
+
+        if (detailIconImage != null)
+        {
+            Sprite icon = null;
+            if (traitSubUIItems != null && _selectedIndex < traitSubUIItems.Length && traitSubUIItems[_selectedIndex] != null && traitSubUIItems[_selectedIndex].TraitIcon != null)
+            {
+                icon = traitSubUIItems[_selectedIndex].TraitIcon;
+            }
+            else if (traitIcons != null && _selectedIndex < traitIcons.Length)
+            {
+                icon = traitIcons[_selectedIndex];
+            }
+
+            if (icon != null)
+            {
+                detailIconImage.sprite = icon;
+                detailIconImage.gameObject.SetActive(true);
+            }
+        }
     }
 
     private void RefreshTraitBook()
@@ -45,9 +148,9 @@ public class UI_TraitBook : PopUI
 
                 string name = _traitData[i, 0];
                 string desc = _traitData[i, 1];
+                Sprite icon = (traitIcons != null && i < traitIcons.Length) ? traitIcons[i] : null;
 
-                // 개별 하위 SubUI에 데이터를 전달하여 화면을 갱신합니다.
-                traitSubUIItems[i].SetTraitInfo(name, desc);
+                traitSubUIItems[i].SetTraitInfo(name, desc, icon);
             }
         }
     }
