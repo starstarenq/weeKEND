@@ -835,6 +835,8 @@ GameObject:
   - component: {fileID: 221838262}
   - component: {fileID: 221838264}
   - component: {fileID: 221838265}
+  - component: {fileID: 221838267}
+  - component: {fileID: 221838266}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1065,12 +1067,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6653d93e505b8b4aa2fb25d7b048814, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
-  attackRange: 3
-  attackAngle: 65
+  attackRange: 2
+  attackAngle: 31
   attackDamage: 20
   enemyLayer:
     serializedVersion: 2
     m_Bits: 64
+  secondaryAttackRange: 5
+  secondaryAttackAngle: 80
+  secondaryAttackDamage: 50
+  secondaryCooldown: 8
+--- !u!114 &221838266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221838253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef959812d0c649b419db9ef09f6d87b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHP
+  maxHp: 100
+--- !u!114 &221838267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221838253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d780465fccfee842b26db923f235241, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentSkillManager
+  skill1Cooldown: 30
+  skill2Cooldown: 240
+  skill3Cooldown: 600
+  skill4Cooldown: 360
+  skill5Cooldown: 1200
+  playerAttack: {fileID: 221838265}
 --- !u!1 &246738058
 GameObject:
   m_ObjectHideFlags: 0
@@ -2610,6 +2647,8 @@ GameObject:
   - component: {fileID: 1089241212}
   - component: {fileID: 1089241218}
   - component: {fileID: 1089241220}
+  - component: {fileID: 1089241221}
+  - component: {fileID: 1089241222}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -2745,7 +2784,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterRoamAndChase
   currentState: 0
-  maxHp: 100
   roamRadius: 5
   minWaitTime: 2
   maxWaitTime: 5
@@ -2753,7 +2791,43 @@ MonoBehaviour:
   chaseSpeed: 5
   attackTargetDistance: 3
   chaseBufferDistance: 0.5
+--- !u!114 &1089241221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089241211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d1812036593e9d47a263a3aaf6f4fa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHP
+  maxHp: 100
   emotionReward: 10
+  hpBarFillImage: {fileID: 0}
+  hpBarSlider: {fileID: 0}
+  OnTakeDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDieEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1089241222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1089241211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96af55ed8988e6141bf61f891bfc448f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAttack
+  attackDamage: 10
+  attackRate: 1.5
+  attackRange: 3.5
 --- !u!1 &1098889034
 GameObject:
   m_ObjectHideFlags: 0
@@ -3374,6 +3448,7 @@ MonoBehaviour:
   inGameSceneUI: {fileID: 1326726802}
   pausePopupUI: {fileID: 5907842}
   traitBookUI: {fileID: 2110015989}
+  playerAttack: {fileID: 0}
   enemyObject: {fileID: 1089241211}
 --- !u!4 &1449895575
 Transform:

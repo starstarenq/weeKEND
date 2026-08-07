@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회고인생 (Retrospective Life) | 개발 기록 & 프로젝트 대시보드</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Noto Sans KR) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700;900&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="text-xl font-black tracking-wider text-indigo-400 flex items-center gap-2">
+                <i class="fa-solid fa-hourglass-half"></i> 회고인생.DEV
+            </a>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-indigo-400 transition-colors">게임 소개</a>
+                <a href="#characters" class="hover:text-indigo-400 transition-colors">세계관 & 등장인물</a>
+                <a href="#todolist" class="hover:text-indigo-400 transition-colors">개발 체크리스트</a>
+                <a href="#footprints" class="hover:text-indigo-400 transition-colors">개발 로드맵</a>
+                <a href="#project" class="hover:text-indigo-400 transition-colors">핵심 시스템 모듈</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="about"
+        class="pt-32 pb-16 max-w-6xl mx-auto px-6 flex flex-col items-start justify-center min-h-[50vh]">
+        <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6">
+            <span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span> Realtime Action RPG
+        </div>
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight leading-tight mb-4">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">회고인생
+                (Retrospective Life)</span><br>개발 진행 현황 & 프로젝트 대시보드
+        </h1>
+        <p class="text-slate-400 text-lg max-w-3xl leading-relaxed mt-2">
+            "후회로부터, 새로운 선택을" — 바쁜 현대 사회 속 무기력하게 살다 죽음을 맞이한 주인공이 사후세계 지옥의 법원과 전생 메모리실을 거치며 자신의 삶을 돌아보고 인생의 가치를 깨달아가는 실시간
+            액션 RPG 프로젝트 개발 대시보드입니다.
+        </p>
+    </section>
+
+    <!-- Worldview & Character Section -->
+    <section id="characters" class="py-16 border-t border-slate-800 bg-slate-900/30">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="mb-10">
+                <span class="text-indigo-400 font-semibold text-sm tracking-widest uppercase">Lore & Characters</span>
+                <h2 class="text-3xl font-extrabold mt-1">사후세계 주요 인물 및 세계관</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 주인공 -->
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-indigo-500/50 transition-all">
+                    <div class="text-xs font-bold text-slate-400 mb-1">플레이어</div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">주인공 (22세)</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">무기력한 삶을 살다 갑작스런 죽음 후 사후세계에 도착. 전생 메모리실에서 자신의 기억을
+                        조작하며 삶을 재선택함.</p>
+                </div>
+                <!-- 코스모 -->
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-indigo-500/50 transition-all">
+                    <div class="text-xs font-bold text-amber-400 mb-1">천사 (가호 부여)</div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">코스모 (Cosmo)</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">행복하고 좋은 기억을 보여주며 긍정적인 선택을 유도. 챕터당 3회 공격력/체력 증가 가호
+                        스킬 제공.</p>
+                </div>
+                <!-- 오큐시스 -->
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-indigo-500/50 transition-all">
+                    <div class="text-xs font-bold text-rose-400 mb-1">악마 (장난/시련)</div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">오큐시스 (Oqysis)</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">불행한 기억을 보여주며 부정적 선택 유도. 챕터당 5회 몬스터 증가 및 적대화 등
+                        '오큐시스의 장난' 발동.</p>
+                </div>
+                <!-- 미노스 & 오르페스 -->
+                <div
+                    class="bg-slate-900 border border-slate-800 rounded-xl p-5 hover:border-indigo-500/50 transition-all">
+                    <div class="text-xs font-bold text-purple-400 mb-1">신족 / 관리자</div>
+                    <h3 class="text-lg font-bold text-slate-100 mb-2">미노스 & 오르페스</h3>
+                    <p class="text-slate-400 text-xs leading-relaxed">지옥의 법원 판결장 '미노스'와 수많은 기억을 다루어 다중인격을 가진 전생 메모리실 관리자
+                        '오르페스'.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TODO List & Progress Check Section -->
+    <section id="todolist" class="py-16 border-t border-slate-800 bg-slate-900/60">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <span class="text-indigo-400 font-semibold text-sm tracking-widest uppercase">Task Tracker</span>
+                    <h2 class="text-3xl font-extrabold mt-1">개발 구현 체크리스트</h2>
+                </div>
+                <!-- 진행률 표시 바 -->
+                <div class="w-full md:w-72 bg-slate-800 p-3 rounded-lg border border-slate-700">
+                    <div class="flex justify-between text-xs font-semibold mb-1">
+                        <span class="text-slate-400">전체 개발 진행률</span>
+                        <span id="progress-text" class="text-indigo-400">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2.5 overflow-hidden">
+                        <div id="progress-bar"
+                            class="bg-gradient-to-r from-indigo-500 to-purple-500 h-2.5 rounded-full transition-all duration-500"
+                            style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 새 작업 추가 폼 -->
+            <form id="todo-form" class="flex gap-3 mb-8">
+                <input type="text" id="todo-input" placeholder="새로운 개발 모듈 또는 서브 시스템 작업/기능을 입력하세요..."
+                    class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-indigo-500 text-slate-100 placeholder-slate-500">
+                <button type="submit"
+                    class="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold px-6 py-3 rounded-lg text-sm transition-all flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-plus"></i> 작업 추가
+                </button>
+            </form>
+
+            <!-- TODO 목록 그룹 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 완료된 작업 -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-4 text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check"></i> 구현 및 리팩토링 완료
+                    </h3>
+                    <ul id="completed-list" class="space-y-3">
+                        <!-- JS에서 동적 생성됨 -->
+                    </ul>
+                </div>
+
+                <!-- 진행 예정 작업 -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-4 text-amber-400 flex items-center gap-2">
+                        <i class="fa-solid fa-clock"></i> 예정된 개발 스펙
+                    </h3>
+                    <ul id="pending-list" class="space-y-3">
+                        <!-- JS에서 동적 생성됨 -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Development Footprints (Timeline / Roadmap) -->
+    <section id="footprints" class="py-20 border-t border-slate-800 max-w-6xl mx-auto px-6">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <span class="text-indigo-400 font-semibold text-sm tracking-widest uppercase">Development Roadmap</span>
+            <h2 class="text-3xl md:text-4xl font-extrabold mt-2">게임 개발 단계별 발자취</h2>
+        </div>
+
+        <div class="relative border-l-2 border-slate-800 ml-4 md:ml-32 space-y-12">
+            <!-- Phase 1 -->
+            <div class="relative pl-8 md:pl-12">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-950">
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-100">기획 로드맵 및 핵심 시스템 정립</h3>
+                    <span
+                        class="text-xs font-mono text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 w-fit mt-1 sm:mt-0">Phase
+                        1</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                    <code class="text-slate-300 font-semibold">Todolist.md</code> 작성 및 기획서 정립. 사후세계 배경, 감정 게이지 시스템(행복/불행
+                    난이도 변동), 보스 살려주기/처치 선택지 분기, 맵 동선 흐름도(Movement Flow Map) 작성 완료.
+                </p>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="relative pl-8 md:pl-12">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-950">
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-100">장비 스킬 5종 및 감정 메카닉 구축</h3>
+                    <span
+                        class="text-xs font-mono text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 w-fit mt-1 sm:mt-0">Phase
+                        2</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                    장비 고유 스킬 5종(분노, 탐욕, 슬픔, 사랑, 우정) 스펙 정의 및 <code
+                        class="text-slate-300 font-semibold">EquipmentSkillManager.cs</code> 구축. 쿨타임 타이머, 사랑 스킬 데미지
+                    버프(+30%), 슬픔 스킬 피격 3회 무효화 배리어 구현.
+                </p>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="relative pl-8 md:pl-12">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-950">
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-100">전투 조작 및 판정 범위 최적화</h3>
+                    <span
+                        class="text-xs font-mono text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 w-fit mt-1 sm:mt-0">Phase
+                        3</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                    <code class="text-slate-300 font-semibold">PlayerAttack.cs</code> 내 OverlapSphere 및 내적/각도 기반 부채꼴 공격
+                    판정 완성. 마우스 좌클릭(기본공격), 우클릭(보조스킬), Shift(회피), Q(궁극기) 조작 체계 확립.
+                </p>
+            </div>
+
+            <!-- Phase 4 -->
+            <div class="relative pl-8 md:pl-12">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-950">
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-100">몬스터 AI 모듈화 & 이벤트 연동</h3>
+                    <span
+                        class="text-xs font-mono text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 w-fit mt-1 sm:mt-0">Phase
+                        4</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                    <code class="text-slate-300 font-semibold">EnemyChase.cs</code>, <code
+                        class="text-slate-300 font-semibold">EnemyHP.cs</code>, <code
+                        class="text-slate-300 font-semibold">EnemyAttack.cs</code> 독립 스크립트로 모듈화. 선제 공격 시 추격 전환, 사망 시 UI
+                    감정 게이지 변동 연동.
+                </p>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="relative pl-8 md:pl-12">
+                <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-indigo-500 ring-4 ring-slate-950">
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
+                    <h3 class="text-xl font-bold text-slate-100">입력 충돌 리팩토링 & 시스템 동기화</h3>
+                    <span
+                        class="text-xs font-mono text-indigo-400 bg-indigo-950/60 px-3 py-1 rounded-full border border-indigo-800 w-fit mt-1 sm:mt-0">Phase
+                        5</span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-3">
+                    기본 공격 키와 장비 스킬 숫자키(1~5) 충돌 제거, 공격 데미지 전달 변수 오류 교정, 오큐시스의 장난/코스모의 가호 예외 처리. 전체 시스템 기록을 <code
+                        class="text-slate-300 font-semibold">remember.md</code>에 업데이트.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Project Showcase -->
+    <section id="project" class="py-20 border-t border-slate-800 bg-slate-900/50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-indigo-400 font-semibold text-sm tracking-widest uppercase">Project
+                        Architecture</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold mt-2">핵심 구현 스크립트 모듈</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-indigo-300">PlayerAttack.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">OverlapSphere 기반 부채꼴 공격 판정, 마우스 우클릭 보조 스킬 연동 및 좌클릭
+                        기본 공격 오버랩 충돌 방지 로직 적용.</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-purple-300">EquipmentSkillManager.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">장비 스킬 5종(숫자키 1~5) 쿨타임 및 버프 관리. PlayerHP와 연동된 피격 3회
+                        무효화 배리어 및 데미지 버프 연산.</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-pink-300">EnemyAttack.cs / EnemyChase.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">자유 전투(선제 공격 전 비적대) AI 및 사거리 진입 시 주기적 타격 처리. 사망 시
+                        감정 게이지 싱글톤 연동.</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-amber-300">EmotionGaugeManager.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">행복/불행 비율(0~100%) 실시간 계산. 감정 수치에 따른 기억 스테이지 난이도 및
+                        보스 패턴 스케일링 적용.</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-rose-300">OqysisRandomEvent.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">챕터당 5회 랜덤 발동되는 '오큐시스의 장난'(몬스터 수 증가, 디버프 등) 및 클리어 시
+                        추가 보상(데스 크리스탈) 증정 로직.</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6">
+                    <h3 class="text-lg font-bold mb-2 text-emerald-300">MemoryRestSanctuary.cs</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">스테이지 사이 안식처(상점) 시스템. 체력 회복, 에스페란사/응원의 구슬 구매,
+                        코스모/오큐시스 퀘스트 수주 기능.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800 text-center text-slate-500 text-sm">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p>© 2026 Minhwan Kim. All rights reserved.</p>
+            <p class="font-mono text-xs text-slate-600">Project: Retrospective Life (회고인생)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Dynamic Todo & Progress Management -->
+    <script>
+        // 회고인생 프로젝트 기반 초기 데이터
+        const defaultTodos = [
+            // 완료된 항목 (Completed)
+            { id: 1, text: "PlayerAttack.cs 부채꼴 공격 판정 및 WASD / 좌우클릭 기본 전투 조작 구현", completed: true },
+            { id: 2, text: "EquipmentSkillManager.cs 5종 장비 스킬 쿨타임 & 버프 연동", completed: true },
+            { id: 3, text: "PlayerHP.cs & EquipmentSkillManager 간 슬픔(3회 피격 무효) 스킬 연동", completed: true },
+            { id: 4, text: "EnemyChase.cs AI 자유 전투(선제공격 시 적대 전환) 시스템 연동", completed: true },
+            { id: 5, text: "EnemyAttack.cs 독립 컴포넌트 작성 및 UnityEvent 결합도 최적화", completed: true },
+            { id: 6, text: "기본 공격 입력과 장비 스킬 숫자키(1~5) 입력 충돌 버그 수정", completed: true },
+
+            // 앞으로 해야 할 항목 (Pending)
+            { id: 7, text: "UI_HUD 연동: 감정 게이지(행복/불행 %), 스킬 쿨타임 및 버프 지속시간 표시", completed: false },
+            { id: 8, text: "유년기 중간보스 '메카 로키' 흑화 패턴 및 스테이지 5 '학교' 파괴 조건 구현", completed: false },
+            { id: 9, text: "청소년기 보스 '사춘기' / '큐피트' 및 성인 챕터 '압박과 부담' / '무에르떼' 전투 로직", completed: false },
+            { id: 10, text: "오큐시스의 장난(악효과 3개 중첩) & 코스모의 가호 상충 이펙트 및 보상 시스템", completed: false },
+            { id: 11, text: "기억의 휴식처(상점) 상호작용 및 에스페란사/응원의 구슬 구매 로직", completed: false },
+            { id: 12, text: "보스 처치 / 살려주기 선택지 분기 및 다중 엔딩 조건 시스템 구축", completed: false }
+        ];
+
+        // localStorage 동기화
+        let todos = JSON.parse(localStorage.getItem('minhwan_retrospective_todos')) || defaultTodos;
+
+        const todoForm = document.getElementById('todo-form');
+        const todoInput = document.getElementById('todo-input');
+        const completedList = document.getElementById('completed-list');
+        const pendingList = document.getElementById('pending-list');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+
+        function saveTodos() {
+            localStorage.setItem('minhwan_retrospective_todos', JSON.stringify(todos));
+            renderTodos();
+        }
+
+        function toggleTodo(id) {
+            todos = todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo);
+            saveTodos();
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(todo => todo.id !== id);
+            saveTodos();
+        }
+
+        function renderTodos() {
+            completedList.innerHTML = '';
+            pendingList.innerHTML = '';
+
+            let completedCount = 0;
+
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between p-3 rounded-lg bg-slate-800/60 border border-slate-700/50 hover:border-slate-600 transition-all text-sm";
+
+                if (todo.completed) {
+                    completedCount++;
+                    li.innerHTML = `
+                        <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="toggleTodo(${todo.id})">
+                            <input type="checkbox" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+                            <span class="line-through text-slate-400">${todo.text}</span>
+                        </div>
+                        <button onclick="deleteTodo(${todo.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1 transition-colors">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                    completedList.appendChild(li);
+                } else {
+                    li.innerHTML = `
+                        <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="toggleTodo(${todo.id})">
+                            <input type="checkbox" class="w-4 h-4 accent-indigo-500 rounded cursor-pointer">
+                            <span class="text-slate-200 font-medium">${todo.text}</span>
+                        </div>
+                        <button onclick="deleteTodo(${todo.id})" class="text-slate-500 hover:text-rose-400 px-2 py-1 transition-colors">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    `;
+                    pendingList.appendChild(li);
+                }
+            });
+
+            // 진행률 계산
+            const total = todos.length;
+            const percentage = total === 0 ? 0 : Math.round((completedCount / total) * 100);
+            progressBar.style.width = `${percentage}%`;
+            progressText.innerText = `${percentage}% (${completedCount}/${total})`;
+        }
+
+        // 새 작업 추가 이벤트
+        todoForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = todoInput.value.trim();
+            if (text) {
+                todos.push({
+                    id: Date.now(),
+                    text: text,
+                    completed: false
+                });
+                todoInput.value = '';
+                saveTodos();
+            }
+        });
+
+        // 초기 랜더링
+        renderTodos();
+    </script>
+</body>
+
+</html>

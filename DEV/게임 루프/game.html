@@ -70,6 +70,12 @@
             color: #ff4d4d;
         }
 
+        #skill-status {
+            bottom: 65px;
+            left: 20px;
+            color: #ff00ff;
+        }
+
         #action-log {
             bottom: 20px;
             right: 20px;
@@ -81,7 +87,7 @@
             flex-direction: column-reverse;
         }
 
-        /* 모달 overlay 스타일 (선택 화면, 오버, 클리어 공통) */
+        /* 모달 overlay 스타일 */
         .overlay-screen {
             display: none;
             position: absolute;
@@ -113,6 +119,7 @@
             transition: 0.2s;
             pointer-events: auto;
             margin: 8px;
+            min-width: 160px;
         }
 
         .btn:hover {
@@ -120,14 +127,13 @@
             transform: scale(1.05);
         }
 
-        .stage-select-btn {
-            background: #28a745;
-            color: #fff;
-            min-width: 150px;
+        .difficulty-btn {
+            background: #ffcc00;
+            color: #111;
         }
 
-        .stage-select-btn:hover {
-            background: #218838;
+        .difficulty-btn:hover {
+            background: #e6b800;
         }
     </style>
 </head>
@@ -148,21 +154,26 @@
         <div id="ui-layer">
             <div id="fps-counter" class="ui-element">FPS: 0</div>
             <div id="stage-timer" class="ui-element">STAGE 1 - 01:00</div>
+            <div id="skill-status" class="ui-element">궁극기(Q): 3/3 | 대시(Shift): READY</div>
             <div id="player-stats" class="ui-element">HP: 100 / 100</div>
             <div id="action-log" class="ui-element">게임 준비 완료!</div>
         </div>
 
-        <!-- 1. 스테이지 선택 화면 -->
-        <div id="stage-select-screen" class="overlay-screen" style="display: flex;">
-            <h1 style="color: #00ffcc;">스테이지 선택</h1>
-            <div id="stage-buttons-container"></div>
+        <!-- 1. 난이도 선택 화면 -->
+        <div id="difficulty-select-screen" class="overlay-screen" style="display: flex;">
+            <h1 style="color: #00ffcc;">난이도 선택</h1>
+            <div>
+                <button class="btn difficulty-btn" onclick="selectDifficulty('EASY')">쉬움</button>
+                <button class="btn difficulty-btn" onclick="selectDifficulty('NORMAL')">보통</button>
+                <button class="btn difficulty-btn" onclick="selectDifficulty('HARD')">어려움</button>
+            </div>
         </div>
 
         <!-- 2. 게임 오버 화면 -->
         <div id="game-over-screen" class="overlay-screen">
             <h1 style="color: #ff4d4d;">GAME OVER</h1>
-            <button class="btn" onclick="retryCurrentStage()">다시 시도</button>
-            <button class="btn" onclick="showStageSelect()">스테이지 선택으로</button>
+            <button class="btn" onclick="retryCurrentStage()">현재 스테이지 재시도</button>
+            <button class="btn" onclick="showDifficultySelect()">난이도 재선택</button>
         </div>
 
         <!-- 3. 스테이지 클리어 화면 -->
@@ -170,58 +181,60 @@
             <h1 style="color: #00ffcc;">STAGE CLEAR!</h1>
             <p id="clear-message" style="font-size: 1.5rem; margin-bottom: 20px;">1분간 생존에 성공했습니다!</p>
             <button class="btn" onclick="nextStage()">다음 스테이지</button>
-            <button class="btn" onclick="showStageSelect()">스테이지 선택으로</button>
         </div>
     </div>
+
+    <!-- 외부 스크립트 로드 -->
+    <script src="level.js"></script>
+    <script src="skill.js"></script>
+    <script src="dash.js"></script>
+    <script src="takedamage.js"></script>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const renderGroup = document.getElementById('render-group');
         const fpsCounter = document.getElementById('fps-counter');
         const playerStats = document.getElementById('player-stats');
+        const skillStatusUI = document.getElementById('skill-status');
         const actionLog = document.getElementById('action-log');
         const stageTimerUI = document.getElementById('stage-timer');
 
-        const stageSelectScreen = document.getElementById('stage-select-screen');
+        const difficultySelectScreen = document.getElementById('difficulty-select-screen');
         const gameOverScreen = document.getElementById('game-over-screen');
         const stageClearScreen = document.getElementById('stage-clear-screen');
-        const stageButtonsContainer = document.getElementById('stage-buttons-container');
 
         const WIDTH = 800;
         const HEIGHT = 600;
 
-        // 스테이지 시스템 관리 변수
         const TOTAL_STAGES = 5;
-        const SURVIVAL_TIME = 60; // 목표 생존 시간 (60초)
+        const SURVIVAL_TIME = 60;
         let currentStage = 1;
         let stageTimer = SURVIVAL_TIME;
         let stageTimeAccumulator = 0;
 
-        // 게임 상태 정의
         let isGameRunning = false;
         let isGameOver = false;
         let lastTime = 0;
         let accumulator = 0;
         const timeStep = 1000 / 60;
 
-        // FPS 계산 변수
         let fps = 0;
         let frameCount = 0;
         let fpsLastTime = 0;
 
-        // 입력 상태 객체
         const input = {
             w: false, a: false, s: false, d: false,
             mouseLeft: false,
             q: false,
+            shift: false,
             skills: { 1: false, 2: false, 3: false, 4: false, 5: false }
         };
 
-        // 플레이어 객체
         let player = {
             x: WIDTH / 2,
             y: HEIGHT / 2,
             radius: 15,
+            baseSpeed: 4,
             speed: 4,
             hp: 100,
             maxHp: 100,
@@ -232,7 +245,6 @@
         let projectiles = [];
         let particles = [];
 
-        // 몬스터 생성 스파우너
         const monsterSpawner = {
             spawnRate: 1500,
             lastSpawnTime: 0,
@@ -240,10 +252,11 @@
                 if (currentTime - this.lastSpawnTime >= this.spawnRate) {
                     this.spawn();
                     this.lastSpawnTime = currentTime;
-                    if (this.spawnRate > 300) this.spawnRate -= 15; // 난이도 조절
+                    if (this.spawnRate > 300) this.spawnRate -= 15;
                 }
             },
             spawn: function () {
+                const config = window.levelManager.getDifficultyConfig();
                 const corners = [
                     { x: 20, y: 20 },
                     { x: WIDTH - 20, y: 20 },
@@ -252,15 +265,15 @@
                 ];
 
                 const spawnPoint = corners[Math.floor(Math.random() * corners.length)];
-                // 스테이지가 높아질수록 몬스터 속도 증가
                 const speedBoost = (currentStage - 1) * 0.3;
+                const baseSpeed = (1.5 + Math.random() * 1.0 + speedBoost) * config.speedModifier;
 
                 const monster = {
                     id: Date.now() + Math.random(),
                     x: spawnPoint.x,
                     y: spawnPoint.y,
                     radius: 12,
-                    speed: 1.5 + Math.random() * 1.0 + speedBoost,
+                    speed: baseSpeed,
                     attackRate: Math.max(400, (800 + Math.random() * 1000) - (currentStage * 50)),
                     lastAttackTime: 0,
                     color: `hsl(${Math.random() * 360}, 80%, 60%)`,
@@ -271,23 +284,21 @@
             }
         };
 
-        // 스테이지 선택 버튼 생성
-        function initStageButtons() {
-            stageButtonsContainer.innerHTML = '';
-            for (let i = 1; i <= TOTAL_STAGES; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'btn stage-select-btn';
-                btn.textContent = `STAGE ${i}`;
-                btn.onclick = () => startStage(i);
-                stageButtonsContainer.appendChild(btn);
-            }
+        function selectDifficulty(diff) {
+            window.levelManager.setDifficulty(diff);
+            startGameFromStage1();
         }
 
-        function showStageSelect() {
+        function showDifficultySelect() {
             isGameRunning = false;
             gameOverScreen.style.display = 'none';
             stageClearScreen.style.display = 'none';
-            stageSelectScreen.style.display = 'flex';
+            difficultySelectScreen.style.display = 'flex';
+        }
+
+        function startGameFromStage1() {
+            currentStage = 1;
+            startStage(currentStage);
         }
 
         function startStage(stageNum) {
@@ -295,25 +306,33 @@
             stageTimer = SURVIVAL_TIME;
             stageTimeAccumulator = 0;
 
-            // 몬스터 난이도 초기화 (스테이지 반영)
-            monsterSpawner.spawnRate = Math.max(400, 1500 - (currentStage - 1) * 200);
+            const config = window.levelManager.getDifficultyConfig();
+
+            const baseSpawnRate = Math.max(400, 1500 - (currentStage - 1) * 200);
+            monsterSpawner.spawnRate = baseSpawnRate * config.spawnRateModifier;
+
+            player.maxHp = config.playerMaxHp;
+
+            window.skillManager.reset();
+            window.dashManager.reset();
+            window.takeDamageManager.reset();
 
             resetGame();
 
-            stageSelectScreen.style.display = 'none';
+            difficultySelectScreen.style.display = 'none';
             gameOverScreen.style.display = 'none';
             stageClearScreen.style.display = 'none';
 
             isGameRunning = true;
-            logAction(`STAGE ${currentStage} 시작! 1분간 생존하세요.`);
+            logAction(`[${config.name}] STAGE ${currentStage} 시작! 1분간 생존하세요.`);
         }
 
         function nextStage() {
             if (currentStage < TOTAL_STAGES) {
                 startStage(currentStage + 1);
             } else {
-                logAction("모든 스테이지를 클리어했습니다!");
-                showStageSelect();
+                logAction("축하합니다! 모든 스테이지를 클리어했습니다!");
+                showDifficultySelect();
             }
         }
 
@@ -330,15 +349,32 @@
             }
         }
 
-        // 입력 처리
         window.addEventListener('keydown', (e) => {
             if (!isGameRunning || isGameOver) return;
             const key = e.key.toLowerCase();
             if (['w', 'a', 's', 'd'].includes(key)) input[key] = true;
+
             if (key === 'q') {
-                if (!input.q) { logAction("궁극기(Q) 시전!"); triggerUltimate(); }
+                if (!input.q) {
+                    if (window.skillManager.useUltimate()) {
+                        logAction(`궁극기(Q) 시전! (남은 횟수: ${window.skillManager.getRemainingCount()})`);
+                        triggerUltimate();
+                    } else {
+                        logAction("궁극기 횟수를 모두 소진했습니다!");
+                    }
+                }
                 input.q = true;
             }
+
+            if (e.code === 'ShiftLeft' || key === 'shift') {
+                if (!input.shift) {
+                    if (window.dashManager.triggerDash(performance.now())) {
+                        logAction("대시(Shift) 사용! 무적 상태!");
+                    }
+                }
+                input.shift = true;
+            }
+
             if (['1', '2', '3', '4', '5'].includes(key)) {
                 if (!input.skills[key]) { logAction(`스킬 ${key}번 사용!`); triggerSkill(key); }
                 input.skills[key] = true;
@@ -349,6 +385,7 @@
             const key = e.key.toLowerCase();
             if (['w', 'a', 's', 'd'].includes(key)) input[key] = false;
             if (key === 'q') input.q = false;
+            if (e.code === 'ShiftLeft' || key === 'shift') input.shift = false;
             if (['1', '2', '3', '4', '5'].includes(key)) input.skills[key] = false;
         });
 
@@ -418,7 +455,6 @@
             }
         }
 
-        // 메인 게임 루프
         function gameLoop(currentTime) {
             if (!lastTime) lastTime = currentTime;
             let elapsed = currentTime - lastTime;
@@ -432,7 +468,6 @@
                 accumulator -= timeStep;
             }
 
-            // FPS 측정
             frameCount++;
             if (currentTime - fpsLastTime >= 1000) {
                 fps = frameCount;
@@ -445,9 +480,7 @@
             requestAnimationFrame(gameLoop);
         }
 
-        // 게임 업데이트 (시간 타이머 포함)
         function updateGame(currentTime, delta) {
-            // 타이머 계산
             stageTimeAccumulator += delta;
             if (stageTimeAccumulator >= 1000) {
                 stageTimer--;
@@ -459,12 +492,17 @@
                 }
             }
 
-            // UI 타이머 업데이트 (00:00 포맷)
             const min = String(Math.floor(stageTimer / 60)).padStart(2, '0');
             const sec = String(stageTimer % 60).padStart(2, '0');
             stageTimerUI.textContent = `STAGE ${currentStage} - ${min}:${sec}`;
 
-            // 1. 플레이어 이동
+            const remainingUlt = window.skillManager.getRemainingCount();
+            const dashCd = window.dashManager.getRemainingCooldown(currentTime);
+            const dashText = dashCd > 0 ? `${dashCd}초` : 'READY';
+            skillStatusUI.textContent = `궁극기(Q): ${remainingUlt}/3 | 대시(Shift): ${dashText}`;
+
+            player.speed = player.baseSpeed * window.dashManager.getSpeedModifier();
+
             if (input.w) player.y -= player.speed;
             if (input.s) player.y += player.speed;
             if (input.a) player.x -= player.speed;
@@ -474,10 +512,8 @@
             player.y = Math.max(player.radius, Math.min(HEIGHT - player.radius, player.y));
             player.pulseTimer += 0.05;
 
-            // 2. 몬스터 스파우너
             monsterSpawner.update(currentTime);
 
-            // 3. 몬스터 로직
             for (let i = monsters.length - 1; i >= 0; i--) {
                 let m = monsters[i];
                 let dx = player.x - m.x;
@@ -509,7 +545,6 @@
                 }
             }
 
-            // 4. 발사체
             for (let i = projectiles.length - 1; i >= 0; i--) {
                 let p = projectiles[i];
                 p.x += p.vx;
@@ -544,7 +579,6 @@
                 }
             }
 
-            // 5. 파티클
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.x += p.vx;
@@ -570,8 +604,21 @@
 
         function playerDamage(amount) {
             if (isGameOver || !isGameRunning) return;
-            player.hp -= amount;
-            logAction(`피해를 입었습니다! -${amount} HP`);
+
+            // 대시 무적 또는 피격 후 무적 시 데미지 무시
+            if (window.dashManager.isInvincible() || window.takeDamageManager.checkInvincible()) {
+                return;
+            }
+
+            const config = window.levelManager.getDifficultyConfig();
+            const actualDamage = Math.round(amount * config.hpMultiplier);
+
+            player.hp -= actualDamage;
+            logAction(`피해를 입었습니다! -${actualDamage} HP`);
+
+            // 피격 무적 발동 (1초간 무적)
+            window.takeDamageManager.triggerHit(performance.now());
+
             if (player.hp <= 0) {
                 player.hp = 0;
                 isGameOver = true;
@@ -597,9 +644,28 @@
             playerSvg.setAttribute("cx", player.x);
             playerSvg.setAttribute("cy", player.y);
             playerSvg.setAttribute("r", currentRadius);
-            playerSvg.setAttribute("fill", "#00ffcc");
-            playerSvg.setAttribute("stroke", "#ffffff");
-            playerSvg.setAttribute("stroke-width", "2");
+
+            const isDashInvincible = window.dashManager.isInvincible();
+            const isHitInvincible = window.takeDamageManager.checkInvincible();
+            const isVisible = window.takeDamageManager.isVisible(currentTime);
+
+            // 상태별 플레이어 그래픽 변경 (대시 / 피격 깜빡임 / 일반)
+            if (isDashInvincible) {
+                playerSvg.setAttribute("fill", "#00ffff");
+                playerSvg.setAttribute("opacity", "0.6");
+                playerSvg.setAttribute("stroke", "#ffffff");
+                playerSvg.setAttribute("stroke-width", "4");
+            } else if (isHitInvincible) {
+                playerSvg.setAttribute("fill", "#ff4d4d");
+                playerSvg.setAttribute("opacity", isVisible ? "0.9" : "0.2"); // 깜빡임 효과
+                playerSvg.setAttribute("stroke", "#ffffff");
+                playerSvg.setAttribute("stroke-width", "2");
+            } else {
+                playerSvg.setAttribute("fill", "#00ffcc");
+                playerSvg.setAttribute("opacity", "1.0");
+                playerSvg.setAttribute("stroke", "#ffffff");
+                playerSvg.setAttribute("stroke-width", "2");
+            }
             renderGroup.appendChild(playerSvg);
 
             const playerCore = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -607,6 +673,7 @@
             playerCore.setAttribute("cy", player.y);
             playerCore.setAttribute("r", currentRadius * 0.4);
             playerCore.setAttribute("fill", "#ffffff");
+            playerCore.setAttribute("opacity", (isHitInvincible && !isVisible) ? "0.2" : "1.0");
             renderGroup.appendChild(playerCore);
 
             monsters.forEach(m => {
@@ -654,8 +721,6 @@
             isGameOver = false;
         }
 
-        // 초기화 및 게임 루프 가동
-        initStageButtons();
         requestAnimationFrame(gameLoop);
     </script>
 
