@@ -97,6 +97,9 @@ public class UI_PausePopup : PopUI
         }
     }
 
+    [Header("메인 메뉴 UI 참조")]
+    [SerializeField] private UI_MainMenuScene mainMenuUI;
+
     private void ExecuteSelectedMenu()
     {
         if (_selectedIndex == 0)
@@ -106,12 +109,15 @@ public class UI_PausePopup : PopUI
         }
         else if (_selectedIndex == 1)
         {
-            Debug.Log("게임을 종료합니다.");
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            Debug.Log("메인 메뉴 화면으로 이동합니다.");
+            ClosePopup(); // 일시정지 팝업 닫기
+
+            // 메인 메뉴 UI 활성화
+            if (mainMenuUI != null)
+            {
+                mainMenuUI.gameObject.SetActive(true);
+                mainMenuUI.Init();
+            }
         }
     }
 }

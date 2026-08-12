@@ -87,7 +87,7 @@ public class UI_GameOver : PopUI
     }
 
     /// <summary>
-    /// 화살표 위치 및 선택된 버튼의 텍스트 색상을 업데이트하는 함수
+    /// 선택된 메뉴의 글자 색상 및 화살표 Y축 위치를 업데이트하는 함수
     /// </summary>
     private void UpdateMenuVisual()
     {
@@ -95,10 +95,10 @@ public class UI_GameOver : PopUI
         Button mainBtn = Get<Button>((int)Buttons.MainMenuButton);
         Image arrowImg = Get<Image>((int)Images.SelectionArrowImage);
 
-        Text restartText = restartBtn != null ? restartBtn.GetComponentInChildren<Text>() : null;
-        Text mainText = mainBtn != null ? mainBtn.GetComponentInChildren<Text>() : null;
+        if (restartBtn == null || mainBtn == null) return;
 
-        Button targetButton = (_selectedIndex == 0) ? restartBtn : mainBtn;
+        Text restartText = restartBtn.GetComponentInChildren<Text>();
+        Text mainText = mainBtn.GetComponentInChildren<Text>();
 
         // 1. 선택된 메뉴의 글자 색상 연동 (노란색/흰색)
         if (_selectedIndex == 0)
@@ -112,14 +112,17 @@ public class UI_GameOver : PopUI
             if (mainText != null) mainText.color = Color.yellow;
         }
 
-        // 2. 화살표 위치 고정 연동
+        // 2. 화살표 X축 위치 고정 / Y축 위치 연동
+        Button targetButton = (_selectedIndex == 0) ? restartBtn : mainBtn;
         if (arrowImg != null && targetButton != null)
         {
-            // 선택된 버튼의 자식으로 화살표 이동
-            arrowImg.transform.SetParent(targetButton.transform);
+            RectTransform arrowRect = arrowImg.rectTransform;
+            RectTransform targetRect = targetButton.GetComponent<RectTransform>();
 
-            // 버튼의 좌측 정렬 위치 조정 (버튼 크기에 맞게 -300f 숫자 조정 가능)
-            arrowImg.transform.localPosition = new Vector3(-300f, 0f, 0f);
+            // 현재 화살표의 X 좌표는 유지하고 Y 좌표만 선택된 버튼의 Y 좌표로 세팅
+            Vector2 arrowPos = arrowRect.anchoredPosition;
+            arrowPos.y = targetRect.anchoredPosition.y;
+            arrowRect.anchoredPosition = arrowPos;
         }
     }
 
@@ -144,16 +147,21 @@ public class UI_GameOver : PopUI
         SceneManager.LoadScene(currentSceneName);
     }
 
+    [Header("메인 메뉴 UI 참조")]
+    [SerializeField] private UI_MainMenuScene mainMenuUI;
+
     private void OnClickMainMenu()
     {
-        Time.timeScale = 1f;
-        // 메인메뉴 씬 이동 시 아래 주석 해제 후 씬 이름 지정
-        // SceneManager.LoadScene("MainMenuScene");
+        Time.timeScale = 0f; // 메인 메뉴 화면으로 돌아가므로 시간 일시정지 유지
 
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        Application.Quit();
-#endif
+        // 게임 오버 팝업 닫기
+        gameObject.SetActive(false);
+
+        // 메인 메뉴 화면 활성화
+        if (mainMenuUI != null)
+        {
+            mainMenuUI.gameObject.SetActive(true);
+            mainMenuUI.Init();
+        }
     }
 }

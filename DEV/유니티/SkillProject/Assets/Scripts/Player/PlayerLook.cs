@@ -26,7 +26,7 @@ public class PlayerLook : MonoBehaviour
         }
     }
 
-    void LateUpdate() // 카메라는 캐릭터 이동이 끝난 후 처리하기 위해 LateUpdate를 씁니다.
+    void LateUpdate()
     {
         if (cameraTransform == null) return;
 
@@ -44,17 +44,17 @@ public class PlayerLook : MonoBehaviour
         // 3. 위아래 회전 제한 (뒤집힘 방지)
         rotationY = Mathf.Clamp(rotationY, yMinLimit, yMaxLimit);
 
-        // 4. 좌우 회전값으로 캐릭터 몸통 회전 시키기
-        transform.rotation = Quaternion.Euler(0f, rotationX, 0f);
+        // ※ 기존의 transform.rotation = Quaternion.Euler(0f, rotationX, 0f); 구문 제거
+        // (사유: 몸통 직접 회전 시 땅 콜라이더와 비벼지며 상공으로 솟구치는 문제 방지)
 
-        // 5. [핵심] 카메라의 회전(Rotation) 계산
+        // 4. 카메라의 회전(Rotation) 계산
         Quaternion rotation = Quaternion.Euler(rotationY, rotationX, 0f);
 
-        // 6. [핵심] 캐릭터 머리 위치 기준(오프셋 적용)으로 카메라를 뒤로 밀어 위치(Position) 정하기
+        // 5. 캐릭터 머리 위치 기준(오프셋 적용)으로 카메라 위치 정하기
         Vector3 targetPosition = transform.position + Vector3.up * heightOffset;
         Vector3 cameraPosition = targetPosition - (rotation * Vector3.forward * distance);
 
-        // 7. 카메라에 계산된 회전과 위치를 최종 대입
+        // 6. 카메라에 계산된 회전과 위치를 최종 대입
         cameraTransform.rotation = rotation;
         cameraTransform.position = cameraPosition;
     }

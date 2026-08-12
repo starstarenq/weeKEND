@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class UI_MainMenuScene : SceneUI
 {
-    // UIBase의 Bind 기능을 위해 hierarchy의 오브젝트 이름과 똑같이 맞춥니다.
     enum Buttons
     {
         StartButton,
@@ -12,7 +11,7 @@ public class UI_MainMenuScene : SceneUI
 
     enum Images
     {
-        SelectionArrowImage // 화살표 이미지가 없을 경우 생성하지 않아도 동작합니다.
+        SelectionArrowImage
     }
 
     [Header("인게임 UI 참조")]
@@ -50,24 +49,31 @@ public class UI_MainMenuScene : SceneUI
     private void Start()
     {
         Init();
+        ShowMainMenu();
+    }
 
-        // 1. 메인 메뉴가 켜진 동안 게임 시간 일시정지
-        Time.timeScale = 0f;
+    // 메인 메뉴 화면으로 진입할 때 호출
+    public void ShowMainMenu()
+    {
+        gameObject.SetActive(true);
+        Time.timeScale = 0f; // 시간 정지
 
-        // 2. 게임 시작 전까지 인게임 UI 비활성화 (나타나지 않도록 처리)
+        // 인게임 UI 숨기기
         if (inGameSceneUI != null)
         {
             inGameSceneUI.gameObject.SetActive(false);
         }
 
+        _selectedIndex = 0;
         UpdateMenuVisual();
     }
 
     private void Update()
     {
+        // ⚠️ 메인 메뉴가 비활성화되어 있으면 키 입력을 받지 않음
         if (!gameObject.activeSelf) return;
 
-        // 키보드 방향키 및 엔터 입력 지원
+        // 키보드 방향키 입력 처리
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             _selectedIndex = 0;
@@ -84,12 +90,6 @@ public class UI_MainMenuScene : SceneUI
         }
     }
 
-    /// <summary>
-    /// 선택된 메뉴 글자 색상 변경 및 화살표 위치 고정 연동
-    /// </summary>
-    /// <summary>
-    /// 선택된 메뉴 글자 색상 변경 및 화살표 Y축 위치 연동
-    /// </summary>
     private void UpdateMenuVisual()
     {
         Button startBtn = Get<Button>((int)Buttons.StartButton);
@@ -101,7 +101,7 @@ public class UI_MainMenuScene : SceneUI
         Text startText = startBtn.GetComponentInChildren<Text>();
         Text exitText = exitBtn.GetComponentInChildren<Text>();
 
-        // 1. 선택 메뉴 글자 색상 (노란색 / 흰색)
+        // 1. 색상 변경
         if (_selectedIndex == 0)
         {
             if (startText != null) startText.color = Color.yellow;
@@ -113,14 +113,13 @@ public class UI_MainMenuScene : SceneUI
             if (exitText != null) exitText.color = Color.yellow;
         }
 
-        // 2. 화살표 X축 고정 / Y축 위치 연동
+        // 2. 화살표 Y축 연동
         Button targetButton = (_selectedIndex == 0) ? startBtn : exitBtn;
         if (arrowImg != null && targetButton != null)
         {
             RectTransform arrowRect = arrowImg.rectTransform;
             RectTransform targetRect = targetButton.GetComponent<RectTransform>();
 
-            // 화살표의 현재 X 좌표는 그대로 유지하고, Y 좌표만 선택된 버튼의 Y 좌표로 변경
             Vector2 arrowPos = arrowRect.anchoredPosition;
             arrowPos.y = targetRect.anchoredPosition.y;
             arrowRect.anchoredPosition = arrowPos;
@@ -139,18 +138,12 @@ public class UI_MainMenuScene : SceneUI
         }
     }
 
-    /// <summary>
-    /// [시작] 버튼 클릭 시 동작
-    /// </summary>
     public void OnClickStart()
     {
-        // 1. 메인 메뉴 UI 비활성화
+        Debug.Log("게임 시작 클릭됨!");
         gameObject.SetActive(false);
+        Time.timeScale = 1f; // 시간 다시 흐름
 
-        // 2. 게임 시간을 정상 상태로 전환
-        Time.timeScale = 1f;
-
-        // 3. 게임 시작 시점에 인게임 UI 활성화 및 초기화 진행
         if (inGameSceneUI != null)
         {
             inGameSceneUI.gameObject.SetActive(true);
@@ -158,11 +151,9 @@ public class UI_MainMenuScene : SceneUI
         }
     }
 
-    /// <summary>
-    /// [게임 종료] 버튼 클릭 시 동작
-    /// </summary>
     public void OnClickExit()
     {
+        Debug.Log("게임 종료 클릭됨!");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
