@@ -55,12 +55,10 @@ public class UI_PausePopup : PopUI
         {
             ExecuteSelectedMenu();
         }
-
-        // ⚠️ 흔들림 연출(AnimateArrow) 함수 호출을 삭제하여 움직이지 않게 합니다.
     }
 
     /// <summary>
-    /// 화살표 UI의 위치와 글자 색상을 선택된 메뉴에 맞게 고정 연결하는 함수
+    /// 화살표 UI의 X축 좌표는 그대로 두고 선택된 메뉴에 맞게 Y축 좌표 및 글자 색상만 업데이트하는 함수
     /// </summary>
     private void UpdateMenuVisual()
     {
@@ -68,10 +66,10 @@ public class UI_PausePopup : PopUI
         Button exitBtn = Get<Button>((int)Buttons.ExitButton);
         Image arrowImg = Get<Image>((int)Images.SelectionArrowImage);
 
+        if (resumeBtn == null || exitBtn == null) return;
+
         Text resumeText = resumeBtn.GetComponentInChildren<Text>();
         Text exitText = exitBtn.GetComponentInChildren<Text>();
-
-        Button targetButton = (_selectedIndex == 0) ? resumeBtn : exitBtn;
 
         // 1. 글자 색상 실시간 연동
         if (_selectedIndex == 0)
@@ -85,15 +83,17 @@ public class UI_PausePopup : PopUI
             if (exitText != null) exitText.color = Color.yellow;
         }
 
-        // 2. ⚠️ 화살표 위치 고정 연동 (흔들리지 않고 지정된 자리에 정지)
+        // 2. 화살표 X축 위치 고정 / Y축 위치 연동
+        Button targetButton = (_selectedIndex == 0) ? resumeBtn : exitBtn;
         if (arrowImg != null && targetButton != null)
         {
-            // 화살표를 선택된 버튼의 자식으로 등록
-            arrowImg.transform.SetParent(targetButton.transform);
+            RectTransform arrowRect = arrowImg.rectTransform;
+            RectTransform targetRect = targetButton.GetComponent<RectTransform>();
 
-            // 버튼의 왼쪽 앞에 딱 멈춰 서 있도록 로컬 좌표계 정렬
-            // (화살표가 글자와 너무 가깝거나 멀다면 -120f 숫자를 조절해 보세요)
-            arrowImg.transform.localPosition = new Vector3(-300f, 0f, 0f);
+            // 현재 화살표의 X 좌표는 그대로 유지하고, Y 좌표만 선택된 버튼의 Y 좌표로 변경
+            Vector2 arrowPos = arrowRect.anchoredPosition;
+            arrowPos.y = targetRect.anchoredPosition.y;
+            arrowRect.anchoredPosition = arrowPos;
         }
     }
 
@@ -101,16 +101,16 @@ public class UI_PausePopup : PopUI
     {
         if (_selectedIndex == 0)
         {
-            Debug.Log("키보드 엔터 선택: 게임을 재개합니다.");
+            Debug.Log("게임을 재개합니다.");
             ClosePopup();
         }
         else if (_selectedIndex == 1)
         {
-            Debug.Log("키보드 엔터 선택: 게임을 종료합니다.");
+            Debug.Log("게임을 종료합니다.");
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
-                Application.Quit();
+            Application.Quit();
 #endif
         }
     }
