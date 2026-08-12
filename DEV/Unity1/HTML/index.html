@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>플레이어 클래스 테스트 환경</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f9; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .status-box { background: #eee; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .row { display: flex; gap: 10px; }
+        button { flex: 1; padding: 10px; font-weight: bold; cursor: pointer; border: 1px solid #ccc; border-radius: 4px; background: #e1e1e1; }
+        button:hover { background: #d0d0d0; }
+        .btn-attack { background: #ff4d4d; color: white; border: none; }
+        .btn-attack:hover { background: #e60000; }
+        .btn-item { background: #4caf50; color: white; border: none; }
+        .btn-item:hover { background: #45a049; }
+        #log { background: #222; color: #00ff00; padding: 15px; height: 150px; overflow-y: auto; font-family: monospace; border-radius: 5px; white-space: pre-line; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Player 테스트 컨트롤러</h2>
+    
+    <div class="status-box">
+        <div><strong>현재 체력:</strong> <span id="hp-display">100 / 100</span></div>
+        <div><strong>이동 상태:</strong> <span id="move-display">방향 (0, 0), 속도: 5</span></div>
+        <div><strong>게임 상태:</strong> <span id="status-display">정상</span></div>
+    </div>
+
+    <div class="btn-group">
+        <div class="row">
+            <button onclick="triggerMove(0, 1)">위로 이동</button>
+            <button onclick="triggerMove(1, 0)">오른쪽 이동</button>
+        </div>
+        
+        <button class="btn-attack" onclick="triggerAttack()">콤보 공격 시전</button>
+        
+        <div class="row">
+            <!-- 변수명 대신 따옴표를 사용하여 문자열값으로 안전하게 전달 -->
+            <button onclick="triggerDamage(10, 'Normal', 'Normal')">일반몹 평타 (-10)</button>
+            <button onclick="triggerDamage(20, 'FinalBoss', 'Skill')">최종보스 스킬 (-75)</button>
+        </div>
+
+        <button class="btn-item" onclick="triggerItem()">에스페란사 획득 (풀피 회복)</button>
+    </div>
+
+    <h3>실행 로그</h3>
+    <div id="log">게임을 시작합니다. 변수들이 초기화되었습니다.</div>
+</div>
+
+<script src="Player.js"></script>
+<script>
+    // 스크립트가 완전히 로드된 후 객체 생성
+    const player = new Player(100, 5);
+
+    const logDiv = document.getElementById('log');
+    const hpDisplay = document.getElementById('hp-display');
+    const moveDisplay = document.getElementById('move-display');
+    const statusDisplay = document.getElementById('status-display');
+
+    function updateUI() {
+        hpDisplay.innerText = `${player.health} / ${player.maxHealth}`;
+        moveDisplay.innerText = `방향 (${player.direction.x}, ${player.direction.y}), 속도: ${player.moveSpeed}`;
+        statusDisplay.innerText = player.isGameOver ? "❌ 게임 오버" : "🟢 플레이 중";
+        statusDisplay.style.color = player.isGameOver ? "red" : "green";
+    }
+
+    function printLog(message) {
+        logDiv.innerText += `\n${message}`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+        updateUI();
+    }
+
+    function triggerMove(x, y) {
+        const msg = player.move(x, y);
+        printLog(msg);
+    }
+
+    function triggerAttack() {
+        const msg = player.attack();
+        printLog(msg);
+    }
+
+    function triggerDamage(baseDamage, mType, aType) {
+        const msg = player.takeDamage(baseDamage, mType, aType);
+        printLog(msg);
+    }
+
+    function triggerItem() {
+        const msg = player.obtainEsperanza();
+        printLog(msg);
+    }
+
+    updateUI();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\bin\Debug\net10.0\D02(열거형).exe
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\bin\Debug\net10.0\D02(열거형).deps.json
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\bin\Debug\net10.0\D02(열거형).runtimeconfig.json
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\bin\Debug\net10.0\D02(열거형).dll
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\bin\Debug\net10.0\D02(열거형).pdb
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).AssemblyInfoInputs.cache
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).AssemblyInfo.cs
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).csproj.CoreCompileInputs.cache
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).dll
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\refint\D02(열거형).dll
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).pdb
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\D02(열거형).genruntimeconfig.cache
+C:\Users\stars\OneDrive\Desktop\DEV\ConsoleApp1\D02(열거형)\obj\Debug\net10.0\ref\D02(열거형).dll
