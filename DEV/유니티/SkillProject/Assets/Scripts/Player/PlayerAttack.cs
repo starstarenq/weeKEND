@@ -78,19 +78,27 @@ public class PlayerAttack : MonoBehaviour
 
         float finalDamage = attackDamage * currentMultiplier;
 
-        foreach (Collider enemyCollider in targets)
+        foreach (Collider targetCollider in targets)
         {
-            Vector3 directionToTarget = (enemyCollider.transform.position - transform.position);
+            Vector3 directionToTarget = (targetCollider.transform.position - transform.position);
             directionToTarget.y = 0;
 
             float angleToTarget = Vector3.Angle(transform.forward, directionToTarget.normalized);
 
             if (angleToTarget <= attackAngle / 2f)
             {
-                EnemyHP monsterHP = enemyCollider.GetComponent<EnemyHP>();
+                // 1. Enemy인 경우
+                EnemyHP monsterHP = targetCollider.GetComponent<EnemyHP>();
                 if (monsterHP != null)
                 {
                     monsterHP.TakeDamage(finalDamage);
+                }
+
+                // 2. NPC인 경우 [추가]
+                NPCHP npcHP = targetCollider.GetComponent<NPCHP>();
+                if (npcHP != null)
+                {
+                    npcHP.TakeDamage(finalDamage);
                 }
             }
         }
