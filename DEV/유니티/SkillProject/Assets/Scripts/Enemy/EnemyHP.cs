@@ -10,15 +10,15 @@ public class EnemyHP : MonoBehaviour
     private float currentHp;
 
     [Header("사망 보상 설정")]
-    [SerializeField] private float emotionReward = 10f; // 적 사망 시 수급할 감정 수치[cite: 1]
+    [SerializeField] private float emotionReward = 10f; // 적 사망 시 수급할 감정 수치
 
     [Header("UI 연동 (선택 사항)")]
-    [SerializeField] private Image hpBarFillImage;      // UI Image (Fill Amount)[cite: 1]
-    [SerializeField] private Slider hpBarSlider;        // UI Slider[cite: 1]
+    [SerializeField] private Image hpBarFillImage;      // UI Image (Fill Amount)
+    [SerializeField] private Slider hpBarSlider;        // UI Slider
 
     [Header("피격 / 사망 이벤트")]
-    public UnityEvent OnTakeDamageEvent;                // 피격 시 실행될 이벤트[cite: 1]
-    public UnityEvent OnDieEvent;                       // 사망 시 추가 연출 이벤트[cite: 1]
+    public UnityEvent OnTakeDamageEvent;                // 피격 시 실행될 이벤트
+    public UnityEvent OnDieEvent;                       // 사망 시 추가 연출 이벤트
 
     public bool IsDead { get; private set; } = false;
 
@@ -51,17 +51,13 @@ public class EnemyHP : MonoBehaviour
     }
 
     /// <summary>
-    /// 감정 게이지 수치(0~100)에 맞춰 체력 보정 적용 (1%당 0.1% 스탯 하락 = 100% 시 10% 하락)
+    /// 감정 게이지 수치(0~100)에 맞춰 체력 보정 적용 (1%당 0.1% 상승)
     /// </summary>
     private void ApplyEmotionStatModifier(float emotionValue)
     {
         if (IsDead) return;
 
-        // 1%당 0.1% 하락 -> 감정 100%일 때 10%(0.1) 감소 (multiplier = 0.9)
-        float statReductionRatio = (emotionValue * 0.001f);
-        float modifier = Mathf.Clamp(1.0f - statReductionRatio, 0.1f, 1.0f);
-
-        // 이전 최대 체력 대비 현재 체력 비율 유지
+        float modifier = 1.0f + (emotionValue * 0.001f);
         float hpRatio = maxHp > 0 ? currentHp / maxHp : 1f;
 
         maxHp = baseMaxHp * modifier;
@@ -71,7 +67,7 @@ public class EnemyHP : MonoBehaviour
     }
 
     /// <summary>
-    /// PlayerAttack 등 공격 스크립트에서 데미지를 가할 때 호출[cite: 1]
+    /// 데미지 적용 함수
     /// </summary>
     public void TakeDamage(float damageAmount)
     {
@@ -101,7 +97,35 @@ public class EnemyHP : MonoBehaviour
 
         if (UI_InGameScene.Instance != null)
         {
-            UI_InGameScene.Instance.AddEmotion(emotionReward); // 감정 수치 증가
+            // 1. 감정 수치 증가
+            UI_InGameScene.Instance.AddEmotion(emotionReward);
+
+            // 2. 적 처치 시 데스 크리스탈(Death) 30 증가
+            UI_InGameScene.Instance.AddDeath(30);
+
+            // 3. 유니티 버전 호환성을 고려한 씬 전체 적 검사
+#if UNITY_2023_1_OR_NEWER
+            EnemyHP[] allEnemies = FindObjectsByType<EnemyHP>(FindObjectsSortMode.None);
+#else
+            EnemyHP[] allEnemies = FindObjectsOfType<EnemyHP>();
+#endif
+
+            // 살아있는 적(본인 제외, 아직 안 죽은 적) 개수 측정
+            int aliveCount = 0;
+            foreach (var enemy in allEnemies)
+            {
+                if (enemy != this && !enemy.IsDead)
+                {
+                    aliveCount++;
+                }
+            }
+
+            // 모든 적이 처치되었으면 기억의 구슬(Memory) 1 증가
+            if (aliveCount == 0)
+            {
+                UI_InGameScene.Instance.AddMemory(1);
+                Debug.Log("스테이지의 모든 적 처치 완료! 기억의 구슬 +1");
+            }
         }
 
         OnDieEvent?.Invoke();

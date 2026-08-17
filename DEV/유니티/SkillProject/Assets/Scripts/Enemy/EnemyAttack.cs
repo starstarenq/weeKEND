@@ -6,8 +6,8 @@ public class EnemyAttack : MonoBehaviour
     [Header("공격 설정")]
     [SerializeField] private float baseAttackDamage = 10f; // 기본 몬스터 공격 데미지
     public float attackDamage;                              // 실시간 보정된 데미지
-    public float attackRate = 1.5f;                         // 공격 주기 (초)[cite: 2]
-    public float attackRange = 3.5f;                        // 공격 가능 최대 거리[cite: 2]
+    public float attackRate = 1.5f;                         // 공격 주기 (초)
+    public float attackRange = 3.5f;                        // 공격 가능 최대 거리
 
     private float lastAttackTime = 0f;
     private EnemyHP enemyHp;
@@ -39,13 +39,12 @@ public class EnemyAttack : MonoBehaviour
     }
 
     /// <summary>
-    /// 감정 게이지 수치(0~100)에 맞춰 공격력 보정 적용
+    /// 감정 게이지 수치(0~100)에 맞춰 공격력 보정 적용 (1%당 0.1% 상승)
     /// </summary>
     private void ApplyEmotionStatModifier(float emotionValue)
     {
-        // 1%당 0.1% 하락 -> 100% 시 10% 감소
-        float statReductionRatio = (emotionValue * 0.001f);
-        float modifier = Mathf.Clamp(1.0f - statReductionRatio, 0.1f, 1.0f);
+        // 1%당 0.1%(0.001) 증가 공식 적용 (감정 100%일 때 baseAttackDamage * 1.1)
+        float modifier = 1.0f + (emotionValue * 0.001f);
 
         attackDamage = baseAttackDamage * modifier;
     }

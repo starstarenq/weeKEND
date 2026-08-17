@@ -9,7 +9,7 @@ public class NPCHP : MonoBehaviour
     private float currentHp;
 
     [Header("사망 페널티 설정")]
-    [Tooltip("NPC 사망 시 감소시킬 감정 수치")]
+    [Tooltip("NPC 사망 시 감소시킬 감정 수치 (양수/음수 값 모두 감소 처리)")]
     [SerializeField] private float emotionLoss = 15f;
 
     [Header("UI 연동 (선택 사항)")]
@@ -59,12 +59,12 @@ public class NPCHP : MonoBehaviour
         if (IsDead) return;
         IsDead = true;
 
-        Debug.Log($"NPC {gameObject.name} 사망 - 감정 게이지 {emotionLoss} 하락!");
+        Debug.Log($"NPC {gameObject.name} 사망 - 감정 게이지 {Mathf.Abs(emotionLoss)} 하락!");
 
-        // 인게임 UI 싱글톤을 찾아 감정 게이지 감소 (-emotionLoss)
+        // Mathf.Abs() 적용으로 인스펙터 입력값(양수/음수)에 상관없이 무조건 감정 게이지 차감 처리
         if (UI_InGameScene.Instance != null)
         {
-            UI_InGameScene.Instance.AddEmotion(-emotionLoss);
+            UI_InGameScene.Instance.AddEmotion(-Mathf.Abs(emotionLoss));
         }
 
         OnDieEvent?.Invoke();
