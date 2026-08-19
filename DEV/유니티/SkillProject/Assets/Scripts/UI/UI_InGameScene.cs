@@ -6,6 +6,7 @@ public class UI_InGameScene : SceneUI
 
     [SerializeField] private UI_EmotionGauge emotionGaugeSubUI;
     [SerializeField] private UI_Currency currencySubUI;
+    [SerializeField] private UI_EnemyHPBar enemyHPBarSubUI; // 🎯 상단 적 체력바 추가
 
     private void Awake()
     {
@@ -27,7 +28,6 @@ public class UI_InGameScene : SceneUI
             emotionGaugeSubUI.SetEmotionValue(50f);
         }
 
-        // [수정된 부분] SetCurrency 대신 SetDeath, SetMemory로 초기화
         if (currencySubUI != null)
         {
             currencySubUI.Init();
@@ -35,11 +35,27 @@ public class UI_InGameScene : SceneUI
             currencySubUI.SetMemory(0);
         }
 
+        if (enemyHPBarSubUI != null)
+        {
+            enemyHPBarSubUI.Init();
+        }
+
         UI_TraitBook traitBook = FindAnyObjectByType<UI_TraitBook>(FindObjectsInactive.Include);
         if (traitBook != null)
         {
             traitBook.Init();
             traitBook.gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 공격받은 적의 체력바를 상단 UI로 출력
+    /// </summary>
+    public void ShowEnemyHP(EnemyHP enemy)
+    {
+        if (enemyHPBarSubUI != null)
+        {
+            enemyHPBarSubUI.TargetEnemy(enemy);
         }
     }
 
@@ -59,7 +75,6 @@ public class UI_InGameScene : SceneUI
         }
     }
 
-    // [추가된 부분] 외부에서 Death/Memory 재화를 조작하는 연동 메서드
     public void AddDeath(int amount)
     {
         if (currencySubUI != null)

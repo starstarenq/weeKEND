@@ -4,21 +4,28 @@ using UnityEngine.Events;
 
 public class EnemyHP : MonoBehaviour
 {
+    [Header("적 정보")]
+    [SerializeField] private string enemyName = "Boss / Enemy";
+    public string EnemyName => enemyName;
+
     [Header("체력 설정")]
-    [SerializeField] private float baseMaxHp = 100f; // 기본 최대 체력
+    [SerializeField] private float baseMaxHp = 100f;
     private float maxHp;
     private float currentHp;
 
+    public float MaxHP => maxHp;
+    public float CurrentHP => currentHp;
+
     [Header("사망 보상 설정")]
-    [SerializeField] private float emotionReward = 10f; // 적 사망 시 수급할 감정 수치
+    [SerializeField] private float emotionReward = 10f;
 
     [Header("UI 연동 (선택 사항)")]
-    [SerializeField] private Image hpBarFillImage;      // UI Image (Fill Amount)
-    [SerializeField] private Slider hpBarSlider;        // UI Slider
+    [SerializeField] private Image hpBarFillImage;
+    [SerializeField] private Slider hpBarSlider;
 
     [Header("피격 / 사망 이벤트")]
-    public UnityEvent OnTakeDamageEvent;                // 피격 시 실행될 이벤트
-    public UnityEvent OnDieEvent;                       // 사망 시 추가 연출 이벤트
+    public UnityEvent OnTakeDamageEvent;
+    public UnityEvent OnDieEvent;
 
     public bool IsDead { get; private set; } = false;
 
@@ -31,10 +38,8 @@ public class EnemyHP : MonoBehaviour
 
     private void OnEnable()
     {
-        // 감정 게이지 변경 이벤트 구독
         UI_EmotionGauge.OnEmotionChanged += ApplyEmotionStatModifier;
 
-        // 현재 감정 수치가 존재한다면 초기 적용
         if (UI_InGameScene.Instance != null)
         {
             UI_EmotionGauge gauge = FindAnyObjectByType<UI_EmotionGauge>();
@@ -50,9 +55,6 @@ public class EnemyHP : MonoBehaviour
         UI_EmotionGauge.OnEmotionChanged -= ApplyEmotionStatModifier;
     }
 
-    /// <summary>
-    /// 감정 게이지 수치(0~100)에 맞춰 체력 보정 적용 (1%당 0.1% 상승)
-    /// </summary>
     private void ApplyEmotionStatModifier(float emotionValue)
     {
         if (IsDead) return;
@@ -66,9 +68,6 @@ public class EnemyHP : MonoBehaviour
         UpdateHpUI();
     }
 
-    /// <summary>
-    /// 데미지 적용 함수
-    /// </summary>
     public void TakeDamage(float damageAmount)
     {
         if (IsDead || currentHp <= 0) return;
@@ -79,6 +78,12 @@ public class EnemyHP : MonoBehaviour
         Debug.Log($"{gameObject.name} 피격! 입은 데미지: {damageAmount}, 남은 체력: {currentHp}/{maxHp}");
 
         UpdateHpUI();
+
+        // 🎯 다크소울 스타일 상단 체력바 갱신 호출
+        if (UI_InGameScene.Instance != null)
+        {
+            UI_InGameScene.Instance.ShowEnemyHP(this);
+        }
 
         OnTakeDamageEvent?.Invoke();
 
@@ -97,20 +102,15 @@ public class EnemyHP : MonoBehaviour
 
         if (UI_InGameScene.Instance != null)
         {
-            // 1. 감정 수치 증가
             UI_InGameScene.Instance.AddEmotion(emotionReward);
-
-            // 2. 적 처치 시 데스 크리스탈(Death) 30 증가
             UI_InGameScene.Instance.AddDeath(30);
 
-            // 3. 유니티 버전 호환성을 고려한 씬 전체 적 검사
 #if UNITY_2023_1_OR_NEWER
             EnemyHP[] allEnemies = FindObjectsByType<EnemyHP>(FindObjectsSortMode.None);
 #else
             EnemyHP[] allEnemies = FindObjectsOfType<EnemyHP>();
 #endif
 
-            // 살아있는 적(본인 제외, 아직 안 죽은 적) 개수 측정
             int aliveCount = 0;
             foreach (var enemy in allEnemies)
             {
@@ -120,7 +120,6 @@ public class EnemyHP : MonoBehaviour
                 }
             }
 
-            // 모든 적이 처치되었으면 기억의 구슬(Memory) 1 증가
             if (aliveCount == 0)
             {
                 UI_InGameScene.Instance.AddMemory(1);
