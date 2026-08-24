@@ -4,10 +4,6 @@ using UnityEngine.Events;
 
 public class EnemyHP : MonoBehaviour
 {
-    [Header("적 정보")]
-    [SerializeField] private string enemyName = "Boss / Enemy";
-    public string EnemyName => enemyName;
-
     [Header("체력 설정")]
     [SerializeField] private float baseMaxHp = 100f;
     private float maxHp;
@@ -79,10 +75,10 @@ public class EnemyHP : MonoBehaviour
 
         UpdateHpUI();
 
-        // 🎯 다크소울 스타일 상단 체력바 갱신 호출
+        // 🎯 공통 상단 체력바(UI_HPBar)에 현재 오브젝트 이름과 체력 전달
         if (UI_InGameScene.Instance != null)
         {
-            UI_InGameScene.Instance.ShowEnemyHP(this);
+            UI_InGameScene.Instance.ShowHPBar(gameObject.name, currentHp, maxHp);
         }
 
         OnTakeDamageEvent?.Invoke();

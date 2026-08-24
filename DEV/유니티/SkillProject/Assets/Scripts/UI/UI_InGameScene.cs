@@ -6,7 +6,7 @@ public class UI_InGameScene : SceneUI
 
     [SerializeField] private UI_EmotionGauge emotionGaugeSubUI;
     [SerializeField] private UI_Currency currencySubUI;
-    [SerializeField] private UI_EnemyHPBar enemyHPBarSubUI; // 🎯 상단 적 체력바 추가
+    [SerializeField] private UI_HPBar hpBarSubUI; // 🎯 상단 공통 체력바
 
     private void Awake()
     {
@@ -35,9 +35,9 @@ public class UI_InGameScene : SceneUI
             currencySubUI.SetMemory(0);
         }
 
-        if (enemyHPBarSubUI != null)
+        if (hpBarSubUI != null)
         {
-            enemyHPBarSubUI.Init();
+            hpBarSubUI.Init();
         }
 
         UI_TraitBook traitBook = FindAnyObjectByType<UI_TraitBook>(FindObjectsInactive.Include);
@@ -49,13 +49,17 @@ public class UI_InGameScene : SceneUI
     }
 
     /// <summary>
-    /// 공격받은 적의 체력바를 상단 UI로 출력
+    /// 모든 피격 대상(Enemy, NPC)의 이름과 체력 게이지 출력
     /// </summary>
-    public void ShowEnemyHP(EnemyHP enemy)
+    public void ShowHPBar(string name, float currentHp, float maxHp)
     {
-        if (enemyHPBarSubUI != null)
+        if (hpBarSubUI != null)
         {
-            enemyHPBarSubUI.TargetEnemy(enemy);
+            hpBarSubUI.UpdateTargetHP(name, currentHp, maxHp);
+        }
+        else
+        {
+            Debug.LogWarning("UI_InGameScene: hpBarSubUI가 인스펙터에 연결되어 있지 않습니다.");
         }
     }
 
