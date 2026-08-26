@@ -7,7 +7,8 @@ public class PlayerHP : MonoBehaviour
     private float currentHp;
 
     [Header("UI 연동")]
-    [SerializeField] private UI_GameOver gameOverUI; // 인스펙터에서 UI_GameOver 패널 할당
+    [SerializeField] private UI_PlayerHPBar playerHPBar; // 인스펙터 직렬화 연결
+    [SerializeField] private UI_GameOver gameOverUI;
 
     private EquipmentSkillManager equipmentSkillManager;
 
@@ -15,6 +16,15 @@ public class PlayerHP : MonoBehaviour
     {
         currentHp = maxHp;
         equipmentSkillManager = GetComponent<EquipmentSkillManager>();
+
+        // 수동 할당이 안 되어있을 경우 씬에서 자동 탐색
+        if (playerHPBar == null)
+        {
+            playerHPBar = FindAnyObjectByType<UI_PlayerHPBar>();
+        }
+
+        // 초기 체력 UI 반영
+        UpdateHPUI();
     }
 
     public void TakeDamage(float damageAmount)
@@ -28,9 +38,19 @@ public class PlayerHP : MonoBehaviour
         currentHp -= damageAmount;
         Debug.Log($"플레이어 피격! 남은 체력: {currentHp}/{maxHp}");
 
+        UpdateHPUI();
+
         if (currentHp <= 0)
         {
             Die();
+        }
+    }
+
+    private void UpdateHPUI()
+    {
+        if (playerHPBar != null)
+        {
+            playerHPBar.UpdateHP(currentHp, maxHp);
         }
     }
 
@@ -38,13 +58,11 @@ public class PlayerHP : MonoBehaviour
     {
         Debug.Log("플레이어 사망!");
 
-        // 1. 인스펙터에 수동 연동되지 않았을 경우 씬 전체 탐색 (비활성화된 것도 포함)
         if (gameOverUI == null)
         {
             gameOverUI = FindObjectOfType<UI_GameOver>(true);
         }
 
-        // 2. PopUI 계열 표준 함수인 ShowPopup() 호출
         if (gameOverUI != null)
         {
             gameOverUI.ShowPopup();

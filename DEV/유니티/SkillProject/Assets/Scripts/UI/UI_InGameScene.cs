@@ -6,13 +6,14 @@ public class UI_InGameScene : SceneUI
 
     [SerializeField] private UI_EmotionGauge emotionGaugeSubUI;
     [SerializeField] private UI_Currency currencySubUI;
-    [SerializeField] private UI_HPBar hpBarSubUI; // 🎯 상단 공통 체력바
+    [SerializeField] private UI_HPBar hpBarSubUI;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            Init();
         }
         else
         {
@@ -48,9 +49,6 @@ public class UI_InGameScene : SceneUI
         }
     }
 
-    /// <summary>
-    /// 모든 피격 대상(Enemy, NPC)의 이름과 체력 게이지 출력
-    /// </summary>
     public void ShowHPBar(string name, float currentHp, float maxHp)
     {
         if (hpBarSubUI != null)

@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93c703e8880103c4eadb6af4628e44fc, type: 3}
+  m_Name: MazeRoomSet
+  m_EditorClassIdentifier: Assembly-CSharp::ProceduralMaze.MazeRoomSet
+  modules:
+  - type: 0
+    prefab: {fileID: 8059467731606432844, guid: 661b9db71993d054bbb93f916ca1afc6, type: 3}
+    rotationOffsetSteps: 0
+  - type: 1
+    prefab: {fileID: 7801035148080672501, guid: cc9d531d29ddab94a9ce41120e6988b6, type: 3}
+    rotationOffsetSteps: 0
+  - type: 2
+    prefab: {fileID: 7801035148080672501, guid: 4247dacddd7bc2f42a53273c7ad4d50a, type: 3}
+    rotationOffsetSteps: 0
+  - type: 3
+    prefab: {fileID: 7801035148080672501, guid: 0eab15c7314971444ad5f7c561bf6f88, type: 3}
+    rotationOffsetSteps: 0
+  - type: 4
+    prefab: {fileID: 3253927650969235556, guid: fb3265a7942766745b13336f56d3a94d, type: 3}
+    rotationOffsetSteps: 0
