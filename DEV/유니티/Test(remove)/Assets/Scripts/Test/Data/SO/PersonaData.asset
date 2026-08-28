@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13d368fa670085f4c97778abec920350, type: 3}
+  m_Name: PersonaData
+  m_EditorClassIdentifier: Assembly-CSharp::PersonaData
+  personaName: "\uD0A4\uC6B4"
+  arcana: "\uBCC4"
+  baseLevel: 30
+  strength: 213
+  magic: 2
+  endurance: 213
+  agility: 321
+  luck: 312

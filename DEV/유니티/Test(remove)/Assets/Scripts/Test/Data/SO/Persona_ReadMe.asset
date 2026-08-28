@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03d46429221371e489db2bd1c79ff60a, type: 3}
+  m_Name: Persona_ReadMe
+  m_EditorClassIdentifier: Assembly-CSharp::PersonaReadmeSO
+  readMeDescription: "=== \uD398\uB974\uC18C\uB098 5 \uB85C\uC584 \uB808\uBCA8 30
+    \uB3D9\uB4F1 \uB370\uC774\uD130\uBCA0\uC774\uC2A4 ===\n\n\u2022 \uC544\uB77C\uD558\uBC14\uD0A4
+    : \uB0B4\uAD6C/\uB9C8\uB825 \uC911\uC2EC (\uBC29\uC5B4/\uD0F1\uD0B9)\n\u2022
+    \uB124\uBE44\uB85C\uC2A4   : \uB192\uC740 \uB9C8\uB825 (\uC8FC\uC6D0 \uB9C8\uBC95
+    \uD2B9\uD654)\n\u2022 \uB78C\uB2E4       : \uB192\uC740 \uD798/\uC18D\uB3C4 (\uBB3C\uB9AC/\uC0C1\uD0DC\uC774\uC0C1)\n\u2022
+    \uD0A4\uC6B4       : \uB9C8\uB825/\uC6B4 \uC911\uC2EC (\uC5FC\uB3D9/\uD06C\uB9AC\uD2F0\uCEEC)"
+  personaList: []
