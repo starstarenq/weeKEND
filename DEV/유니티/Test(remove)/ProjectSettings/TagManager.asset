@@ -14,8 +14,8 @@ TagManager:
   - UI
   - Ghost Object
   - Character Ghost
-  - 
-  - 
+  - Ground
+  - Object
   - 
   - 
   - 
@@ -41,6 +41,15 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Ground
+    uniqueID: 3846714015
+    locked: 0
+  - name: Object
+    uniqueID: 1100323345
+    locked: 0
+  - name: Player
+    uniqueID: 1070508237
     locked: 0
   m_RenderingLayers:
   - Default
