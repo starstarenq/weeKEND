@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "Whip",
+    "Korean_Name": "채찍",
+    "Base_Damage_Min": 10,
+    "Base_Damage_Max": 40,
+    "Cooldown_Min": 1.35,
+    "Cooldown_Max": 1.05,
+    "Amount_Min": 1,
+    "Amount_Max": 2
+  },
+  {
+    "Name": "Magic Wand",
+    "Korean_Name": "마법 지팡이",
+    "Base_Damage_Min": 10,
+    "Base_Damage_Max": 35,
+    "Cooldown_Min": 1.2,
+    "Cooldown_Max": 0.7,
+    "Amount_Min": 1,
+    "Amount_Max": 5
+  },
+  {
+    "Name": "Knife",
+    "Korean_Name": "단검",
+    "Base_Damage_Min": 5,
+    "Base_Damage_Max": 20,
+    "Cooldown_Min": 1.0,
+    "Cooldown_Max": 0.35,
+    "Amount_Min": 1,
+    "Amount_Max": 6
+  },
+  {
+    "Name": "Axe",
+    "Korean_Name": "도끼",
+    "Base_Damage_Min": 20,
+    "Base_Damage_Max": 80,
+    "Cooldown_Min": 4.0,
+    "Cooldown_Max": 3.5,
+    "Amount_Min": 1,
+    "Amount_Max": 5
+  },
+  {
+    "Name": "Cross",
+    "Korean_Name": "십자가",
+    "Base_Damage_Min": 15,
+    "Base_Damage_Max": 55,
+    "Cooldown_Min": 2.0,
+    "Cooldown_Max": 1.6,
+    "Amount_Min": 1,
+    "Amount_Max": 4
+  },
+  {
+    "Name": "King Bible",
+    "Korean_Name": "성경",
+    "Base_Damage_Min": 15,
+    "Base_Damage_Max": 45,
+    "Cooldown_Min": 3.0,
+    "Cooldown_Max": 3.0,
+    "Amount_Min": 1,
+    "Amount_Max": 4
+  },
+  {
+    "Name": "Fire Wand",
+    "Korean_Name": "화염 지팡이",
+    "Base_Damage_Min": 20,
+    "Base_Damage_Max": 100,
+    "Cooldown_Min": 4.5,
+    "Cooldown_Max": 3.5,
+    "Amount_Min": 1,
+    "Amount_Max": 4
+  },
+  {
+    "Name": "Garlic",
+    "Korean_Name": "마늘",
+    "Base_Damage_Min": 5,
+    "Base_Damage_Max": 17,
+    "Cooldown_Min": 1.0,
+    "Cooldown_Max": 1.0,
+    "Amount_Min": 1,
+    "Amount_Max": 1
+  },
+  {
+    "Name": "Santa Water",
+    "Korean_Name": "성수",
+    "Base_Damage_Min": 15,
+    "Base_Damage_Max": 45,
+    "Cooldown_Min": 4.5,
+    "Cooldown_Max": 3.5,
+    "Amount_Min": 1,
+    "Amount_Max": 5
+  },
+  {
+    "Name": "Runetracer",
+    "Korean_Name": "룬트레이서",
+    "Base_Damage_Min": 15,
+    "Base_Damage_Max": 45,
+    "Cooldown_Min": 3.0,
+    "Cooldown_Max": 3.0,
+    "Amount_Min": 1,
+    "Amount_Max": 4
+  },
+  {
+    "Name": "Lightning Ring",
+    "Korean_Name": "번개 반지",
+    "Base_Damage_Min": 15,
+    "Base_Damage_Max": 75,
+    "Cooldown_Min": 4.5,
+    "Cooldown_Max": 3.7,
+    "Amount_Min": 2,
+    "Amount_Max": 5
+  },
+  {
+    "Name": "Pentagram",
+    "Korean_Name": "오각별",
+    "Base_Damage_Min": 0,
+    "Base_Damage_Max": 0,
+    "Cooldown_Min": 90.0,
+    "Cooldown_Max": 60.0,
+    "Amount_Min": 1,
+    "Amount_Max": 1
+  },
+  {
+    "Name": "Peachone",
+    "Korean_Name": "피치원",
+    "Base_Damage_Min": 10,
+    "Base_Damage_Max": 30,
+    "Cooldown_Min": 4.0,
+    "Cooldown_Max": 3.0,
+    "Amount_Min": 1,
+    "Amount_Max": 8
+  },
+  {
+    "Name": "Ebony Wings",
+    "Korean_Name": "에보니 윙",
+    "Base_Damage_Min": 10,
+    "Base_Damage_Max": 30,
+    "Cooldown_Min": 4.0,
+    "Cooldown_Max": 3.0,
+    "Amount_Min": 1,
+    "Amount_Max": 8
+  }
+]
