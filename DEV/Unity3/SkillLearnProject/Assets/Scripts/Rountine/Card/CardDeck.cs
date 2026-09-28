@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class CardDeck : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // List<T> 자료구조 사용해서 덱이란 코드표헌
+    //originalDeck 최초 카드 풀
+
     void Start()
     {
         
