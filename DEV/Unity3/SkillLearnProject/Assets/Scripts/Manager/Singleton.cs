@@ -5,7 +5,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     // 전역 접근을 가능하게 만들기 위한 정적(static) 변수
     public static T Instance { get; private set; }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         // 유일하게 사용할 수 있게 만드는 예외 처리 (중복 생성 방지)
         if (Instance == null)

@@ -1,0 +1,46 @@
+{
+    "version": 1,
+    "name": "FireballControls",
+    "maps": [
+        {
+            "name": "Gameplay",
+            "id": "eaea9bc1-c587-4c43-91c1-cb27221323fc",
+            "actions": [
+                {
+                    "name": "Fireball",
+                    "type": "Button",
+                    "id": "7145cb7a-902c-46f5-9b96-3bde0ab05823",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "68e8b618-9ffe-4499-98e9-fac85dca4630",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fireball",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fc9ad087-750c-4919-bce5-522a967193c9",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fireball",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
