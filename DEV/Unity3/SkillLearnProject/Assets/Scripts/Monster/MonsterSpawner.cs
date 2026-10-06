@@ -1,21 +1,26 @@
 using UnityEngine;
 using System.Collections.Generic;
-//ë°ì´í„°(ìì£¼ ë³€í• ê²ƒë“¤) ë¹¼ì„œ ë³´ê´€
-//ì•„ì´í…œ, ìŠ¤í‚¬, ëª¬ìŠ¤í„°, í”Œë ˆì´ì–´ ì§ì—…
+// µ¥ÀÌÅÍ (ÀÚÁÖ º¯ÇÒ °Íµé) »©¼­ º¸°üÇÏÀÚ.
 
-public class Wave
-{
-    [SerializeField] List<Monster> monsterGroup = new List<Monster>();
-}
+// ¾ÆÀÌÅÛ, ½ºÅ³, ¸ó½ºÅÍ, ÇÃ·¹ÀÌ¾îÀÇ Á÷¾÷
+
+// sphereInside
+
+// ¹ìÆÄÀÌ¾î ¼­¹ÙÀÌ¹ú ¸ó½ºÅÍ ½ºÆù ¹æ½Ä
+
 public class MonsterSpawner : MonoBehaviour
 {
-    [SerializeField] List<Monster> monsterGroup = new List<Monster>(); // 10..
-    //ë°ì´í„° ìˆìœ¼ë‹ˆ ë°ì´í„°ë¡œ ëª¬ìŠ¤í„° ìƒì„±
+    [SerializeField] List<Monster> monsterGroup = new List<Monster>();
+
+
+    // µ¥ÀÌÅÍ°¡ ÀÖÀ¸´Ï±ñ µ¥ÀÌÅÍ·Î ¸ó½ºÅÍ¸¦ »ı¼ºÇÒ°Ô.
+
     private void Start()
     {
-        //ë‚´ ëª¬ìŠ¤í„° ê·¸ë£¹ì— ìˆëŠ” ëª¬ìŠ¤í„°ë¥¼ ì†Œí™˜í•˜ëŠ” ì½”ë“œ ì‘ì„±
-        // wave -> waveë‹¹ ëª‡ ì¢…ë¥˜ì˜ ëª‡ë§ˆë¦¬ ì†Œí™˜?
-        
+        // ³» ¸ó½ºÅÍ ±×·ì¿¡ ÀÖ´Â ¸ó½ºÅÍ¸¦ ¼ÒÈ¯ÇÏ´Â ÄÚµå¸¦ ÀÛ¼ºÇÏ¼¼¿ä. 
+
+        // wave -> wave´ç ¸î Á¾·ùÀÇ ¸î¸¶¸®¸¦ ¼ÒÈ¯ÇÒ±î¿ä? 
+
         Instantiate(monsterGroup[1]);
     }
 }

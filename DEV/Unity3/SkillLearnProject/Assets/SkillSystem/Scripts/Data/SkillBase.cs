@@ -9,6 +9,7 @@ namespace KDH_SkillSystem
         [SerializeField] private string skillName;
         [TextArea(2, 5)][SerializeField] private string description;
         [SerializeField] private Sprite icon;
+        [SerializeField] AudioClip castSound;
 
         [Header("스킬 속성 및 스탯")]
         [SerializeField] private SkillType skillType;
@@ -27,6 +28,8 @@ namespace KDH_SkillSystem
         public Element Element => element;
         public SkillCostInfo CostInfo => costInfo;
         public SkillImpactInfo ImpactInfo => impactInfo;
+
+        public AudioClip CastSound => castSound;
 
         /// <summary>
         /// 스킬 데이터 초기화가 필요할 경우 사용할 추상 메서드

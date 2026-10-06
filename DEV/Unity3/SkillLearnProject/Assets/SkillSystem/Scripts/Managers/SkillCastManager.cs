@@ -61,6 +61,8 @@ namespace KDH_SkillSystem
                 // 2D 환경에서의 타겟팅 타겟 포지션 구하기 (예시: 마우스의 월드 좌표)
                 Vector3 targetWorldPosition = GetMouseWorldPosition2D();
 
+                SkillManager.Instance.PlaySound(skillData.CastSound);
+
                 // 시전자(플레이어 자신)와 목표 좌표를 넘겨 실행
                 executableSkill.Execute(playerInput.gameObject, targetWorldPosition);
 

@@ -16,6 +16,7 @@ MonoBehaviour:
   skillName: Fireball
   description: "\uD30C\uC774\uC5B4\uBCFC \uC2DC\uC804"
   icon: {fileID: 21300000, guid: 77ef5fffa3e88264bae248b69db9a779, type: 3}
+  castSound: {fileID: 8300000, guid: ffedd94f955671c44a47134004596c59, type: 3}
   skillType: 0
   targetType: 0
   element: 1
@@ -25,5 +26,5 @@ MonoBehaviour:
   impactInfo:
     damageMultiplier: 1
     range: 10
-  fireballPrefab: {fileID: 3877779369952947691, guid: 8c88623a5cef9bf4ba608a12a4395c5b, type: 3}
+  fireballPrefab: {fileID: 1801177612528116688, guid: b7a71648749b1794fbf3e9c726da9d34, type: 3}
   projectileSpeed: 10

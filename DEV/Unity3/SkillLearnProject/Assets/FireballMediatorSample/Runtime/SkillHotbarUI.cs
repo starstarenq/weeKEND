@@ -61,6 +61,18 @@ namespace FireballMediatorSample
                     if (!string.IsNullOrEmpty(label) && !labels.Contains(label)) labels.Add(label);
                 }
             bindingText.text = labels.Count > 0 ? string.Join(" / ", labels) : "Unbound";
+
+            var action2 = input != null ? input.IceballAction : null;
+            var labels2 = new List<string>();
+            if (action2 != null)
+                for (int i = 0; i < action2.bindings.Count; i++)
+                {
+                    var binding = action2.bindings[i];
+                    if (binding.isPartOfComposite || string.IsNullOrEmpty(binding.effectivePath)) continue;
+                    string label = action2.GetBindingDisplayString(i);
+                    if (!string.IsNullOrEmpty(label) && !labels.Contains(label)) labels.Add(label);
+                }
+            bindingText.text = labels2.Count > 0 ? string.Join(" / ", labels2) : "Unbound";
         }
         void Update()
         {

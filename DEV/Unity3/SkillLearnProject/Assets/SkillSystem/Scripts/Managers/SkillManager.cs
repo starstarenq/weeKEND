@@ -11,6 +11,9 @@ namespace KDH_SkillSystem
         // Resources 내 스킬 에셋들이 위치할 하위 경로
         private const string SkillAssetsPath = "Skills";
 
+        private AudioSource audioSource;
+        [SerializeField, Range(0, 1)] float sfxVolume = 0.5f;
+
         protected override void Awake()
         {
             base.Awake();
@@ -23,6 +26,8 @@ namespace KDH_SkillSystem
         /// </summary>
         private void InitializeManager()
         {
+            audioSource = GetComponent<AudioSource>();
+
             _skillDatabase.Clear();
 
             // 1. Resources/Skills/ 경로에 있는 모든 SkillBase 타입의 에셋을 로드합니다.
@@ -69,6 +74,11 @@ namespace KDH_SkillSystem
 
             Debug.LogWarning($"[SkillDataManager] ID '{skillId}'에 해당하는 스킬 데이터를 찾을 수 없습니다.");
             return null;
+        }
+
+        public void PlaySound(AudioClip clip)
+        {
+            if (clip != null && audioSource != null) audioSource.PlayOneShot(clip, sfxVolume);
         }
     }
 }

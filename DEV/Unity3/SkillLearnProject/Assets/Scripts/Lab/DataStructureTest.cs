@@ -1,21 +1,17 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class DataStructureTest : MonoBehaviour
 {
-    List<CardData> AllCardData = new List<CardData>();
 
-    public CardData[] CardDatas;
+    int buffDamage = 10;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
-    }
+        Debug.Log(CardManager.Instance.GetCardData("타격").CardDescription.value);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        CardManager.Instance.GetCardData("타격").CardDescription.value += buffDamage;
     }
+    
 }

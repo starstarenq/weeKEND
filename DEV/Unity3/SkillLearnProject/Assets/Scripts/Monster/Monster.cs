@@ -1,35 +1,42 @@
 using UnityEngine;
 using System;
 
-[System.Serializable]
 
-
+[Serializable]
 public class Monster : MonoBehaviour
 {
-    //ì²´ë ¥ - ì •ìˆ˜,ì†Œìˆ˜ì 
-    //ì´ë¦„
-    //ì†ë„
-    //ê³µê²©ë ¥
-[SerializeField] MonsterData monsterData;
+    // Ã¼·Â - Á¤¼ö, ¼Ò¼öÁ¡
+    // ÀÌ¸§
+    // ¼Óµµ
+    // °ø°İ·Â
 
-    ///<summary>
-    ////////////////////ë°ì´í„°
+    // public  vs   [SerializeField] private
+
+    [SerializeField] MonsterData monsterData;
+    /// <summary>
+    /// /////////////////// µ¥ÀÌÅÍ
     /// </summary>
+
     private void Start()
     {
-        Debug.Log($"{name}ì˜ ì²´ë ¥ : {monsterData.HP}");
-        Debug.Log($"{name}ì˜ ì†ë„ : {monsterData.speed}");
-        Debug.Log($"{name}ì˜ ê³µê²©ë ¥ : {monsterData.damage}");
+        Debug.Log($"{monsterData.name}ÀÇ Ã¼·Â : {monsterData.HP}");
+        Debug.Log($"{monsterData.name}ÀÇ ¼Óµµ : {monsterData.speed}");
+        Debug.Log($"{monsterData.name}ÀÇ °ø°İ·Â : {monsterData.damage}");
     }
-    //ê·¸ë˜ì„œ ëˆ„ê°€ ë‚  ê³µê²©? -> 1> ê°•ê²°í•©, 2> Manager ëˆ„ê°€ ê³µê²© ë‹¹í•˜ê³  ë°›ëŠ”ì§€ ì•Œë ¤ì¤€ë‹¤, 3> ì´ë²¤íŠ¸
 
-    ///<summary>
-    /// ê¸°ëŠ¥ : í•œë²ˆ ê²°ì • ë˜ì—ˆìœ¼ë©´ íŠ¹ë³„í•œ ì¼ì´ ì—†ìœ¼ë©´ ì˜ ë³€ê²½ë˜ì§€ ì•Šì„ê²ƒë“¤
+    // ±×·¡¼­ ´©°¡ ³ª¸¦ °ø°İÇÕ´Ï±î? ->  1> °­°áÇÕ , 2>  Manager ´©°¡ °ø°İÀ» ´çÇÏ°í ¹Ş´ÂÁö ¾Ë·ÁÁØ´Ù. 3> ÀÌº¥Æ®
+
+    /// <summary>
+    /// ±â´É : ÇÑ¹ø °áÁ¤ÀÌ µÇ¾úÀ¸¸é Æ¯º°ÇÑ ÀÏÀÌ ¾øÀ¸¸é Àß º¯°æµÇÁö ¾ÊÀ» °Íµé
     /// </summary>
+    /// <param name="defenderMonsterData"></param>
+    /// <param name="attackerStat"></param>
 
-    public void CombarBattle(MonsterData defenderStat, MonsterData attackerStat)
+    public void CombatBattle(MonsterData defenderStat, MonsterData attackerStat)
     {
-       int finalDmg = defenderStat.HP - (int)attackerStat.damage;
-        Debug.Log($"ìµœì¢… ë°ë¯¸ì§€ : {finalDmg}");
+        int finalDmg = defenderStat.HP - (int)attackerStat.damage;
+
+        Debug.Log($"ÃÖÁ¾ µ¥¹ÌÁö {finalDmg}");
     }
+
 }

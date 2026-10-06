@@ -1,0 +1,1673 @@
+{
+  "version": 2,
+  "bodyType": "muscular",
+  "selections": {
+    "body": {
+      "itemId": "body",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.ochre",
+      "name": "Body Color (all.lpcr.ochre)"
+    },
+    "head": {
+      "itemId": "heads_human_male",
+      "variant": "",
+      "recolor": "all.lpcr.ochre",
+      "name": "Human Male (all.lpcr.ochre)"
+    },
+    "expression": {
+      "itemId": "face_look_l",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.ochre",
+      "name": "Looking Left (all.lpcr.ochre)"
+    },
+    "wound_eye_right": {
+      "itemId": "wound_eye_right",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.wine",
+      "name": "Right Eye (all.lpcr.wine)"
+    },
+    "wound_ribs": {
+      "itemId": "wound_ribs",
+      "subId": null,
+      "variant": null,
+      "recolor": "orange",
+      "name": "Ribs (orange)"
+    },
+    "wings": {
+      "itemId": "wings_dragonfly",
+      "subId": null,
+      "variant": "forest",
+      "recolor": null,
+      "name": "Dragonfly Wings (forest)"
+    },
+    "wings_edge": {
+      "itemId": "wings_monarch_edge",
+      "subId": null,
+      "variant": "brown",
+      "recolor": null,
+      "name": "Monarch Wings Edge (brown)"
+    },
+    "tail": {
+      "itemId": "tail_lizard",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.ochre",
+      "name": "Lizard tail (all.lpcr.ochre)"
+    },
+    "eyes": {
+      "itemId": "eyes_cyclops2",
+      "subId": null,
+      "variant": null,
+      "recolor": "lpcr.brown",
+      "name": "Alt Cyclops Eyes (lpcr.brown)"
+    },
+    "furry_ears_skin": {
+      "itemId": "head_ears_cat_skin",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.ochre",
+      "name": "Cat Ears Skintone (all.lpcr.ochre)"
+    },
+    "ears_inner": {
+      "itemId": "head_ears_avyon_skin",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.ochre",
+      "name": "Feather Ears Skintone (all.lpcr.ochre)"
+    },
+    "horns": {
+      "itemId": "head_horns_curled",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.navy",
+      "name": "Curled Horns (all.lpcr.navy)"
+    },
+    "fins": {
+      "itemId": "head_fins_fin_short",
+      "subId": null,
+      "variant": null,
+      "recolor": "black",
+      "name": "Short fin (black)"
+    },
+    "mustache": {
+      "itemId": "beards_mustache",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.forest",
+      "name": "Mustache (all.lpcr.forest)"
+    },
+    "hairextr": {
+      "itemId": "hairext_xlong_bangr",
+      "subId": null,
+      "variant": null,
+      "recolor": "dark_gray",
+      "name": "Right XLong Bang (dark gray)"
+    },
+    "hairtie_rune": {
+      "itemId": "hat_headband_hairtie_rune",
+      "subId": null,
+      "variant": null,
+      "recolor": "red",
+      "name": "Hair Tie Rune (red)"
+    },
+    "hat_accessory": {
+      "itemId": "hat_cap_cavalier_feather",
+      "subId": null,
+      "variant": "sky",
+      "recolor": null,
+      "name": "Cavalier feather (sky)"
+    },
+    "hat_overlay": {
+      "itemId": "hat_tricorne_captain_skull",
+      "subId": null,
+      "variant": "forest",
+      "recolor": null,
+      "name": "Tricorne Captain Skull (forest)"
+    },
+    "hat_buckle": {
+      "itemId": "hat_magic_wizard_buckle",
+      "subId": null,
+      "variant": "bronze",
+      "recolor": null,
+      "name": "Wizard Hat Buckle (bronze)"
+    },
+    "earrings": {
+      "itemId": "facial_earrings_stud",
+      "subId": null,
+      "variant": "ceramic",
+      "recolor": null,
+      "name": "Stud earrings (ceramic)"
+    },
+    "neck": {
+      "itemId": "neck_capetie",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.tan",
+      "name": "Cape Tie (all.lpcr.tan)"
+    },
+    "bauldron": {
+      "itemId": "bauldron",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.porcelain",
+      "name": "Bauldron (all.lpcr.porcelain)"
+    },
+    "overalls": {
+      "itemId": "torso_aprons_suspenders",
+      "subId": null,
+      "variant": "pink",
+      "recolor": null,
+      "name": "Suspenders (pink)"
+    },
+    "cape_trim": {
+      "itemId": "cape_trim",
+      "subId": null,
+      "variant": null,
+      "recolor": "metal.steel",
+      "name": "Cape Trim (metal.steel)"
+    },
+    "legs": {
+      "itemId": "legs_skirts_legion",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.coral",
+      "name": "Legion skirt (all.lpcr.coral)"
+    },
+    "shoes": {
+      "itemId": "feet_shoes_basic",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.cerise",
+      "name": "Basic Shoes (all.lpcr.cerise)"
+    },
+    "shield_pattern": {
+      "itemId": "shield_heater_revised_pattern_bend_sinister",
+      "subId": null,
+      "variant": null,
+      "recolor": "all.lpcr.teal",
+      "name": "revised_bend_sinister (all.lpcr.teal)"
+    }
+  },
+  "selectedAnimation": "core_idle",
+  "showTransparencyGrid": false,
+  "applyTransparencyMask": false,
+  "matchBodyColorEnabled": true,
+  "compactDisplay": false,
+  "enabledLicenses": {
+    "CC0": true,
+    "CC-BY-SA": true,
+    "CC-BY": true,
+    "OGA-BY": true,
+    "GPL": true
+  },
+  "enabledAnimations": {
+    "spellcast": false,
+    "thrust": false,
+    "walk": false,
+    "slash": false,
+    "shoot": false,
+    "hurt": false,
+    "climb": false,
+    "idle": false,
+    "jump": false,
+    "sit": false,
+    "emote": false,
+    "run": false,
+    "watering": false,
+    "combat": false,
+    "1h_slash": false,
+    "1h_backslash": false,
+    "1h_halfslash": false
+  },
+  "url": "file:///C:/Users/Administrator/AppData/Local/Programs/spritesheet-character-generator-gui/resources/app.asar/out/renderer/index.html#sex=muscular&body=Body_Color_all.lpcr.ochre&head=Human_Male_all.lpcr.ochre&expression=Looking_Left_all.lpcr.ochre&wound_eye_right=Right_Eye_all.lpcr.wine&wound_ribs=Ribs_orange&wings=Dragonfly_Wings_forest&wings_edge=Monarch_Wings_Edge_brown&tail=Lizard_tail_all.lpcr.ochre&eyes=Alt_Cyclops_Eyes_lpcr.brown&furry_ears_skin=Cat_Ears_Skintone_all.lpcr.ochre&ears_inner=Feather_Ears_Skintone_all.lpcr.ochre&horns=Curled_Horns_all.lpcr.navy&fins=Short_fin_black&mustache=Mustache_all.lpcr.forest&hairextr=Right_XLong_Bang_dark_gray&hairtie_rune=Hair_Tie_Rune_red&hat_accessory=Cavalier_feather_sky&hat_overlay=Tricorne_Captain_Skull_forest&hat_buckle=Wizard_Hat_Buckle_bronze&earrings=Stud_earrings_ceramic&neck=Cape_Tie_all.lpcr.tan&bauldron=Bauldron_all.lpcr.porcelain&overalls=Suspenders_pink&cape_trim=Cape_Trim_metal.steel&legs=Legion_skirt_all.lpcr.coral&shoes=Basic_Shoes_all.lpcr.cerise&shield_pattern=revised_bend_sinister_all.lpcr.teal",
+  "layers": [
+    {
+      "itemId": "shield_heater_revised_pattern_bend_sinister",
+      "name": "revised_bend_sinister (all.lpcr.teal)",
+      "variant": null,
+      "recolors": {
+        "shield_pattern": "all.lpcr.teal"
+      },
+      "zPos": 4,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "shield/heater/revised/pattern/bend_sinister/bg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wings_dragonfly",
+      "name": "Dragonfly Wings (forest)",
+      "variant": "forest",
+      "recolors": null,
+      "zPos": 5,
+      "layerNum": 2,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wings/dragonfly/solid/bg/spellcast/forest.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "tail_lizard",
+      "name": "Lizard tail (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "tail": "all.lpcr.ochre"
+      },
+      "zPos": 5,
+      "layerNum": 2,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/tail/lizard/adult/bg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wings_monarch_edge",
+      "name": "Monarch Wings Edge (brown)",
+      "variant": "brown",
+      "recolors": null,
+      "zPos": 6,
+      "layerNum": 2,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wings/monarch/edge/bg/spellcast/brown.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "head_ears_cat_skin",
+      "name": "Cat Ears Skintone (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "furry_ears_skin": "all.lpcr.ochre"
+      },
+      "zPos": 9,
+      "layerNum": 2,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/ears/cat/skin/adult/bg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "body",
+      "name": "Body Color (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "body": "all.lpcr.ochre"
+      },
+      "zPos": 10,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/bodies/muscular/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wound_ribs",
+      "name": "Ribs (orange)",
+      "variant": null,
+      "recolors": {
+        "wound_ribs": "orange"
+      },
+      "zPos": 15,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wound/ribs/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "feet_shoes_basic",
+      "name": "Basic Shoes (all.lpcr.cerise)",
+      "variant": null,
+      "recolors": {
+        "shoes": "all.lpcr.cerise"
+      },
+      "zPos": 15,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "feet/shoes/basic/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "legs_skirts_legion",
+      "name": "Legion skirt (all.lpcr.coral)",
+      "variant": null,
+      "recolors": {
+        "legs": "all.lpcr.coral"
+      },
+      "zPos": 20,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "legs/skirts/legion/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "torso_aprons_suspenders",
+      "name": "Suspenders (pink)",
+      "variant": "pink",
+      "recolors": null,
+      "zPos": 38,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "torso/aprons/suspenders/male/spellcast/pink.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "bauldron",
+      "name": "Bauldron (all.lpcr.porcelain)",
+      "variant": null,
+      "recolors": {
+        "bauldron": "all.lpcr.porcelain"
+      },
+      "zPos": 65,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "shoulders/bauldron/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "tail_lizard",
+      "name": "Lizard tail (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "tail": "all.lpcr.ochre"
+      },
+      "zPos": 85,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/tail/lizard/adult/fg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "neck_capetie",
+      "name": "Cape Tie (all.lpcr.tan)",
+      "variant": null,
+      "recolors": {
+        "neck": "all.lpcr.tan"
+      },
+      "zPos": 90,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "neck/capetie/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run"
+      ]
+    },
+    {
+      "itemId": "cape_trim",
+      "name": "Cape Trim (metal.steel)",
+      "variant": null,
+      "recolors": {
+        "cape_trim": "metal.steel"
+      },
+      "zPos": 90,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "cape/trim/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle"
+      ]
+    },
+    {
+      "itemId": "heads_human_male",
+      "name": "Human Male (all.lpcr.ochre)",
+      "variant": "",
+      "recolors": {
+        "head": "all.lpcr.ochre",
+        "eyes": "lpcr.brown"
+      },
+      "zPos": 100,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/heads/human/male/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "face_look_l",
+      "name": "Looking Left (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "expression": "all.lpcr.ochre",
+        "eyes": "lpcr.brown"
+      },
+      "zPos": 101,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/faces/male/look_l/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wings_dragonfly",
+      "name": "Dragonfly Wings (forest)",
+      "variant": "forest",
+      "recolors": null,
+      "zPos": 105,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wings/dragonfly/solid/fg/spellcast/forest.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "eyes_cyclops2",
+      "name": "Alt Cyclops Eyes (lpcr.brown)",
+      "variant": null,
+      "recolors": {
+        "eyes": "lpcr.brown"
+      },
+      "zPos": 105,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "eyes/cyclops2/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wings_monarch_edge",
+      "name": "Monarch Wings Edge (brown)",
+      "variant": "brown",
+      "recolors": null,
+      "zPos": 106,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wings/monarch/edge/fg/spellcast/brown.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "beards_mustache",
+      "name": "Mustache (all.lpcr.forest)",
+      "variant": null,
+      "recolors": {
+        "mustache": "all.lpcr.forest"
+      },
+      "zPos": 111,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "beards/mustache/basic/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "shield_heater_revised_pattern_bend_sinister",
+      "name": "revised_bend_sinister (all.lpcr.teal)",
+      "variant": null,
+      "recolors": {
+        "shield_pattern": "all.lpcr.teal"
+      },
+      "zPos": 112,
+      "layerNum": 2,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "shield/heater/revised/pattern/bend_sinister/fg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "wound_eye_right",
+      "name": "Right Eye (all.lpcr.wine)",
+      "variant": null,
+      "recolors": {
+        "wound_eye_right": "all.lpcr.wine"
+      },
+      "zPos": 115,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "body/wound/eye_right/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "facial_earrings_stud",
+      "name": "Stud earrings (ceramic)",
+      "variant": "ceramic",
+      "recolors": null,
+      "zPos": 115,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "facial/earrings/stud/male/spellcast/ceramic.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt"
+      ]
+    },
+    {
+      "itemId": "head_fins_fin_short",
+      "name": "Short fin (black)",
+      "variant": null,
+      "recolors": {
+        "fins": "black"
+      },
+      "zPos": 125,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/fins/fin_short/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "head_horns_curled",
+      "name": "Curled Horns (all.lpcr.navy)",
+      "variant": null,
+      "recolors": {
+        "horns": "all.lpcr.navy"
+      },
+      "zPos": 126,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/horns/curled/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hat_headband_hairtie_rune",
+      "name": "Hair Tie Rune (red)",
+      "variant": null,
+      "recolors": {
+        "hairtie_rune": "red"
+      },
+      "zPos": 126,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hat/headband/hairtie/rune/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "head_ears_avyon_skin",
+      "name": "Feather Ears Skintone (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "ears_inner": "all.lpcr.ochre"
+      },
+      "zPos": 127,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/ears/avyon/skin/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hairext_xlong_bangr",
+      "name": "Right XLong Bang (dark gray)",
+      "variant": null,
+      "recolors": {
+        "hairextr": "dark_gray"
+      },
+      "zPos": 128,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hair/extensions/bangs/xlong_bangr/adult/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "head_ears_cat_skin",
+      "name": "Cat Ears Skintone (all.lpcr.ochre)",
+      "variant": null,
+      "recolors": {
+        "furry_ears_skin": "all.lpcr.ochre"
+      },
+      "zPos": 131,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "head/ears/cat/skin/adult/fg/spellcast.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hat_cap_cavalier_feather",
+      "name": "Cavalier feather (sky)",
+      "variant": "sky",
+      "recolors": null,
+      "zPos": 131,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hat/pirate/cavalier/feather/adult/spellcast/sky.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hat_tricorne_captain_skull",
+      "name": "Tricorne Captain Skull (forest)",
+      "variant": "forest",
+      "recolors": null,
+      "zPos": 131,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hat/pirate/tricorne/captain/skull/adult/spellcast/forest.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    },
+    {
+      "itemId": "hat_magic_wizard_buckle",
+      "name": "Wizard Hat Buckle (bronze)",
+      "variant": "bronze",
+      "recolors": null,
+      "zPos": 132,
+      "layerNum": 1,
+      "yPos": 0,
+      "needsRecolor": false,
+      "source": {
+        "kind": "catalog",
+        "spritePath": "hat/magic/wizard/buckle/adult/spellcast/bronze.png"
+      },
+      "supportedAnimations": [
+        "spellcast",
+        "thrust",
+        "walk",
+        "slash",
+        "shoot",
+        "hurt",
+        "climb",
+        "idle",
+        "jump",
+        "sit",
+        "emote",
+        "run",
+        "combat_idle",
+        "backslash",
+        "halfslash"
+      ]
+    }
+  ],
+  "credits": [
+    {
+      "fileName": "body/bodies/muscular/core_idle.png",
+      "file": "body/bodies/muscular",
+      "notes": "see details at https://opengameart.org/content/lpc-character-bases",
+      "authors": [
+        "bluecarrot16",
+        "JaidynReiman",
+        "Evert",
+        "TheraHedwig",
+        "MuffinElZangano",
+        "Durrani",
+        "Sander Frenken (castelonia)",
+        "Benjamin K. Smith (BenCreating)",
+        "Eliza Wyatt (ElizaWy)",
+        "dalonedrau",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "https://opengameart.org/content/lpc-barbarian-sprite-base",
+        "https://opengameart.org/content/lpc-muscular-swing-animation",
+        "https://opengameart.org/content/lpc-muscular-hurt-animation",
+        "https://opengameart.org/content/lpc-jump-expanded",
+        "https://opengameart.org/content/lpc-revised-character-basics",
+        "https://opengameart.org/content/lpc-be-seated",
+        "https://opengameart.org/content/lpc-jump-expanded",
+        "https://opengameart.org/content/lpc-character-bases",
+        "https://opengameart.org/content/lpc-male-jumping-animation-by-durrani"
+      ]
+    },
+    {
+      "fileName": "head/heads/human/male/core_idle.png",
+      "file": "head/heads/human/male",
+      "notes": "original head by Redshrike, tweaks by BenCreating, modular version by bluecarrot16",
+      "authors": [
+        "bluecarrot16",
+        "Benjamin K. Smith (BenCreating)",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/liberated-pixel-cup-lpc-base-assets-sprites-map-tiles",
+        "https://opengameart.org/content/lpc-character-bases"
+      ]
+    },
+    {
+      "fileName": "head/faces/male/look_l/core_idle.png",
+      "file": "head/faces",
+      "notes": "Original by Redshrike, Expressions by ElizaWy, mapped to all frames by JaidynReiman",
+      "authors": [
+        "JaidynReiman",
+        "ElizaWy",
+        "Stephen Challener (Redshrike)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Head",
+        "https://opengameart.org/content/ulpc-expanded-expressions"
+      ]
+    },
+    {
+      "fileName": "body/wound/eye_right/core_idle.png",
+      "file": "body/wound/eye_right",
+      "notes": "Zombie by BenCreating, commissioned by castelonia",
+      "authors": [
+        "Benjamin K. Smith (BenCreating)",
+        "Sander Frenken (castelonia)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-zombie"
+      ]
+    },
+    {
+      "fileName": "body/wound/ribs/core_idle.png",
+      "file": "body/wound/ribs",
+      "notes": "",
+      "authors": [
+        "Benjamin K. Smith (BenCreating)",
+        "Sander Frenken (castelonia)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-zombie"
+      ]
+    },
+    {
+      "fileName": "body/wings/dragonfly/solid/fg/core_idle/forest.png",
+      "file": "body/wings/dragonfly",
+      "notes": "In dedication to my grandmother, Sharon Rowe",
+      "authors": [
+        "The Foreman"
+      ],
+      "licenses": [
+        "OGA-BY 4.0",
+        "CC-BY-SA 4.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-fairy-wings-pack-2"
+      ]
+    },
+    {
+      "fileName": "body/wings/monarch/edge/fg/core_idle/brown.png",
+      "file": "body/wings/monarch",
+      "notes": "In dedication to my grandmother, Sharon Rowe",
+      "authors": [
+        "The Foreman"
+      ],
+      "licenses": [
+        "OGA-BY 4.0",
+        "CC-BY-SA 4.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-fairy-wings"
+      ]
+    },
+    {
+      "fileName": "body/tail/lizard/adult/fg/core_idle.png",
+      "file": "body/tail/lizard",
+      "notes": "edited for v3 bases and recolored by bluecarrot16, additional animations added by JaidynReiman",
+      "authors": [
+        "Nila122",
+        "bluecarrot16",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/drakes-and-lizardfolk"
+      ]
+    },
+    {
+      "fileName": "eyes/cyclops2/adult/core_idle.png",
+      "file": "eyes/cyclops2",
+      "notes": "original by kirts, repositioned by JaidynReiman along with shading and recolors",
+      "authors": [
+        "kirts",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "CC0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/cyclops-and-his-eye"
+      ]
+    },
+    {
+      "fileName": "head/ears/cat/skin/adult/fg/core_idle.png",
+      "file": "head/ears/cat",
+      "notes": "",
+      "authors": [
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0+",
+        "CC-BY 3.0+",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-furry-ears-tails-for-rpg-sprites"
+      ]
+    },
+    {
+      "fileName": "head/ears/avyon/skin/adult/core_idle.png",
+      "file": "head/ears/avyon",
+      "notes": "",
+      "authors": [
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0+",
+        "CC-BY 3.0+",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-furry-ears-tails-for-rpg-sprites"
+      ]
+    },
+    {
+      "fileName": "head/horns/curled/adult/core_idle.png",
+      "file": "head/horns/curled",
+      "notes": "",
+      "authors": [
+        "Nila122"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "GPL 3.0",
+        "CC-BY-SA 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-lizard-headgear"
+      ]
+    },
+    {
+      "fileName": "head/fins/fin_short/adult/core_idle.png",
+      "file": "head/fins",
+      "notes": "adapted to v3 base by bluecarrot16",
+      "authors": [
+        "bluecarrot16",
+        "Nila122"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "GPL 3.0",
+        "CC-BY-SA 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-lizard-headgear",
+        "http://opengameart.org/content/lpc-clothing-updates"
+      ]
+    },
+    {
+      "fileName": "beards/mustache/basic/core_idle.png",
+      "file": "beards/mustache/basic",
+      "notes": "Original by Nemisys, repositioning by JaidynReiman.",
+      "authors": [
+        "JaidynReiman",
+        "Carlo Enrico Victoria (Nemisys)"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-brunet-mustache"
+      ]
+    },
+    {
+      "fileName": "hair/extensions/bangs/xlong_bangr/adult/core_idle.png",
+      "file": "hair/extensions/bangs/xlong_bangr",
+      "notes": "",
+      "authors": [
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0+",
+        "CC-BY 3.0+",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-relm-hair-xlong-ponytail",
+        "https://opengameart.org/content/lpc-expanded-xlong-hair"
+      ]
+    },
+    {
+      "fileName": "hat/headband/hairtie/rune/adult/core_idle.png",
+      "file": "hat/headband/hairtie",
+      "notes": "",
+      "authors": [
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0+",
+        "CC-BY 3.0+",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-relm-hair-xlong-ponytail",
+        "https://opengameart.org/content/lpc-expanded-hats-facial-helmets"
+      ]
+    },
+    {
+      "fileName": "hat/pirate/cavalier/feather/adult/core_idle/sky.png",
+      "file": "hat/pirate/cavalier",
+      "notes": "Cavalier Hat by Bluecarrot16, layers and added animations by JaidynReiman",
+      "authors": [
+        "bluecarrot16",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-pirates",
+        "https://opengameart.org/content/lpc-expanded-hats-facial-helmets"
+      ]
+    },
+    {
+      "fileName": "hat/pirate/tricorne/captain/skull/adult/core_idle/forest.png",
+      "file": "hat/pirate/tricorne/captain",
+      "notes": "Pirate Hat by Bluecarrot16, layers and added animations by JaidynReiman",
+      "authors": [
+        "bluecarrot16"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-pirates",
+        "https://opengameart.org/content/lpc-expanded-hats-facial-helmets"
+      ]
+    },
+    {
+      "fileName": "hat/magic/wizard/buckle/adult/core_idle/bronze.png",
+      "file": "hat/magic/wizard",
+      "notes": "Original Wizard Hat and Recolors by bigbeargames and reemax; split into separate layers with new recolors by JaidynReiman",
+      "authors": [
+        "Michael Whitlock (bigbeargames)",
+        "Tuomo Untinen (reemax)",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "CC-BY-SA 3.0",
+        "GPL 2.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-items-and-game-effects",
+        "https://opengameart.org/content/lpc-pointed-hats",
+        "https://opengameart.org/content/lpc-expanded-hats-facial-helmets"
+      ]
+    },
+    {
+      "fileName": "facial/earrings/stud/male/core_idle/ceramic.png",
+      "file": "facial/earrings/stud",
+      "notes": "",
+      "authors": [
+        "bluecarrot16"
+      ],
+      "licenses": [
+        "CC0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-jewelry"
+      ]
+    },
+    {
+      "fileName": "neck/capetie/male/core_idle.png",
+      "file": "neck/capetie",
+      "notes": "adapted to male body and v3 bases by bluecarrot16",
+      "authors": [
+        "bluecarrot16",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more"
+      ]
+    },
+    {
+      "fileName": "shoulders/bauldron/male/core_idle.png",
+      "file": "shoulders/bauldron",
+      "notes": "Original by Nila122, climb/jump/sit/emote/run by JaidynReiman",
+      "authors": [
+        "Nila122",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "GPL 2.0",
+        "GPL 3.0",
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/more-lpc-clothes-and-hair"
+      ]
+    },
+    {
+      "fileName": "torso/aprons/suspenders/male/core_idle/pink.png",
+      "file": "torso/aprons/suspenders",
+      "notes": "original by ElizaWy; spellcast/thrust/shoot/hurt/combat adapted from original by JaidynReiman",
+      "authors": [
+        "ElizaWy",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://github.com/ElizaWy/LPC/tree/main/Characters/Clothing",
+        "https://opengameart.org/content/lpc-expanded-sit-run-jump-more"
+      ]
+    },
+    {
+      "fileName": "cape/trim/core_idle.png",
+      "file": "cape/trim",
+      "notes": "isolated stripe from cape_trimmed, adapted to v3 bases by bluecarrot16",
+      "authors": [
+        "bluecarrot16",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-curly-hair-elven-ears-white-cape-with-blue-trim-and-more",
+        "http://opengameart.org/content/lpc-clothing-updates"
+      ]
+    },
+    {
+      "fileName": "legs/skirts/legion/male/core_idle.png",
+      "file": "legs/skirts/legion",
+      "notes": "original by Nila122 to legion, adapted to v3 bases by bluecarrot16, climb/jump/sit/run by JaidynReiman",
+      "authors": [
+        "bluecarrot16",
+        "Nila122",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 2.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-roman-armor",
+        "http://opengameart.org/content/lpc-clothing-updates",
+        "https://opengameart.org/content/lpc-expanded-armour"
+      ]
+    },
+    {
+      "fileName": "feet/shoes/basic/male/core_idle.png",
+      "file": "feet/shoes",
+      "notes": "original by wulax, edited for v3 base by bluecarrot16, Jump/Sit/Emote/Run/Revised Combat by JaidynReiman",
+      "authors": [
+        "JaidynReiman",
+        "bluecarrot16",
+        "Johannes Sjölund (wulax)"
+      ],
+      "licenses": [
+        "OGA-BY 3.0",
+        "CC-BY-SA 3.0",
+        "GPL 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-medieval-fantasy-character-sprites",
+        "http://opengameart.org/content/lpc-clothing-updates",
+        "https://opengameart.org/content/lpc-expanded-socks-shoes"
+      ]
+    },
+    {
+      "fileName": "shield/heater/revised/pattern/bend_sinister/bg/core_idle.png",
+      "file": "shield/heater/revised/pattern",
+      "notes": "",
+      "authors": [
+        "bluecarrot16",
+        "Sander Frenken (castelonia)",
+        "ElizaWy",
+        "JaidynReiman"
+      ],
+      "licenses": [
+        "OGA-BY 3.0"
+      ],
+      "urls": [
+        "https://opengameart.org/content/lpc-shields"
+      ]
+    }
+  ]
+}

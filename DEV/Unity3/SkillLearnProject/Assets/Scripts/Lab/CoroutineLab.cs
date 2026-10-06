@@ -3,27 +3,26 @@ using UnityEngine;
 
 public class CoroutineLab : MonoBehaviour
 {
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // StartCoroutineì„ ì‚¬ìš©í•´ ì•„ë˜ì—ì„œ ë§Œë“  ì½”ë£¨í‹´ í•¨ìˆ˜ë¥¼ ì‹¤í–‰í•©ë‹ˆë‹¤.
-        StartCoroutine(ExecuteSequence());
+        // ÄÚ·çÆ¾À» ½ÃÀÛÇÕ´Ï´Ù.
+        StartCoroutine(MyCoroutine());
     }
 
-    /// <summary>
-    /// ì§€ì •ëœ ì‹œê°„ ê°„ê²©ìœ¼ë¡œ ë””ë²„ê·¸ ë¡œê·¸ë¥¼ ì¶œë ¥í•˜ëŠ” ì½”ë£¨í‹´ í•¨ìˆ˜
-    /// </summary>
-    private IEnumerator ExecuteSequence()
+    // ¿ä±¸»çÇ×À» Ã³¸®ÇÏ´Â ÄÚ·çÆ¾ ¸Ş¼­µåÀÔ´Ï´Ù.
+    IEnumerator MyCoroutine()
     {
-        // 1. 0.1ì´ˆ ê¸°ë‹¤ë ¸ë‹¤ ë””ë²„ê·¸ë¡œ 1 ì¶œë ¥
+        // 0.1ÃÊ ±â´Ù·È´Ù°¡ µğ¹ö±×·Î 1 Ãâ·ÂÇÏ¼¼¿ä.
         yield return new WaitForSeconds(0.1f);
-        Debug.Log("1");
+        Debug.Log(1);
 
-        // 2. 1ì´ˆ ê¸°ë‹¤ë ¸ë‹¤ ë””ë²„ê·¸ë¡œ ë°œì‚¬ ì¶œë ¥
-        yield return new WaitForSeconds(1.0f);
-        Debug.Log("ë°œì‚¬");
+        // 1ÃÊ ±â´Ù·È´Ù°¡ µğ¹ö±×·Î ¹ß»ç Ãâ·ÂÇÏ¼¼¿ä.
+        yield return new WaitForSeconds(1f);
+        Debug.Log("¹ß»ç");
 
-        // 3. 2ì´ˆ ë’¤ì— ë””ë²„ê·¸ì— ì™„ë£Œ ì¶œë ¥
-        yield return new WaitForSeconds(2.0f);
-        Debug.Log("ì™„ë£Œ");
+        // 2ÃÊ µÚ¿¡ µğ¹ö±×¿¡ ¿Ï·á¸¦ Ãâ·ÂÇÏ¼¼¿ä.
+        yield return new WaitForSeconds(2f);
+        Debug.Log("¿Ï·á");
     }
 }

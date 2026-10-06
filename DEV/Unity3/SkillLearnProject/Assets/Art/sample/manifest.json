@@ -1,0 +1,134 @@
+{
+  "format": "sprite-generator-game-assets-v2",
+  "frameSize": 64,
+  "frameIndexBase": 0,
+  "directionOrder": [
+    "up",
+    "left",
+    "down",
+    "right"
+  ],
+  "clips": {
+    "idle": {
+      "file": "core/idle.png",
+      "source": "walk",
+      "sourceCycle": [
+        0
+      ],
+      "cycle": [
+        0
+      ],
+      "columns": 1,
+      "rows": 4,
+      "directions": [
+        "up",
+        "left",
+        "down",
+        "right"
+      ]
+    },
+    "walk": {
+      "file": "core/walk.png",
+      "source": "walk",
+      "sourceCycle": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "cycle": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "columns": 8,
+      "rows": 4,
+      "directions": [
+        "up",
+        "left",
+        "down",
+        "right"
+      ]
+    },
+    "attack": {
+      "file": "core/attack.png",
+      "source": "slash",
+      "sourceCycle": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "cycle": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "columns": 6,
+      "rows": 4,
+      "directions": [
+        "up",
+        "left",
+        "down",
+        "right"
+      ]
+    },
+    "hit": {
+      "file": "core/hit.png",
+      "source": "hurt",
+      "sourceCycle": [
+        0,
+        1
+      ],
+      "cycle": [
+        0,
+        1
+      ],
+      "columns": 2,
+      "rows": 1,
+      "directions": [
+        "down"
+      ]
+    },
+    "death": {
+      "file": "core/death.png",
+      "source": "hurt",
+      "sourceCycle": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "cycle": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "columns": 6,
+      "rows": 1,
+      "directions": [
+        "down"
+      ],
+      "holdLastFrame": true
+    }
+  }
+}

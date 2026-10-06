@@ -17,6 +17,6 @@ MonoBehaviour:
   damage: 25
   initiallyUnlocked: 1
   castSound: {fileID: 8300000, guid: ffedd94f955671c44a47134004596c59, type: 3}
-  projectilePrefab: {fileID: 6770922342718755485, guid: b7a71648749b1794fbf3e9c726da9d34, type: 3}
+  projectilePrefab: {fileID: 2130076154132985774, guid: b7a71648749b1794fbf3e9c726da9d34, type: 3}
   speed: 12
   lifetime: 6

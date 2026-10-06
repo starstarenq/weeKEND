@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UIManager : Singleton<UIManager>
+public class UIManager : Singleton<UIManager> // SceneUI, PopupUI, SubItemUI 생성하는 담당자
 {
     // 현재 켜져 있는 씬 UI 관리
     private SceneUI _sceneUI;
