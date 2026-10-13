@@ -1,0 +1,22 @@
+﻿{
+    "lines":  [
+                  {
+                      "speaker":  "안내자",
+                      "spriteKey":  "DialogueGuide",
+                      "text":  "ResourceManager와 DataManager로 불러온 대사입니다.",
+                      "id":  10000000
+                  },
+                  {
+                      "speaker":  "여행자",
+                      "spriteKey":  "DialogueTraveler",
+                      "text":  "JSON의 speaker, spriteKey, text를 수정하면 다음 실행에 반영됩니다.",
+                      "id":  10000001
+                  },
+                  {
+                      "speaker":  "안내자",
+                      "spriteKey":  "DialogueGuide",
+                      "text":  "상단 ScriptableObject 버튼으로 SO 데이터도 확인하세요.",
+                      "id":  10000002
+                  }
+              ]
+}

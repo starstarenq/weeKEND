@@ -1,0 +1,8 @@
+{
+  "name": "GameLecture.Framework.Runtime",
+  "rootNamespace": "GameLecture.Framework",
+  "references": [
+    "Unity.TextMeshPro"
+  ],
+  "autoReferenced": true
+}

@@ -1,0 +1,23 @@
+{
+  "name": "com.gamelecture.framework",
+  "version": "1.0.0",
+  "displayName": "GameLecture Unity Framework",
+  "description": "A reusable Unity framework with resource, pooling, UI, scene, event, data, save, and LevelPlay mediation samples.",
+  "unity": "6000.0",
+  "author": {
+    "name": "GameLecture2024",
+    "url": "https://github.com/GameLecture2024"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.2",
+    "com.unity.services.levelplay": "9.5.0",
+    "com.unity.ugui": "2.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Framework Starter",
+      "description": "Editable game-specific implementations for objects, data, localization, saving, and LevelPlay ads.",
+      "path": "Samples~/Framework Starter"
+    }
+  ]
+}

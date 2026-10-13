@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b49f7d7c50ad20e4b962a22fab7b91b9, type: 3}
+  m_Name: DialogueSampleConfig
+  m_EditorClassIdentifier: Assembly-CSharp::SysKill.DialogueSample.DialogueConfig
+  idSchemaVersion: 2
+  lines:
+  - nodeId: 10000000
+    nextNodeId: 0
+    legacyId: 
+    legacyNextId: 
+    end: 0
+    choices: []
+    speaker: "\uC548\uB0B4\uC790"
+    sprite: {fileID: 21300000, guid: 2237d9623477b8b46826518a9324a51e, type: 2}
+    text: "\uC774 \uB300\uC0AC\uB294 ScriptableObject\uC5D0\uC11C \uBD88\uB7EC\uC654\uC2B5\uB2C8\uB2E4."
+  - nodeId: 10000001
+    nextNodeId: 0
+    legacyId: 
+    legacyNextId: 
+    end: 0
+    choices: []
+    speaker: "\uC5EC\uD589\uC790"
+    sprite: {fileID: 21300000, guid: fa0ddd4440e3ad7428bf82f091122c43, type: 2}
+    text: "DialogueSampleConfig\uC758 Lines\uC5D0\uC11C \uD654\uC790, Sprite, \uB300\uC0AC\uB97C
+      \uD3B8\uC9D1\uD558\uC138\uC694."
+  - nodeId: 10000002
+    nextNodeId: 0
+    legacyId: 
+    legacyNextId: 
+    end: 0
+    choices: []
+    speaker: "\uC548\uB0B4\uC790"
+    sprite: {fileID: 21300000, guid: 2237d9623477b8b46826518a9324a51e, type: 2}
+    text: "Sprite\uB294 Inspector\uC5D0 \uB4DC\uB798\uADF8\uD574\uC11C \uC5F0\uACB0\uD560
+      \uC218 \uC788\uC2B5\uB2C8\uB2E4."

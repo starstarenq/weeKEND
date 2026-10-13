@@ -1,0 +1,58 @@
+{
+  "lines": [
+    {
+      "id": 10000000,
+      "nextId": 0,
+      "end": false,
+      "choices": null,
+      "speaker": "루피",
+      "spriteKey": "203",
+      "text": "나는 루피!"
+    },
+    {
+      "id": 10000001,
+      "nextId": 0,
+      "end": false,
+      "choices": null,
+      "speaker": "화자",
+      "spriteKey": "Air Transport Icon",
+      "text": "테스트 대사를 시작합니다"
+    },
+    {
+      "id": 10000002,
+      "nextId": 0,
+      "end": false,
+      "choices": [
+        {
+          "text": "꿈이 무엇인가요?",
+          "targetId": 10000003
+        },
+        {
+          "text": "할말이 있나?",
+          "targetId": 10000004
+        }
+      ],
+      "speaker": "질문",
+      "spriteKey": "Air Transport Icon",
+      "text": "궁금한 사항을 질문하세요"
+    },
+    {
+      "id": 10000003,
+      "nextId": 10000002,
+      "end": false,
+      "choices": null,
+      "speaker": "루피",
+      "spriteKey": "203",
+      "text": "해적왕이 될 사나이"
+    },
+    {
+      "id": 10000004,
+      "nextId": 10000002,
+      "end": false,
+      "choices": null,
+      "speaker": "루피",
+      "spriteKey": "203",
+      "text": "3D2Y"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+﻿{
+    "lines":  [
+                  {
+                      "id":  10000000,
+                      "speaker":  "안내자",
+                      "spriteKey":  "DialogueGuide",
+                      "text":  "갈림길입니다. 어느 곳으로 가시겠어요?",
+                      "choices":  [
+                                      {
+                                          "text":  "숲으로 간다",
+                                          "targetId":  10000001
+                                      },
+                                      {
+                                          "text":  "마을로 간다",
+                                          "targetId":  10000002
+                                      }
+                                  ]
+                  },
+                  {
+                      "id":  10000001,
+                      "speaker":  "여행자",
+                      "spriteKey":  "DialogueTraveler",
+                      "text":  "숲에서 오래된 지도를 찾았습니다. Save로 이 경로를 저장할 수 있어요.",
+                      "nextId":  10000003
+                  },
+                  {
+                      "id":  10000002,
+                      "speaker":  "여행자",
+                      "spriteKey":  "DialogueTraveler",
+                      "text":  "마을에서 여관을 발견했습니다. Save로 이 경로를 저장할 수 있어요.",
+                      "nextId":  10000004
+                  },
+                  {
+                      "id":  10000003,
+                      "speaker":  "안내자",
+                      "spriteKey":  "DialogueGuide",
+                      "text":  "숲 탐험을 마쳤습니다. Previous로 선택 지점까지 돌아갈 수 있습니다.",
+                      "end":  true
+                  },
+                  {
+                      "id":  10000004,
+                      "speaker":  "안내자",
+                      "spriteKey":  "DialogueGuide",
+                      "text":  "마을에서 쉬어갑니다. Finish를 누르면 대화가 종료됩니다.",
+                      "end":  true
+                  }
+              ]
+}
