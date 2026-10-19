@@ -14,18 +14,25 @@ public class UI_PlayerHPBar : SubUI
         PlayerHPText
     }
 
+    enum Images
+    {
+        PlayerAvatarImage
+    }
+
     [Header("UI 컴포넌트 직접할당 (권장)")]
     [SerializeField] private Slider hpSlider;
     [SerializeField] private TextMeshProUGUI hpText;
+    [SerializeField] private Image playerAvatarImage;
 
     [Header("게이지 줄어드는 속도")]
-    [SerializeField] private float fillSpeed = 5.0f; // 숫자가 클수록 빠르게 변경됨
+    [SerializeField] private float fillSpeed = 5.0f;
 
     private float targetRatio = 1.0f;
     private float displayHp = 100f;
     private float targetMaxHp = 100f;
 
-    private bool isInit = false;
+    // 💡 [해결] 누락되었던 초기화 체크 변수 추가
+    private bool _initAlready = false;
 
     private void Awake()
     {
@@ -34,16 +41,19 @@ public class UI_PlayerHPBar : SubUI
 
     public override void Init()
     {
-        if (isInit) return;
+        if (_initAlready) return;
 
         Bind<Slider>(typeof(Sliders));
         Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<Image>(typeof(Images));
 
         if (hpSlider == null) hpSlider = Get<Slider>((int)Sliders.PlayerHPSlider);
         if (hpText == null) hpText = Get<TextMeshProUGUI>((int)Texts.PlayerHPText);
+        if (playerAvatarImage == null) playerAvatarImage = Get<Image>((int)Images.PlayerAvatarImage);
 
         if (hpSlider == null) hpSlider = GetComponentInChildren<Slider>(true);
         if (hpText == null) hpText = GetComponentInChildren<TextMeshProUGUI>(true);
+        if (playerAvatarImage == null) playerAvatarImage = GetComponentInChildren<Image>(true);
 
         if (hpSlider != null)
         {
@@ -51,17 +61,14 @@ public class UI_PlayerHPBar : SubUI
             hpSlider.maxValue = 1f;
         }
 
-        isInit = true;
+        _initAlready = true;
     }
 
     private void Update()
     {
         if (hpSlider == null) return;
 
-        // 슬라이더 바를 부드럽게 목표 수치로 이동
         hpSlider.value = Mathf.Lerp(hpSlider.value, targetRatio, Time.deltaTime * fillSpeed);
-
-        // 텍스트 수치도 부드럽게 감소
         displayHp = Mathf.Lerp(displayHp, targetRatio * targetMaxHp, Time.deltaTime * fillSpeed);
 
         if (hpText != null)
@@ -70,9 +77,6 @@ public class UI_PlayerHPBar : SubUI
         }
     }
 
-    /// <summary>
-    /// 외부(PlayerHP)에서 피격 시 목표 체력값 전달
-    /// </summary>
     public void UpdateHP(float currentHp, float maxHp)
     {
         Init();
@@ -80,5 +84,16 @@ public class UI_PlayerHPBar : SubUI
         targetMaxHp = maxHp;
         float clampedHp = Mathf.Clamp(currentHp, 0f, maxHp);
         targetRatio = maxHp > 0 ? clampedHp / maxHp : 0f;
+    }
+
+    public void SetPlayerAvatar(Sprite avatarSprite)
+    {
+        Init();
+
+        if (playerAvatarImage != null && avatarSprite != null)
+        {
+            playerAvatarImage.sprite = avatarSprite;
+            playerAvatarImage.gameObject.SetActive(true);
+        }
     }
 }
