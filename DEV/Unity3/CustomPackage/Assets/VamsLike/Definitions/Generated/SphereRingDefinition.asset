@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a77a77b7cb46c34fbafcbdfe6a70688, type: 3}
+  m_Name: SphereRingDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::VamSurvivalLike.Monsters.Definition.MonsterDefinition
+  monsterId: sphere_ring
+  basePrefab: {fileID: 5989372861409657977, guid: 7f2aa5fe1b6e74f4b946b1cfd77eb3c1, type: 3}
+  stats: {fileID: 11400000, guid: 0f89e49b107aa67449e0ce1248f552a8, type: 2}
+  brainType: 6
+  brain:
+    stoppingDistance: 1.1
+    turnSpeed: 720
+    triggerDistance: 6
+    windupDuration: 0.6
+    chargeDuration: 0.7
+    recoveryDuration: 1
+    chargeSpeedMultiplier: 3
+    attackWidth: 2
+    attackAngle: 90
+    innerRadiusRatio: 0.58
+    hitHeight: 2
+    targetLayers:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    orbitRadius: 3
+    clockwise: 1
+    desiredDistance: 4
+    distanceTolerance: 0.4
+  views:
+    modules:
+    - rid: 6744453223267434692
+  prewarmCount: 6
+  maxPoolSize: 32
+  jsonOverride: {fileID: 4900000, guid: dbd0f62181618474d870dff45680aed3, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 6744453223267434692
+      type: {class: SkillIndicatorViewModuleDefinition, ns: VamSurvivalLike.Monsters.Definition, asm: Assembly-CSharp}
+      data:
+        moduleId: ring_donut
+        anchorPath: ViewRoot/Ground
+        attackKey: RingBurst
+        indicatorPrefab: {fileID: 4538850413259893319, guid: e73bd5bf782503e4fa0909e87a4f5a48, type: 3}
+        shape: 3
+        radius: 4.5
+        width: 2
+        length: 4
+        angle: 90
+        innerRadiusRatio: 0.55
+        border: 0.025
+        opacity: 1
+        tint: {r: 0.72, g: 0.36, b: 1, a: 1}
+        followDuringWindup: 1
+        syncRangeFromAttack: 1
+        pinToWindupWorldPosition: 1

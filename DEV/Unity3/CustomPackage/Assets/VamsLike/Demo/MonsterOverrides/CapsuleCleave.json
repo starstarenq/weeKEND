@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "monsterId": "capsule_cleave",
+  "stats": { "maxHealth": 135.0, "moveSpeed": 2.3, "contactDamage": 20.0, "contactInterval": 1.1 },
+  "brain": {
+    "stoppingDistance": -1.0, "turnSpeed": -1.0,
+    "triggerDistance": 4.0, "windupDuration": 1.25, "chargeDuration": 0.5,
+    "recoveryDuration": 1.4, "chargeSpeedMultiplier": 2.5,
+    "orbitRadius": -1.0, "clockwise": -1,
+    "desiredDistance": -1.0, "distanceTolerance": -1.0
+  },
+  "views": [
+    {
+      "moduleId": "cleave_sector", "shape": 2,
+      "radius": 4.0, "width": -1.0, "length": -1.0, "angle": 110.0,
+      "innerRadiusRatio": -1.0, "border": 0.03, "opacity": 1.0, "tint": "#FFB02E"
+    }
+  ]
+}

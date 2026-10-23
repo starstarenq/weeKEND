@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "monsterId": "sphere_burst",
+  "stats": { "maxHealth": 36.0, "moveSpeed": 3.8, "contactDamage": 7.0, "contactInterval": 0.7 },
+  "brain": {
+    "stoppingDistance": -1.0, "turnSpeed": -1.0,
+    "triggerDistance": 3.0, "windupDuration": 1.1, "chargeDuration": 0.35,
+    "recoveryDuration": 1.2, "chargeSpeedMultiplier": 2.2,
+    "orbitRadius": -1.0, "clockwise": -1,
+    "desiredDistance": -1.0, "distanceTolerance": -1.0
+  },
+  "views": [
+    {
+      "moduleId": "burst_circle", "shape": 0,
+      "radius": 3.0, "width": -1.0, "length": -1.0, "angle": -1.0,
+      "innerRadiusRatio": -1.0, "border": 0.04, "opacity": 0.9, "tint": "#29B6FF"
+    }
+  ]
+}
